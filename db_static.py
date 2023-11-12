@@ -276,4 +276,150 @@ def init():
     cursor.execute(query)
     db.commit()
 
+    query = ''' 
+        CREATE TABLE IF NOT EXISTS media_items(    
+        mediaid INTEGER,
+        mediatype VARCHAR(10),
+        title VARCHAR(50),
+        description VARCHAR(500),
+        duration INTEGER,
+        language VARCHAR(10),
+        thumbnailurl VARCHAR(256),
+        playurl VARCHAR(256),
+        downloadurl VARCHAR(256),
+        keywords VARCHAR(256),
+        tags VARCHAR(256),
+        imageurl VARCHAR(256),
+        presentationdate VARCHAR(30),
+        releasedate VARCHAR(30),
+        lastmodified VARCHAR(30),
+        PRIMARY KEY (mediaid),
+    );
+    '''
+
+    cursor.execute(query)
+    db.commit()
+    
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}media_items.csv'
+        INTO TABLE media_items
+        FIELDS TERMINATED BY ','
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        CREATE TABLE IF NOT EXISTS media_relationships(    
+        mediaid INTEGER,
+        relatedid INTEGER,
+        relatedentity VARCHAR(50),
+        FOREIGN KEY (mediaid) REFERENCES media_items(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
+    );
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}media_relationships.csv'
+        INTO TABLE media_relationships
+        FIELDS TERMINATED BY ','
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        CREATE TABLE IF NOT EXISTS published_images(    
+        uuid VARCHAR(50),
+        iiifurl VARCHAR(100),
+        iiifthumburl VARCHAR(100),
+        viewtype VARCHAR(20),
+        sequence INTEGER,
+        width INTEGER,
+        height INTEGER,
+        maxpixels INTEGER,
+        created VARCHAR(10),
+        modified VARCHAR(10),
+        depictstmsobjectid INTEGER,
+        assistivetext VARCHAR(500),
+        PRIMARY KEY (uuid),
+    );
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}published_images.csv'
+        INTO TABLE published_images
+        FIELDS TERMINATED BY ','
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        CREATE TABLE IF NOT EXISTS object_media(    
+        mediaid INTEGER,
+        mediatype VARCHAR(10),
+        title VARCHAR(50),
+        description VARCHAR(500),
+        duration VARCHAR(100),
+        language VARCHAR(10),
+        thumbnailurl VARCHAR(256),
+        playurl VARCHAR(256),
+        downloadurl VARCHAR(256),
+        keywords VARCHAR(256),
+        tags VARCHAR(256),
+        imageurl VARCHAR(256),
+        presentationdate VARCHAR(30),
+        releasedate VARCHAR(30),
+        lastmodified VARCHAR(30),
+        PRIMARY KEY (mediaid),
+    );
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}object_media.csv'
+        INTO TABLE object_media
+        FIELDS TERMINATED BY ','
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        CREATE TABLE IF NOT EXISTS constituents_media(    
+        mediaid INTEGER,
+        mediatype VARCHAR(10),
+        title VARCHAR(50),
+        description VARCHAR(500),
+        duration INTEGER,
+        language VARCHAR(10),
+        thumbnailurl VARCHAR(256),
+        playurl VARCHAR(256),
+        downloadurl VARCHAR(256),
+        keywords VARCHAR(256),
+        tags VARCHAR(256),
+        imageurl VARCHAR(256),
+        presentationdate VARCHAR(30),
+        releasedate VARCHAR(30),
+        lastmodified VARCHAR(30),
+        PRIMARY KEY (mediaid),
+    );
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}constituents_media.csv'
+        INTO TABLE constituents_media
+        FIELDS TERMINATED BY ','
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
 init()
