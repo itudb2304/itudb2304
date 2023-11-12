@@ -1,6 +1,6 @@
 import mysql.connector
-import utils.maskPassword as maskPassword
-from utils.path import path
+import maskPassword as maskPassword
+from path import path
 
 db = mysql.connector.connect(
     host="localhost",
@@ -117,6 +117,161 @@ def init():
     query = ''' 
         UPDATE constituents
         SET displaydate = REPLACE(displaydate, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        CREATE TABLE IF NOT EXISTS objects (
+        objectid                    INT,
+        accessioned                 INT,
+        accessionnum                VARCHAR(32),
+        locationid                  INT,
+        title                       TEXT,
+        displayDate                 VARCHAR(256),
+        beginYear                   INT,
+        endYear                     INT,
+        visualBrowserTimeSpan       VARCHAR(32),
+        medium                      TEXT,
+        dimensions                  TEXT,
+        inscription                 VARCHAR(255),
+        markings                    VARCHAR(255),
+        attributionInverted         VARCHAR(1024),
+        attribution                 VARCHAR(1024),
+        provenanceText              TEXT,
+        creditLine                  TEXT,
+        classification              VARCHAR(64),
+        subClassification           VARCHAR(64),
+        visualBrowserClassification VARCHAR(32),
+        parentid                    INT,
+        isVirtual                   INT,
+        departmentabbr              VARCHAR(32),
+        portfolio                   TEXT,
+        series                      VARCHAR(850),
+        volume                      VARCHAR(850),
+        watermarks                  VARCHAR(512),
+        lastDetectedModification    TIME,
+        wikidataid                  VARCHAR(64),
+        customPrintURL              TEXT,
+        PRIMARY KEY(objectid),
+        FOREIGN KEY(locationid) references locations(locationid) ON DELETE CASCADE ON UPDATE CASCADE
+        ); 
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}objects.csv'
+        INTO TABLE objects
+        FIELDS TERMINATED BY ','
+        ENCLOSED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET attributioninverted = REPLACE(attributioninverted, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET attribution = REPLACE(attribution, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET inscription = REPLACE(inscription, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET provenancetext = REPLACE(provenancetext, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET title = REPLACE(title, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET creditline = REPLACE(creditline, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET displaydate = REPLACE(displaydate, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET medium = REPLACE(medium, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET dimensions = REPLACE(dimensions, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET markings = REPLACE(markings, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET subclassification = REPLACE(subclassification, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET portfolio = REPLACE(portfolio, '/', ','); 
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET series = REPLACE(series, '/', ','); 
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET volume = REPLACE(volume, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects
+        SET watermarks = REPLACE(watermarks, '/', ',');
     '''
     cursor.execute(query)
     db.commit()
