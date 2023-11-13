@@ -1,0 +1,7 @@
+Bilgenur Çelik
+150200063
+
+week 6
+- created objects table
+- read the CSV file into the database
+- added app.py to visualize the names of tables inside the database
