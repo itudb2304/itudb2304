@@ -1,0 +1,8 @@
+Hacer Yeter Akıncı
+150200007
+
+week 6
+- organised and merged the tables to adjust the project. 
+- created locations and prefered locations tables.
+- created db_static to insert the database into the Flask project. 
+- read the CSV file into the database.
