@@ -407,7 +407,7 @@ def init():
         presentationdate VARCHAR(30),
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid),
+        PRIMARY KEY (mediaid)
     );
     '''
     cursor.execute(query)
