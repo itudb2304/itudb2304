@@ -293,7 +293,7 @@ def init():
         presentationdate VARCHAR(30),
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid),
+        PRIMARY KEY (mediaid)
     );
     '''
 
@@ -343,7 +343,7 @@ def init():
         modified VARCHAR(10),
         depictstmsobjectid INTEGER,
         assistivetext VARCHAR(500),
-        PRIMARY KEY (uuid),
+        PRIMARY KEY (uuid)
     );
     '''
     cursor.execute(query)
@@ -375,7 +375,7 @@ def init():
         presentationdate VARCHAR(30),
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid),
+        PRIMARY KEY (mediaid)
     );
     '''
     cursor.execute(query)
