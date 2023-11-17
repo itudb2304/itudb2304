@@ -1,0 +1,6 @@
+Aydan Günaydın
+150200012
+
+week 6
+- created media_items, media relationships and published_images tables
+- loaded the corresponding csv files to database
