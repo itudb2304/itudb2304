@@ -1,0 +1,7 @@
+Ceren Yaşar
+150210013
+
+week 6
+- organised and merged the tables to adjust the project. 
+- created the constituents table.
+- read the CSV file into the database.

@@ -1,6 +1,6 @@
 import mysql.connector
-import maskPassword as maskPassword
-from path import path
+import utils.maskPassword as maskPassword
+from utils.path import path
 
 db = mysql.connector.connect(
     host="localhost",
@@ -374,6 +374,37 @@ def init():
         INTO TABLE constituents_media
         FIELDS TERMINATED BY ','
         IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        CREATE TABLE IF NOT EXISTS objects_historical_data (
+            dataType VARCHAR(32) NOT NULL,
+            objectID INTEGER,
+            displayOrder INTEGER NOT NULL,
+            forwardText VARCHAR(256),
+            invertedText VARCHAR(256),
+            remarks VARCHAR(256),
+            effectiveDate VARCHAR(10),
+            FOREIGN KEY (objectID) REFERENCES objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE
+        );
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}objects_historical_data.csv'
+        INTO TABLE objects_historical_data
+        FIELDS TERMINATED BY ';'
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects_historical_data
+        SET invertedText = REPLACE(invertedText, '/', ',');
     '''
     cursor.execute(query)
     db.commit()
