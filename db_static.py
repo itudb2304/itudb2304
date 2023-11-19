@@ -39,7 +39,7 @@ def init():
 
     query = ''' 
         UPDATE preferred_locations
-        SET description = REPLACE(description, '/', ','); 
+        SET mapshapecoords = REPLACE(mapshapecoords, '/', ','); 
     '''
     cursor.execute(query)
     db.commit()
@@ -408,5 +408,8 @@ def init():
     '''
     cursor.execute(query)
     db.commit()
+
+    cursor.close()
+    db.close()
 
 init()

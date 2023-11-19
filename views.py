@@ -1,10 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, abort, render_template, current_app, request
 import mysql.connector
-import maskPassword as maskPassword
-
-import db_static
-
-app = Flask(__name__)
+import utils.maskPassword as maskPassword
 
 db = mysql.connector.connect(
     host="localhost",
@@ -12,8 +8,6 @@ db = mysql.connector.connect(
     password= maskPassword.maskPsw(), 
     database="national_art"  
 )
-
-@app.route('/')
 
 def index():
     cur = db.cursor()
@@ -23,6 +17,24 @@ def index():
 
     return render_template('index.html', images=data)
 
-if __name__ == "__main__":
-    db_static.init()
-    app.run(debug=True)
+def home_page():
+    return render_template("home.html")
+
+def location_page(location_key):
+    db = current_app.config["db"]
+    location = db.get_building(location_key)
+
+    if location is None:
+        abort(404)
+    else:
+        return render_template("location.html", location=location )
+
+def locations_page():
+    db = current_app.config["db"]
+    locations = db.get_all_buildings()
+
+    if locations is None:
+        abort(404)
+    else:
+        return render_template("locations.html", locations=sorted(locations))
+        
