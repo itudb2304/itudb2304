@@ -9,4 +9,3 @@ week 6
 week 7
 - created admin and table templates
 - added get_table_names and get_table_content in database.py
-- 
