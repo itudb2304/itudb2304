@@ -5,5 +5,5 @@ week 6
 - created media_items, media relationships and published_images tables
 - loaded the corresponding csv files to database
 week 7
--created web.py file to show the jgp files in the database on the website
+-created views.py file to show the jgp files in the database on the website
 - created index.html file to show pictures of artworks
