@@ -1,7 +1,7 @@
 from flask import Flask
 import mysql.connector
-import maskPassword as maskPassword
-from path import path
+import utils.maskPassword as maskPassword
+from utils.path import path
 import db_static
 
 app = Flask(__name__ )
