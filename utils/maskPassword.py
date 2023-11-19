@@ -1,6 +1,6 @@
 import base64
 
-string = ""  # enter your mySQL password here
+string = "root44"  # enter your mySQL password here
  
 
 def maskPsw():
