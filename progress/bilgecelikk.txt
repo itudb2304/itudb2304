@@ -5,3 +5,8 @@ week 6
 - created objects table
 - read the CSV file into the database
 - added app.py to visualize the names of tables inside the database
+
+week 7
+- created admin and table templates
+- added get_table_names and get_table_content in database.py
+- 
