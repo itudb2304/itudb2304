@@ -276,50 +276,6 @@ def init():
     cursor.execute(query)
     db.commit()
 
-    query = ''' 
-        CREATE TABLE IF NOT EXISTS media_items(    
-        mediaid INTEGER,
-        mediatype VARCHAR(10),
-        title VARCHAR(50),
-        description VARCHAR(500),
-        duration INTEGER,
-        language VARCHAR(10),
-        thumbnailurl VARCHAR(256),
-        playurl VARCHAR(256),
-        downloadurl VARCHAR(256),
-        keywords VARCHAR(256),
-        tags VARCHAR(256),
-        imageurl VARCHAR(256),
-        presentationdate VARCHAR(30),
-        releasedate VARCHAR(30),
-        lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid)
-    );
-    '''
-
-    cursor.execute(query)
-    db.commit()
-    
-    query = f'''
-        LOAD DATA LOCAL INFILE '{path}media_items.csv'
-        INTO TABLE media_items
-        FIELDS TERMINATED BY ','
-        IGNORE 1 ROWS;
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = ''' 
-        CREATE TABLE IF NOT EXISTS media_relationships(    
-        mediaid INTEGER,
-        relatedid INTEGER,
-        relatedentity VARCHAR(50),
-        FOREIGN KEY (mediaid) REFERENCES media_items(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
-    );
-    '''
-    cursor.execute(query)
-    db.commit()
-
     query = f'''
         LOAD DATA LOCAL INFILE '{path}media_relationships.csv'
         INTO TABLE media_relationships
