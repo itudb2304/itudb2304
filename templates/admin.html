@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Page</title>
+</head>
+<body>
+    <h1>Table Names</h1>
+    <ul>
+        {% for table_name in table_names %}
+            <li><a href="/admin/{{ table_name }}">{{ table_name }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
