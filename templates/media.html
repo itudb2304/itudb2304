@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Art Gallery</title>
+    <style>
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: inline-block; /* or float: left; */
+            margin-right: 10px; /* Add some margin between images */
+        }
+    </style>
+</head>
+<body>
+    <h1>Medias and Images</h1>
+    
+    <div>
+        <h2>Artwork</h2>
+        <ul>
+            {% for image in images %}
+                <li><img src="{{ image[0] }}" alt="Artwork"></li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
