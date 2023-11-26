@@ -54,4 +54,4 @@ def table_page(table_name):
     if table_content is None:
         abort(404)
     else:
-        return render_template("/admin/table.html", table_headers=table_headers, table_content=table_content)
+        return render_template("table.html", table_headers=table_headers, table_content=table_content)

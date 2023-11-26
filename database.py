@@ -22,7 +22,7 @@ class Database:
         with self.db as connection:
             cursor = connection.cursor()
             cursor.execute("SHOW COLUMNS FROM " + table_name + ";")
-            table_headers = [column[0] for column in cursor]
+            table_headers = [column[0] for column in cursor.fetchall()]
             cursor.execute("SELECT * FROM " + table_name + ";")
             while True:
                 rows = cursor.fetchmany(100)
