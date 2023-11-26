@@ -52,3 +52,14 @@ class Database:
             building, description = cursor.fetchone()
         building_ = Location(building=building, location_key=location_key, description=description )
         return building
+    
+    def get_all_constituents(self):
+        constituents = []
+        self.db.reconnect()
+        with self.db as connection:
+            with connection.cursor() as cursor:
+                query = "SELECT preferreddisplayname, forwarddisplayname FROM constituents LIMIT 500;"
+                cursor.execute(query)
+                constituents = cursor.fetchall()
+        return constituents
+    

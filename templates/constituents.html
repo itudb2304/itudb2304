@@ -1,0 +1,8 @@
+{% extends 'header.html' %}
+{% block content %}
+<ol> 
+    {% for  constituent in constituents %} 
+        <li>{{ constituent[1] }} </li>
+    {% endfor %}
+</ol>
+{% endblock %}

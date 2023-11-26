@@ -22,8 +22,8 @@ def create_app():
     app.add_url_rule("/locations/location", view_func=views.location_page)
     app.add_url_rule("/admin", view_func=views.admin_page)
     app.add_url_rule("/admin/<string:table_name>", view_func=views.table_page)
-
     app.add_url_rule("/media", view_func=views.media_page)
+    app.add_url_rule("/constituents", view_func=views.constituents_page)
 
     db = Database(password=maskPassword.maskPsw())
     app.config["db"] = db

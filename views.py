@@ -47,6 +47,14 @@ def admin_page():
         abort(404)
     else:
         return render_template("admin.html", table_names=table_names)
+    
+def constituents_page():
+    db = current_app.config["db"]
+    constituents = db.get_all_constituents()
+    if constituents is None:
+        abort(404)
+    else:
+        return render_template("constituents.html", constituents=constituents)
 
 def table_page(table_name):
     db = current_app.config["db"]
