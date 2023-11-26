@@ -1,6 +1,7 @@
 from flask import Flask, abort, render_template, current_app, request
 import mysql.connector
 import utils.maskPassword as maskPassword
+import urllib.parse
 
 db = mysql.connector.connect(
     host="localhost",
@@ -9,13 +10,14 @@ db = mysql.connector.connect(
     database="national_art"  
 )
 
-def index():
+def media_page():
     cur = db.cursor()
-    cur.execute("SELECT iiifthumburl FROM published_images")
+    cur.execute("SELECT iiifthumburl FROM published_images LIMIT 500")
     data = cur.fetchall()
     cur.close()
 
-    return render_template('index.html', images=data)
+    return render_template('media.html', images=data)
+
 
 def home_page():
     return render_template("home.html")
