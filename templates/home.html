@@ -1,5 +1,6 @@
-{% extends "navbar.html" %}
+{% extends "header.html" %}
 {% block title %}Home Page{% endblock %}
-{% block main_content %}
+{% block content %}
+    {% include 'navbar.html' %}
     <h1>Welcome to MuseMe</h1>
 {% endblock %}
