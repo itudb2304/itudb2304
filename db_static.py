@@ -322,6 +322,16 @@ def init():
     cursor.execute(query)
     db.commit()
 
+    query = f'''
+        UPDATE published_images
+        SET iiifthumburl = TRIM('"' FROM iiifthumburl);
+
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    
+
     query = ''' 
         CREATE TABLE IF NOT EXISTS object_media(    
         mediaid INTEGER,
