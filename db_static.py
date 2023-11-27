@@ -314,6 +314,14 @@ def init():
     cursor.execute(query)
     db.commit()
 
+    query = f'''
+        UPDATE published_images
+        SET iiifthumburl = CONCAT(iiifthumburl, ',200/0/default.jpg')
+
+    '''
+    cursor.execute(query)
+    db.commit()
+
     query = ''' 
         CREATE TABLE IF NOT EXISTS object_media(    
         mediaid INTEGER,
