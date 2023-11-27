@@ -2,17 +2,9 @@ from flask import Flask
 import mysql.connector
 import utils.maskPassword as maskPassword
 from utils.path import path
-from database import Database
+from repository.database import Database
 import views
-
-# Your database configuration
-# Create a MySQL connection
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",  # root in default
-    password= maskPassword.maskPsw(), # your mySQL password written in maskPassword.py file!
-    database="national_art"  #the database created in mySQL and it is in use (mySQL is UP!)
-)
+from controllers.constituents_bp import constituents_bp
 
 def create_app():
     app = Flask(__name__ )
@@ -23,10 +15,19 @@ def create_app():
     app.add_url_rule("/admin", view_func=views.admin_page)
     app.add_url_rule("/admin/<string:table_name>", view_func=views.table_page)
     app.add_url_rule("/media", view_func=views.media_page)
-    app.add_url_rule("/constituents", view_func=views.constituents_page)
 
     db = Database(password=maskPassword.maskPsw())
     app.config["db"] = db
+
+    connection = mysql.connector.connect(
+        host="localhost",
+        user="root",  # root in default
+        password= maskPassword.maskPsw(), # your mySQL password written in maskPassword.py file!
+        database="national_art"  #the database created in mySQL and it is in use (mySQL is UP!)
+    )
+
+    app.register_blueprint(constituents_bp(connection=connection))
+
     return app
 
 
