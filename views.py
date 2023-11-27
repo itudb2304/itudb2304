@@ -12,12 +12,19 @@ db = mysql.connector.connect(
 
 def media_page():
     cur = db.cursor()
-    cur.execute("SELECT iiifthumburl FROM published_images LIMIT 500")
+    cur.execute("SELECT thumbnailurl FROM object_media LIMIT 500")
     data = cur.fetchall()
     cur.close()
 
     return render_template('media.html', images=data)
 
+def artwork_page():
+    cur = db.cursor()
+    cur.execute("SELECT iiifthumburl FROM published_images LIMIT 500")
+    data = cur.fetchall()
+    cur.close()
+
+    return render_template('artwork.html', images=data)
 
 def home_page():
     return render_template("home.html")

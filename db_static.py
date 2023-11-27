@@ -331,6 +331,37 @@ def init():
     db.commit()
 
     
+    query = ''' 
+        CREATE TABLE IF NOT EXISTS media_items(    
+        mediaid INTEGER,
+        mediatype VARCHAR(10),
+        title VARCHAR(50),
+        description VARCHAR(500),
+        duration VARCHAR(100),
+        language VARCHAR(10),
+        thumbnailurl VARCHAR(256),
+        playurl VARCHAR(256),
+        downloadurl VARCHAR(256),
+        keywords VARCHAR(256),
+        tags VARCHAR(256),
+        imageurl VARCHAR(256),
+        presentationdate VARCHAR(30),
+        releasedate VARCHAR(30),
+        lastmodified VARCHAR(30),
+        PRIMARY KEY (mediaid)
+    );
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}media_items.csv'
+        INTO TABLE object_media
+        FIELDS TERMINATED BY '\t'
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
 
     query = ''' 
         CREATE TABLE IF NOT EXISTS object_media(    
@@ -363,6 +394,8 @@ def init():
     '''
     cursor.execute(query)
     db.commit()
+
+
 
     query = ''' 
         CREATE TABLE IF NOT EXISTS constituents_media(    
