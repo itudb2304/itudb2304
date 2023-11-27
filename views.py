@@ -40,18 +40,3 @@ def locations_page():
     else:
         return render_template("locations.html", locations=sorted(locations))
 
-def admin_page():
-    db = current_app.config["db"]
-    table_names = db.get_table_names()
-    if table_names is None:
-        abort(404)
-    else:
-        return render_template("admin.html", table_names=table_names)
-    
-def table_page(table_name):
-    db = current_app.config["db"]
-    table_headers, table_content = db.get_table_content(table_name)
-    if table_content is None:
-        abort(404)
-    else:
-        return render_template("table.html", table_headers=table_headers, table_content=table_content)

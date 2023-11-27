@@ -5,6 +5,7 @@ from utils.path import path
 from repository.database import Database
 import views
 from controllers.constituents_bp import constituents_bp
+from controllers.admin_bp import admin_bp
 
 def create_app():
     app = Flask(__name__ )
@@ -12,8 +13,6 @@ def create_app():
     app.add_url_rule("/", view_func=views.home_page)
     app.add_url_rule("/locations", view_func=views.locations_page)
     app.add_url_rule("/locations/location", view_func=views.location_page)
-    app.add_url_rule("/admin", view_func=views.admin_page)
-    app.add_url_rule("/admin/<string:table_name>", view_func=views.table_page)
     app.add_url_rule("/media", view_func=views.media_page)
 
     db = Database(password=maskPassword.maskPsw())
@@ -27,6 +26,7 @@ def create_app():
     )
 
     app.register_blueprint(constituents_bp(connection=connection))
+    app.register_blueprint(admin_bp(connection=connection))
 
     return app
 
