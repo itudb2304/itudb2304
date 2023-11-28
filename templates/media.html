@@ -5,41 +5,8 @@
 {% block title %} Medias {% endblock %}
 
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>National Art Gallery</title>
-    <style>
-        ul {
-            list-style: none;
-            padding: 0;
-        }
 
-        li {
-            display: inline-block;
-            margin: 10px 0 10px 10px; 
-        }
 
-        img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-        }
-    </style>
-</head>
-
-<body>
-    
-    <div>
-        <h2>Artworks</h2>
-        <ul>
-            {% for image in images %}
-                <li><img src="{{ image[0] }}" alt="Artwork"></li>
-            {% endfor %}
-        </ul>
-    </div>
-</body>
 {% endblock %}
 
 </html>
