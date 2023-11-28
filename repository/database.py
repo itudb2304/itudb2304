@@ -6,32 +6,6 @@ class Database:
         self.db = mysql.connector.connect(host=host, user=user, password= password, database=database)
         self.locations = {}
 
-    def get_table_names(self):
-        tables = []
-        self.db.reconnect()
-        with self.db as connection:
-            cursor = connection.cursor()
-            cursor.execute("SHOW TABLES;")
-            tables = [table[0] for table in cursor.fetchall()]
-        return tables
-    
-    def get_table_content(self, table_name):
-        table_headers = []
-        table_content = []
-        self.db.reconnect()
-        with self.db as connection:
-            cursor = connection.cursor()
-            cursor.execute("SHOW COLUMNS FROM " + table_name + ";")
-            table_headers = [column[0] for column in cursor.fetchall()]
-            cursor.execute("SELECT * FROM " + table_name + ";")
-            while True:
-                rows = cursor.fetchmany(100)
-                if not rows:
-                    break
-                table_content.extend(rows)
-        return table_headers, table_content
-
-
     def get_all_buildings(self):
         buildings = []
         self.db.reconnect()
