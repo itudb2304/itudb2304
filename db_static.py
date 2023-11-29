@@ -276,6 +276,195 @@ def init():
     cursor.execute(query)
     db.commit()
 
+    query = '''
+        UPDATE objects
+        SET accessioned = NULLIF(accessioned, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET accessionnum = NULLIF(accessionnum, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET locationid = NULLIF(locationid, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET title = NULLIF(title, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET visualbrowsertimespan = NULLIF(visualbrowsertimespan, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET displaydate = NULLIF(displaydate, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET medium = NULLIF(medium, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+    
+    query = '''
+        UPDATE objects
+        SET dimensions = NULLIF(dimensions, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET inscription = NULLIF(inscription, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET markings = NULLIF(markings, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET displaydate = NULLIF(displaydate, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET attributioninverted = NULLIF(attributioninverted, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET attribution = NULLIF(attribution, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+    
+    query = '''
+        UPDATE objects
+        SET provenancetext = NULLIF(provenancetext, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET creditline = NULLIF(creditline, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET classification = NULLIF(classification, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+    
+    query = '''
+        UPDATE objects
+        SET subclassification = NULLIF(subclassification, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET visualbrowserclassification = NULLIF(visualbrowserclassification, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET departmentabbr = NULLIF(departmentabbr, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET portfolio = NULLIF(portfolio, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET series = NULLIF(series, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET volume = NULLIF(volume, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET watermarks = NULLIF(watermarks, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET accessioned = NULLIF(accessioned, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET lastDetectedModification = NULLIF(lastDetectedModification, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET wikidataid = NULLIF(wikidataid, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET customPrintURL = NULLIF(customPrintURL, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
     query = ''' 
         CREATE TABLE IF NOT EXISTS media_relationships(    
         mediaid INTEGER,
