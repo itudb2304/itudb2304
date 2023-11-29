@@ -1,17 +1,14 @@
 {% extends "header.html" %}
 {% block title %} Locations {% endblock %}
-{% block main_content %}
+{% block content %}
     <h1 class=" title"> Locations </h1>
     {% if locations %}
     <form action="" method="post">
         <table>
-            {% for location_key, location in locations%}
+            {% for location in locations%}
             <tr>
                 <td>
-                <label class = "checkbox">
-                    <input type="checkbox" name="location_keys" value="{{ location_key }}">
-                </label>
-                <a href="{{ url_for('location_page', location_key=location_key) }}">
+                <li><a href="{{ url_for('locations.location_page', location=location[1]) }}">{{location[0]}}</a></li>            
                 </a>
                 </td>
             </tr>
