@@ -124,10 +124,10 @@ def init():
     query = '''
         CREATE TABLE IF NOT EXISTS objects (
         objectid                    INT,
-        accessioned                 INT,
-        accessionnum                VARCHAR(32),
-        locationid                  INT,
-        title                       TEXT,
+        accessioned                 INT NOT NULL,
+        accessionnum                VARCHAR(32) NOT NULL,
+        locationid                  INT NOT NULL,
+        title                       TEXT NOT NULL,
         displayDate                 VARCHAR(256),
         beginYear                   INT,
         endYear                     INT,
@@ -140,17 +140,17 @@ def init():
         attribution                 VARCHAR(1024),
         provenanceText              TEXT,
         creditLine                  TEXT,
-        classification              VARCHAR(64),
+        classification              VARCHAR(64) NOT NULL,
         subClassification           VARCHAR(64),
         visualBrowserClassification VARCHAR(32),
         parentid                    INT,
-        isVirtual                   INT,
-        departmentabbr              VARCHAR(32),
+        isVirtual                   INT NOT NULL,
+        departmentabbr              VARCHAR(32) NOT NULL,
         portfolio                   TEXT,
         series                      VARCHAR(850),
         volume                      VARCHAR(850),
         watermarks                  VARCHAR(512),
-        lastDetectedModification    TIME,
+        lastDetectedModification    TIME NOT NULL,
         wikidataid                  VARCHAR(64),
         customPrintURL              TEXT,
         PRIMARY KEY(objectid),
@@ -278,28 +278,7 @@ def init():
 
     query = '''
         UPDATE objects
-        SET accessioned = NULLIF(accessioned, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
         SET accessionnum = NULLIF(accessionnum, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET locationid = NULLIF(locationid, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET title = NULLIF(title, '');
     '''
     cursor.execute(query)
     db.commit()
@@ -383,28 +362,7 @@ def init():
 
     query = '''
         UPDATE objects
-        SET classification = NULLIF(classification, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-    
-    query = '''
-        UPDATE objects
-        SET subclassification = NULLIF(subclassification, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
         SET visualbrowserclassification = NULLIF(visualbrowserclassification, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET departmentabbr = NULLIF(departmentabbr, '');
     '''
     cursor.execute(query)
     db.commit()
@@ -439,20 +397,6 @@ def init():
 
     query = '''
         UPDATE objects
-        SET accessioned = NULLIF(accessioned, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET lastDetectedModification = NULLIF(lastDetectedModification, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
         SET wikidataid = NULLIF(wikidataid, '');
     '''
     cursor.execute(query)
@@ -461,6 +405,27 @@ def init():
     query = '''
         UPDATE objects
         SET customPrintURL = NULLIF(customPrintURL, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET beginYear = NULLIF(beginYear, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET endYear = NULLIF(endYear, '');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET parentid = NULLIF(parentid, '');
     '''
     cursor.execute(query)
     db.commit()
