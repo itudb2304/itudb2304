@@ -6,3 +6,15 @@ week 6
 - created locations and prefered locations tables.
 - created db_static to insert the database into the Flask project. 
 - read the CSV file into the database.
+
+week 7
+- created location and locations templates
+- added get_all_buildings and get_building functions to database.py
+- added views function for locations
+
+week 8 
+- update the db_static function adn fix the data error for the last attribute in the column
+- to implement MVC for locations:
+    - created locations_bp.py in controllers
+    - created locations_repository.py
+- updated locations and location html function for displaying all building and floors
