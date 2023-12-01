@@ -15,13 +15,13 @@ cursor = db.cursor()
 def init():
     query = ''' 
         CREATE TABLE IF NOT EXISTS preferred_locations(    
-        locationkey VARCHAR(30),
-        locationtype VARCHAR(15),
-        description VARCHAR(100),
-        ispublicvenue INTEGER,
-        mapshapetype VARCHAR(10),
-        mapshapecoords VARCHAR(100),
-        partof VARCHAR(100),
+        locationkey VARCHAR(32),
+        locationtype VARCHAR(32),
+        description VARCHAR(512),
+        ispublicvenue INTEGER NOT NULL ,
+        mapshapetype VARCHAR(32),
+        mapshapecoords VARCHAR(1024),
+        partof VARCHAR(32),
         PRIMARY KEY (locationkey)
     );
     '''
@@ -32,6 +32,8 @@ def init():
         LOAD DATA LOCAL INFILE '{path}preferred_locations.csv'
         INTO TABLE preferred_locations
         FIELDS TERMINATED BY ','
+        ENCLOSED BY '"'
+        LINES TERMINATED BY '\r\n'
         IGNORE 1 ROWS;
     '''
     cursor.execute(query)
@@ -50,9 +52,9 @@ def init():
         site VARCHAR(30),
         room VARCHAR(10),
         publicaccess INTEGER,
-        description VARCHAR(50),
+        description VARCHAR(512),
         unitposition VARCHAR(20),
-        mapimageurl VARCHAR(100),
+        mapimageurl VARCHAR(1024),
         PRIMARY KEY (locationid),
         FOREIGN KEY (room) REFERENCES preferred_locations(locationkey) ON DELETE CASCADE ON UPDATE CASCADE
     );
@@ -64,6 +66,8 @@ def init():
         LOAD DATA LOCAL INFILE '{path}locations.csv'
         INTO TABLE locations
         FIELDS TERMINATED BY ','
+        ENCLOSED BY '"'
+        LINES TERMINATED BY '\n'
         IGNORE 1 ROWS;
     '''
     cursor.execute(query)
@@ -75,6 +79,15 @@ def init():
     '''
     cursor.execute(query)
     db.commit()
+
+    query = ''' 
+        UPDATE locations
+        SET site = "Sculpture Garden"
+        WHERE site = "Sculpture Garden (WSG)";
+    '''
+    cursor.execute(query)
+    db.commit()
+    
 
     query = '''
         CREATE TABLE IF NOT EXISTS constituents(
@@ -429,7 +442,7 @@ def init():
     '''
     cursor.execute(query)
     db.commit()
-
+    
     query = ''' 
         CREATE TABLE IF NOT EXISTS media_relationships(    
         mediaid INTEGER,
@@ -454,7 +467,7 @@ def init():
         CREATE TABLE IF NOT EXISTS published_images(    
         uuid VARCHAR(50),
         iiifurl VARCHAR(100),
-        iiifthumburl VARCHAR(100),
+        iiifthumburl VARCHAR(2024),
         viewtype VARCHAR(20),
         sequence INTEGER,
         width INTEGER,
@@ -521,7 +534,7 @@ def init():
 
     query = f'''
         LOAD DATA LOCAL INFILE '{path}media_items.csv'
-        INTO TABLE object_media
+        INTO TABLE media_items
         FIELDS TERMINATED BY '\t'
         IGNORE 1 ROWS;
     '''
@@ -550,6 +563,7 @@ def init():
     '''
     cursor.execute(query)
     db.commit()
+
 
     query = f'''
         LOAD DATA LOCAL INFILE '{path}object_media.csv'
