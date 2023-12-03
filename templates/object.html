@@ -1,0 +1,58 @@
+{% extends "header.html" %}
+{% block title %}{{ object.title }}{% endblock %}
+{% block content %}
+<title>{{ object.title }} Detailed</title>
+{% if object %}
+
+<body>
+
+  <h2>Artwork Details</h2>
+
+  <div class="endisdiv">
+    <div class="photoOfArtwork">
+      <img
+        src="https://www.yalovahayat.com/static/do/donence-emir-kimdir-atakan-hosgoren-kim-donence-emir-gercek-adi-sevgilisi-var-mi-nereli-kilosu-boyu-kac-1690052327-310-x750.webp"
+        alt="Artwork Photo">
+    </div>
+    <div class="objectDescription">
+      <h3>Artist Name</h3>
+      <p class="subtitle">{{ object.title }}</p>
+      <h3>View Status</h3>
+      <p>{{ object.isVirtual }}</p>
+      <hr>
+      <h3>Medium</h3>
+      <p>{{ object.medium }}</p>
+      <h3>Dimensions</h3>
+      <p>{{ object.dimensions }}</p>
+      <h3>Credit Line</h3>
+      <p>{{ object.creditLine }}</p>
+      <h3>Accession Number</h3>
+      <p>{{ object.accessionnum }}</p>
+      <h3>Artists / Makers</h3>
+      <p>{{ object.attribution }}</p>
+      <h3>Image Use</h3>
+      <p>{{ object.customPrintURL }}</p>
+      <h3>Status for Related Objects</h3>
+      <p>{{ object.visualBrowserClassification }}</p>
+
+      <h3>Location: </h3>
+      <h4>Site<h4>
+          <p> <a href="{{ url_for('locations.location_page', location=objectLocation.site) }}"> {{ objectLocation.site
+              }}</a></p>
+          <h4>Room</h4>
+          <p>{{objectLocation.room}} </p>
+          <h4>desc</h4>
+          <p>{{objectLocation.decription}} </p>
+    </div>
+  </div>
+  <div class="div3">
+    <h2>Inscription</h2>
+    <p>{{ object.inscription }}</p>
+
+    <h2>Provenance</h2>
+    <p>{{ object.provenanceText }}</p>
+  </div>
+
+
+  {% endif %}
+  {% endblock %}
