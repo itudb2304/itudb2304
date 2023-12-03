@@ -1,41 +1,41 @@
-body{
+body {
 
-    background-color: #eee; 
-  }
-  
-.card{
+  background-color: #eee;
+}
+
+.card {
 
   background-color: #fff;
   padding: 15px;
-  border:none;
+  border: none;
 }
 
-.input-box{
+.input-box {
   position: relative;
 }
 
 .input-box i {
   position: absolute;
   right: 13px;
-  top:15px;
-  color:#ced4da;
+  top: 15px;
+  color: #ced4da;
 
 }
 
-.form-control{
+.form-control {
 
   height: 50px;
-  background-color:#eeeeee69;
+  background-color: #eeeeee69;
 }
 
-.form-control:focus{
+.form-control:focus {
   background-color: #eeeeee69;
   box-shadow: none;
   border-color: #eee;
 }
 
 
-.list{
+.list {
 
   padding-top: 20px;
   padding-bottom: 10px;
@@ -44,19 +44,19 @@ body{
 
 }
 
-.border-bottom{
+.border-bottom {
 
   border-bottom: 2px solid #eee;
 }
 
-.list i{
+.list i {
   font-size: 19px;
   color: red;
 }
 
-.list small{
+.list small {
 
-  color:#dedddd;
+  color: #dedddd;
 }
 
 
@@ -64,19 +64,35 @@ body{
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  }
-  
-  .table th,
-  .table td {
+}
+
+.table th,
+.table td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
-  }
-  
-  .table th {
+}
+
+.table th {
   background-color: rgb(236, 239, 245);
-  }
-  
-  tr:nth-child(even) {
+}
+
+tr:nth-child(even) {
   background-color: rgb(188, 193, 202);
-  }
+}
+
+.endisdiv {
+  display: flex;
+}
+
+.objectDescription {
+  margin: 2em;
+}
+
+.photoOfArtwork {
+  margin: 2em;
+}
+
+.main_page_section {
+  margin: 2em;
+}
