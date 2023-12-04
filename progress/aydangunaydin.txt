@@ -7,3 +7,8 @@ week 6
 week 7
 -created views.py file to show the jgp files in the database on the website
 - created index.html file to show pictures of artworks
+week 8
+-added details and names and sizes of the pictures
+-worked on artwork.html file, user interactions and display
+week 9
+-dealing with the comma separated csv file issues
