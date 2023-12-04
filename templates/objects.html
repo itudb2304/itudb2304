@@ -1,0 +1,79 @@
+{% extends "header.html" %}
+{% block title %} Locations {% endblock %}
+{% block content %}
+<h1 class="title"> OBJECTS </h1>
+{% if objects %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Object ID</th>
+            <th>Accessioned</th>
+            <th>Accession Number</th>
+            <th>Location ID</th>
+            <th>Title</th>
+            <th>Display Date</th>
+            <th>Begin Year</th>
+            <th>End Year</th>
+            <th>Visual Browser Time Span</th>
+            <th>Medium</th>
+            <th>Dimensions</th>
+            <th>Inscription</th>
+            <th>Markings</th>
+            <th>Attribution Inverted</th>
+            <th>Attribution</th>
+            <th>Provenance Text</th>
+            <th>Credit Line</th>
+            <th>Classification</th>
+            <th>Sub-Classification</th>
+            <th>Visual Browser Classification</th>
+            <th>Parent ID</th>
+            <th>Is Virtual</th>
+            <th>Department Abbreviation</th>
+            <th>Portfolio</th>
+            <th>Series</th>
+            <th>Volume</th>
+            <th>Watermarks</th>
+            <th>Last Detected Modification</th>
+            <th>Wikidata ID</th>
+            <th>Custom Print URL</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for obj in objects %}
+        <tr>
+            <td>{{ obj.objectid }}</td>
+            <td>{{ obj.accessioned }}</td>
+            <td>{{ obj.accessionnum }}</td>
+            <td>{{ obj.locationid }}</td>
+            <td>{{ obj.title }}</td>
+            <td>{{ obj.displayDate }}</td>
+            <td>{{ obj.beginYear }}</td>
+            <td>{{ obj.endYear }}</td>
+            <td>{{ obj.visualBrowserTimeSpan }}</td>
+            <td>{{ obj.medium }}</td>
+            <td>{{ obj.dimensions }}</td>
+            <td>{{ obj.inscription }}</td>
+            <td>{{ obj.markings }}</td>
+            <td>{{ obj.attributionInverted }}</td>
+            <td>{{ obj.attribution }}</td>
+            <td>{{ obj.provenanceText }}</td>
+            <td>{{ obj.creditLine }}</td>
+            <td>{{ obj.classification }}</td>
+            <td>{{ obj.subClassification }}</td>
+            <td>{{ obj.visualBrowserClassification }}</td>
+            <td>{{ obj.parentid }}</td>
+            <td>{{ obj.isVirtual }}</td>
+            <td>{{ obj.departmentabbr }}</td>
+            <td>{{ obj.portfolio }}</td>
+            <td>{{ obj.series }}</td>
+            <td>{{ obj.volume }}</td>
+            <td>{{ obj.watermarks }}</td>
+            <td>{{ obj.lastDetectedModification }}</td>
+            <td>{{ obj.wikidataid }}</td>
+            <td>{{ obj.customPrintURL }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}
