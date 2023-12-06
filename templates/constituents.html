@@ -2,7 +2,7 @@
 {% block content %}
 <ol> 
     {% for  constituent in constituents %} 
-        <li>{{ constituent[1] }} </li>
+        <li>{{ constituent.preferreddisplayname }} </li>
     {% endfor %}
 </ol>
 {% endblock %}
