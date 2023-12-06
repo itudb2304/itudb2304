@@ -1,19 +1,17 @@
 {% extends "header.html" %}
 {% block title %} Locations {% endblock %}
-{% block content %}
+, location{% block content %}
     <h1 class=" title"> Locations </h1>
     {% if locations %}
-    <form action="" method="post">
-        <table>
+    <form action="" method="post">       
             {% for location in locations%}
-            <tr>
-                <td>
-                <li><a href="{{ url_for('locations.location_page', location=location[1]) }}">{{location[0]}}</a></li>            
-                </a>
-                </td>
-            </tr>
+                {{location[0]}}           
+                <div id = location[1]>
+                    {% for floor in location[2]%}          
+                        <li><a href="{{url_for('locations.floor_page', floor_id=floor[1])}}">{{floor[0]}}</a></li>                                  
+                    {% endfor %}                     
+                </div>
             {% endfor %}
-        </table>
     </form>
     {% endif %}
 {% endblock %}
