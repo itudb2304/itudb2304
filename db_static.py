@@ -535,11 +535,25 @@ def init():
     query = f'''
         LOAD DATA LOCAL INFILE '{path}media_items.csv'
         INTO TABLE media_items
-        FIELDS TERMINATED BY '\t'
+        FIELDS TERMINATED BY ';'
         IGNORE 1 ROWS;
     '''
     cursor.execute(query)
     db.commit()
+
+    query_template = '''
+        UPDATE media_items
+        SET {column_name} = REPLACE({column_name}, 'WILLCHANGE', ',');
+    '''
+    cursor.execute("SHOW COLUMNS FROM media_items")
+    columns = [column[0] for column in cursor.fetchall()]
+
+    for column in columns:
+        query = query_template.format(column_name=column)
+        cursor.execute(query)
+        db.commit()
+
+
 
     query = ''' 
         CREATE TABLE IF NOT EXISTS object_media(    
@@ -559,6 +573,7 @@ def init():
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
         PRIMARY KEY (mediaid)
+
     );
     '''
     cursor.execute(query)

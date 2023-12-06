@@ -2,11 +2,125 @@
 <html lang="en">
 
 {% extends "header.html" %}
-{% block title %} Medias {% endblock %}
+{% block title %} Media {% endblock %}
 
 {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Art Gallery</title>
+    <style>
+        ul {
+            list-style: none;
+            padding: 0;
+        }
 
+        li {
+            display: inline-block;
+            margin: 10px 0 10px 10px;
+            transition: transform 0.3s ease-in-out; /* Add transition for a smooth effect */
+        }
 
+        li:hover {
+            transform: scale(1.2); /* Increase the size on hover */
+        }
+
+        img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            margin: 10% auto;
+            display: block;
+            max-width: 10%; 
+            max-height: 100%;
+        }
+
+        .close {
+            color: #fff;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2em;
+            cursor: pointer;
+        }
+
+        .info-container {
+            color: #fff;
+            text-align: center;
+            margin-top: 0;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div>
+        <h2>Medias and Audios</h2>
+        <ul>
+            {% for i in range(title|length) %}
+                <li>
+                    <img src="{{ image[i] }}" onclick="openModal('{{ image[i] }}', '{{ description[i] }}')"  onerror="this.parentNode.classList.add('hidden');">
+                    <p>{{title[i]}}</p>     
+                    </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" class="modal-content" alt="Full-size Artwork">
+        <div id="infoContainer" class="info-container"></div>
+    </div>
+
+    <script>
+    function openModal(imageSrc, createdText) {
+        var modal = document.getElementById('myModal');
+        var modalImage = document.getElementById('modalImage');
+        var infoContainer = document.getElementById('infoContainer');
+
+        modalImage.src = imageSrc;
+        infoContainer.innerHTML = createdText;
+
+        modal.style.display = 'block';
+
+        modalImage.style.scale= "2"; // Adjust the percentage as needed
+      
+    }
+
+    function closeModal() {
+        var modal = document.getElementById('myModal');
+        var modalImage = document.getElementById('modalImage');
+
+      
+
+        modal.style.display = 'none';
+    }
+
+    </script>
+</body>
 {% endblock %}
 
 </html>

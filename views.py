@@ -12,11 +12,14 @@ db = mysql.connector.connect(
 
 def media_page():
     cur = db.cursor()
-    cur.execute("SELECT thumbnailurl FROM object_media LIMIT 500")
+    cur.execute("SELECT title, thumbnailurl, description FROM media_items")
     data = cur.fetchall()
     cur.close()
+    text = [row[0] for row in data]
+    image = [row[1] for row in data]
+    description = [row[2] for row in data]
 
-    return render_template('media.html', images=data)
+    return render_template('media.html', title=text, image= image, description = description)
 
 def artwork_page():
     cur = db.cursor()
