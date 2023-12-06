@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for
 from repository.constituent_repository import ConstituentRepository
 
 def constituents_bp(cursor):
@@ -15,6 +15,11 @@ def constituents_bp(cursor):
     @constituents.route('/')
     def constituents_page():
         constituents = repository.get_all_constituents()
+
+        if request.method == 'GET':
+            req = request.args.get('q')
+            return redirect( url_for('.constituent_by_name', name=req) )
+
         return render_template('constituents.html', constituents=constituents)
     
     @constituents.route('/<int:id>')
