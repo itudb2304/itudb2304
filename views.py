@@ -12,7 +12,7 @@ db = mysql.connector.connect(
 
 def media_page():
     cur = db.cursor()
-    cur.execute("SELECT title, thumbnailurl, description FROM media_items")
+    cur.execute("SELECT title, thumbnailurl, description FROM constituents_media")
     data = cur.fetchall()
     cur.close()
     text = [row[0] for row in data]
