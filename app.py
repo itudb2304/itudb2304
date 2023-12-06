@@ -28,10 +28,7 @@ def create_app():
     app.register_blueprint(admin_bp(connection=connection))
     app.register_blueprint(locations_bp(connection=connection))
     app.register_blueprint(objects_bp(connection=connection))
-
-    cursor.close()
-    connection.close()
-
+    
     return app
 
 
