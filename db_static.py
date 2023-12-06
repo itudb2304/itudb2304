@@ -492,13 +492,13 @@ def init():
     cursor.execute(query)
     db.commit()
 
-    query = f'''
-        UPDATE published_images
-        SET iiifthumburl = CONCAT(iiifthumburl, ',200/0/default.jpg')
+    # query = f'''
+    #     UPDATE published_images
+    #     SET iiifthumburl = CONCAT(iiifthumburl, ',200/0/default.jpg')
 
-    '''
-    cursor.execute(query)
-    db.commit()
+    # '''
+    # cursor.execute(query)
+    # db.commit()
 
     query = f'''
         UPDATE published_images
@@ -635,6 +635,34 @@ def init():
     query = ''' 
         UPDATE objects_historical_data
         SET invertedText = REPLACE(invertedText, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        CREATE TABLE IF NOT EXISTS objects_constituents (
+            objectID INTEGER NOT NULL,
+            constituentID INTEGER NOT NULL,
+            displayOrder INTEGER NOT NULL,
+            roleType VARCHAR(64) NOT NULL,
+            role VARCHAR(64) NOT NULL,
+            prefix VARCHAR(64),
+            suffix VARCHAR(64),
+            displayDate VARCHAR(128),
+            beginYear INTEGER,
+            endYear INTEGER,
+            country VARCHAR(64),
+            zipCode VARCHAR(16)
+        );
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}objects_constituents.csv'
+        INTO TABLE objects_constituents
+        FIELDS TERMINATED BY ','
+        IGNORE 1 ROWS;
     '''
     cursor.execute(query)
     db.commit()
