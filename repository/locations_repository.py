@@ -1,4 +1,5 @@
 class Location:
+<<<<<<< HEAD
     def __init__(self, name, type, isPublic = None, partof = None, key = None ) -> None:
         self.name = name
         self.key = key
@@ -7,6 +8,11 @@ class Location:
         self.building = None
         self.floor = None
         self.partof = partof
+=======
+    def __init__(self, name, objects) -> None:
+        self.name = name
+        self.objects = objects
+>>>>>>> 83da0908d6825cdbb0fe57603761abe5324fb136
 
 class LocationsRepository:
     def __init__(self, connection) -> None:
@@ -17,6 +23,11 @@ class LocationsRepository:
         with self.connection.cursor() as cursor:
             query = '''
                 SELECT DISTINCT p.description, p.locationkey FROM preferred_locations AS p
+<<<<<<< HEAD
+=======
+                JOIN locations AS l
+                ON l.site = p.description 
+>>>>>>> 83da0908d6825cdbb0fe57603761abe5324fb136
                 WHERE p.locationtype = "building";'''
             cursor.execute(query)
             for building, id in cursor:
@@ -49,7 +60,11 @@ class LocationsRepository:
                 rooms.append((description, room_id))
         return rooms
     
+<<<<<<< HEAD
     def get_objects(self, room_id):
+=======
+    def get_room(self, room_id):
+>>>>>>> 83da0908d6825cdbb0fe57603761abe5324fb136
         objects = []
         with self.connection.cursor() as cursor:
             query = '''
@@ -65,7 +80,12 @@ class LocationsRepository:
             cursor.execute(query, [room_id])
             for object_id in cursor:
                 objects.append((object_id))
+<<<<<<< HEAD
         return objects
+=======
+        room = Location(room_name, objects)
+        return room
+>>>>>>> 83da0908d6825cdbb0fe57603761abe5324fb136
     
     def get_locationkey(self, location_id):
         locationkey = ""
@@ -76,6 +96,7 @@ class LocationsRepository:
             cursor.execute(query, [location_id])
             for key in cursor:
                 locationkey = key
+<<<<<<< HEAD
         return locationkey
     
     def is_location_key_unique(self, location_key):
@@ -129,3 +150,6 @@ class LocationsRepository:
             cursor.execute(query, [locationkey])
             name, type, isPublic, partof = cursor.fetchone()
         return Location(key =locationkey, name= name, type= type, isPublic=isPublic, partof=partof)
+=======
+        return locationkey
+>>>>>>> 83da0908d6825cdbb0fe57603761abe5324fb136

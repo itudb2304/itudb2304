@@ -53,7 +53,6 @@ def locations_bp(connection):
             repository.update_location(building)
             return redirect(url_for("locations.locations_page"))
 
-
     @locations.route('/<floor_id>')
     def floor_page(floor_id):
         rooms = repository.get_rooms(floor_id)
