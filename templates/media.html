@@ -2,7 +2,7 @@
 <html lang="en">
 
 {% extends "header.html" %}
-{% block title %} Media {% endblock %}
+{% block title %} media {% endblock %}
 
 {% block content %}
 <head>
@@ -19,11 +19,11 @@
         li {
             display: inline-block;
             margin: 10px 0 10px 10px;
-            transition: transform 0.3s ease-in-out; /* Add transition for a smooth effect */
+            transition: transform 0.3s ease-in-out; 
         }
 
         li:hover {
-            transform: scale(1.2); /* Increase the size on hover */
+            transform: scale(1.2); 
         }
 
         img {
@@ -67,7 +67,6 @@
             text-align: center;
             margin-top: 0;
         }
-        
         .hidden {
             display: none;
         }
@@ -77,36 +76,38 @@
 <body>
     
     <div>
-        <h2>Medias and Audios</h2>
+        <h2>media</h2>
         <ul>
-            {% for i in range(title|length) %}
+            {% for i in range(image|length) %}
                 <li>
-                    <img src="{{ image[i] }}" onclick="openModal('{{ image[i] }}', '{{ description[i] }}')"  onerror="this.parentNode.classList.add('hidden');">
-                    <p>{{title[i]}}</p>     
-                    </li>
+                    <img src="{{ image[i] }}" alt="Artwork" onclick="openModal('{{ image[i] }}', '{{ title[i] }}', '{{soundcloudLink[i]}}')" onerror="this.parentNode.classList.add('hidden'); ">
+                </li>
             {% endfor %}
         </ul>
     </div>
 
-    <!-- Modal -->
     <div id="myModal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
         <img id="modalImage" class="modal-content" alt="Full-size Artwork">
         <div id="infoContainer" class="info-container"></div>
     </div>
-
+    <script src="https://w.soundcloud.com/player/api.js"></script>
     <script>
-    function openModal(imageSrc, createdText) {
+    var soundcloudWidget;
+
+    function openModal(imageSrc, createdText, audio) {
         var modal = document.getElementById('myModal');
         var modalImage = document.getElementById('modalImage');
         var infoContainer = document.getElementById('infoContainer');
+        soundcloudWidget = SC.Widget(modal);
+        soundcloudWidget.load(audio, { auto_play: false });
 
         modalImage.src = imageSrc;
         infoContainer.innerHTML = createdText;
 
         modal.style.display = 'block';
 
-        modalImage.style.scale= "2"; // Adjust the percentage as needed
+        modalImage.style.scale= "2"; 
       
     }
 
@@ -115,6 +116,7 @@
         var modalImage = document.getElementById('modalImage');
 
       
+        soundcloudWidget && soundcloudWidget.pause();
 
         modal.style.display = 'none';
     }

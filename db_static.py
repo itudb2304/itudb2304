@@ -443,26 +443,7 @@ def init():
     cursor.execute(query)
     db.commit()
     
-    query = ''' 
-        CREATE TABLE IF NOT EXISTS media_relationships(    
-        mediaid INTEGER,
-        relatedid INTEGER,
-        relatedentity VARCHAR(50),
-        PRIMARY KEY (mediaid)
-    );
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = f'''
-        LOAD DATA LOCAL INFILE '{path}media_relationships.csv'
-        INTO TABLE media_relationships
-        FIELDS TERMINATED BY ','
-        IGNORE 1 ROWS;
-    '''
-    cursor.execute(query)
-    db.commit()
-
+   
     query = ''' 
         CREATE TABLE IF NOT EXISTS published_images(    
         uuid VARCHAR(50),
