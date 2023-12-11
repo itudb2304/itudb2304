@@ -1,17 +1,34 @@
 {% extends "header.html" %}
 {% block title %} Locations {% endblock %}
-, location{% block content %}
+{% block content %}
     <h1 class=" title"> Locations </h1>
     {% if locations %}
     <form action="" method="post">       
             {% for location in locations%}
                 {{location[0]}}           
                 <div id = location[1]>
-                    {% for floor in location[2]%}          
-                        <li><a href="{{url_for('locations.floor_page', floor_id=floor[1])}}">{{floor[0]}}</a></li>                                  
+                    <label class="checkbox">
+                        <input type="checkbox" name="location_keys" value="{{ location[1] }}">
+                    </label>    
+                    <div class="field is-grouped">
+                        <div class="control">
+                          <a class="button is-primary is-outlined is-small"
+                             href="{{url_for('locations.building_edit_page', building_id=location[1])}}">Edit</a>
+                        </div>
+                    </div>   
+                    {% for floor in location[2]%}  
+                        <li><a href="{{url_for('locations.floor_page', floor_id=floor[1])}}">{{floor[0]}}</a></li>                               
                     {% endfor %}                     
                 </div>
             {% endfor %}
+        
+        <div class="field is-grouped">
+            <div class="control">
+            <button class="button is-danger is-small">Delete</button>
+            </div>
+        </div>
     </form>
     {% endif %}
+    <button><a href="{{ url_for('locations.building_add_page')}}">Add Building</a></button>
+
 {% endblock %}
