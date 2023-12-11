@@ -18,3 +18,11 @@ week 8
     - created locations_bp.py in controllers
     - created locations_repository.py
 - updated locations and location html function for displaying all building and floors
+
+week 9
+- The locations files updated for displaying building, floors and rooms
+    - get_floors, get_rooms_ get_room functions are added to locations_repository
+    - get_location_key function is added for object table 
+
+week 10
+- CRUD operations are implemented for building
