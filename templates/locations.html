@@ -7,7 +7,6 @@
             {% for location in locations%}
                 {{location[0]}}           
                 <div id = location[1]>
-<<<<<<< HEAD
                     <label class="checkbox">
                         <input type="checkbox" name="location_keys" value="{{ location[1] }}">
                     </label>    
@@ -28,13 +27,6 @@
             <button class="button is-danger is-small">Delete</button>
             </div>
         </div>
-=======
-                    {% for floor in location[2]%}          
-                        <li><a href="{{url_for('locations.floor_page', floor_id=floor[1])}}">{{floor[0]}}</a></li>                                  
-                    {% endfor %}                     
-                </div>
-            {% endfor %}
->>>>>>> 83da0908d6825cdbb0fe57603761abe5324fb136
     </form>
     {% endif %}
     <button><a href="{{ url_for('locations.building_add_page')}}">Add Building</a></button>
