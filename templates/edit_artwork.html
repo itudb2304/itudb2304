@@ -1,0 +1,54 @@
+{% extends "header.html" %}
+{% block title %} Artwork {% endblock %}
+{% block content %}
+    <h1 class=" title"> Artwork Add/Edit/Delete Page </h1>
+    <form action="" method="post" name="movie_edit">
+
+        <div class="field">
+            <label for="id" class="label">ID</label>
+            <div class = "control"> 
+                <input type="text" name="id" class="input" required="required" value="{{ values['id'] }}"/>
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="id" class="label">URL</label>
+            <div class = "control"> 
+              <input type="text" name="url" class="input" required="required" value="{{ values['url'] }}"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="id" class="label">modified</label>
+          <div class = "control"> 
+            <input type="text" name="modified" class="input" required="required" value="{{ values['modified'] }}"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="id" class="label">Maxpixels</label>
+        <div class = "control"> 
+          <input type="text" name="maxpixels" class="input" required="required" value="{{ values['maxpixels'] }}"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="id" class="label">Height</label>
+      <div class = "control"> 
+        <input type="text" name="height" class="input" required="required" value="{{ values['height'] }}"/>
+    </div>
+  </div>
+
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-primary is-small" >Save</button>
+            </div>
+        </div>
+        <div class="field is-grouped">
+          <div class="control">
+              <button class="button is-primary is-small" >Delete</button>
+          </div>
+      </div>
+        
+    </form>
+{% endblock %}

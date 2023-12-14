@@ -7,13 +7,12 @@ from controllers.constituents_bp import constituents_bp
 from controllers.admin_bp import admin_bp
 from controllers.locations_bp import locations_bp
 from controllers.objects_bp import objects_bp
+from controllers.media_bp import media_bp
+from controllers.artwork_bp import artwork_bp
 
 def create_app():
     app = Flask(__name__ )
-
     app.add_url_rule("/", view_func=views.home_page)
-    app.add_url_rule("/media", view_func=views.media_page)
-    app.add_url_rule("/artwork", view_func=views.artwork_page)
 
     connection = mysql.connector.connect(
         host="localhost",
@@ -26,6 +25,8 @@ def create_app():
     app.register_blueprint(admin_bp(connection=connection))
     app.register_blueprint(locations_bp(connection=connection))
     app.register_blueprint(objects_bp(connection=connection))
+    app.register_blueprint(media_bp(connection=connection))
+    app.register_blueprint(artwork_bp(connection=connection))
 
     return app
 

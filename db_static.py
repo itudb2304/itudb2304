@@ -549,7 +549,7 @@ def init():
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
         PRIMARY KEY (mediaid)
-
+        FOREIGN KEY(mediaid) references objects(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
     );
     '''
     cursor.execute(query)
@@ -596,6 +596,7 @@ def init():
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
         PRIMARY KEY (mediaid)
+        FOREIGN KEY(mediaid) references constituents(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
     );
     '''
     cursor.execute(query)
