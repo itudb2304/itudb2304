@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, jsonify, redirect, render_template, request, url_for
 from repository.objects_repository import ObjectsRepository
 
 def objects_bp(connection):
@@ -12,14 +12,21 @@ def objects_bp(connection):
 
     repository = ObjectsRepository(connection=connection)
 
-    @objects.route('/')
+    @objects.route('/', methods=['GET', 'POST'])
     def objects_page():
-        objects = repository.get_all_objects()
-        return render_template('objects.html', objects=objects)
+        if request.method == "GET":
+            objects = repository.get_all_objects()
+            return render_template("objects.html", objects=objects)
+        
     
-    @objects.route('/<int:objectid>')
+    @objects.route('/<int:objectid>', methods=["GET", "POST"])
     def object_page(objectid):
-        object = repository.get_object_by_objectid(objectid)
-        objectLocation = repository.get_location_by_locationid(object.locationid)
-        return render_template('object.html', object=object, objectLocation=objectLocation)
+        if request.method == "GET":
+            object = repository.get_object_by_objectid(objectid)
+            objectLocation = repository.get_location_by_locationid(object.locationid)
+            return render_template('object.html', object=object, objectLocation=objectLocation)
+        else:
+            repository.delete_object(objectid)
+            return redirect(url_for('objects.objects_page'))
+        
     return objects

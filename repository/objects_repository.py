@@ -18,47 +18,118 @@ class LocationDTO:
     def _handle_none_values(self, data):
         return tuple(None if value is None else value for value in data)
 
+visual_browser_classification_elements = ["painting", "print", "sculpture", "drawing","volume", "portfolio","photograph","new media","decorative art","technical material"]
+
 class ObjectsRepository:
     def __init__(self, connection):
         self.connection = connection
     
     def get_all_objects(self):
-        with self.connection.cursor() as cursor:
-            query = '''
-            SELECT objectid, accessioned, accessionnum, locationid, title, displayDate, beginYear, 
-                endYear, visualBrowserTimeSpan, medium, dimensions, inscription, markings, attributionInverted, 
-                attribution, provenanceText, creditLine, classification, subClassification, visualBrowserClassification, 
-                parentid, isVirtual, departmentabbr, portfolio, series, volume, watermarks, lastDetectedModification, 
-                wikidataid, customPrintURL 
-            FROM objects;'''
-            cursor.execute(query)
-            objects = [ObjectDTO(row) for row in cursor.fetchall()]
-        return objects
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                SELECT objectid, accessioned, accessionnum, locationid, title, displayDate, beginYear, 
+                    endYear, visualBrowserTimeSpan, medium, dimensions, inscription, markings, attributionInverted, 
+                    attribution, provenanceText, creditLine, classification, subClassification, visualBrowserClassification, 
+                    parentid, isVirtual, departmentabbr, portfolio, series, volume, watermarks, lastDetectedModification, 
+                    wikidataid, customPrintURL 
+                FROM objects;'''
+                cursor.execute(query)
+                objects = [ObjectDTO(row) for row in cursor.fetchall()]
+            return objects
+        except Exception as e:
+            print(f"Error getting all objects from the database: {e}")
     
     def get_object_by_objectid(self, objectid):
-        with self.connection.cursor() as cursor:
-            query = '''
-            SELECT objectid, accessioned, accessionnum, locationid, title, displayDate, beginYear, 
-                endYear, visualBrowserTimeSpan, medium, dimensions, inscription, markings, attributionInverted, 
-                attribution, provenanceText, creditLine, classification, subClassification, visualBrowserClassification, 
-                parentid, isVirtual, departmentabbr, portfolio, series, volume, watermarks, lastDetectedModification, 
-                wikidataid, customPrintURL
-            FROM objects
-            WHERE objectid = %s;
-            '''
-            cursor.execute(query, [objectid]) #objectid is a number but it is passed as a string
-            row = cursor.fetchone()
-            object = ObjectDTO(row)
-        return object
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                SELECT objectid, accessioned, accessionnum, locationid, title, displayDate, beginYear, 
+                    endYear, visualBrowserTimeSpan, medium, dimensions, inscription, markings, attributionInverted, 
+                    attribution, provenanceText, creditLine, classification, subClassification, visualBrowserClassification, 
+                    parentid, isVirtual, departmentabbr, portfolio, series, volume, watermarks, lastDetectedModification, 
+                    wikidataid, customPrintURL
+                FROM objects
+                WHERE objectid = %s;
+                '''
+                cursor.execute(query, [objectid]) #objectid is a number but it is passed as a string
+                row = cursor.fetchone()
+                object = ObjectDTO(row)
+            return object
+        except Exception as e:
+            print(f"Error getting object from its objectid from the database: {e}")
 
     def get_location_by_locationid(self, locationid):
-        with self.connection.cursor() as cursor:
-            query = '''
-            SELECT locationid, site, room, publicaccess, description, unitposition, mapimageurl
-            FROM locations
-            WHERE locationid = %s;
-            '''
-            cursor.execute(query, [locationid])
-            row = cursor.fetchone()
-            location = LocationDTO(row)
-        return location
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                SELECT locationid, site, room, publicaccess, description, unitposition, mapimageurl
+                FROM locations
+                WHERE locationid = %s;
+                '''
+                cursor.execute(query, [locationid])
+                row = cursor.fetchone()
+                location = LocationDTO(row)
+            return location
+        except Exception as e:
+            print(f"Error getting location from its locationid from the database: {e}")
+
+    def add_object(self, objectDTO):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                INSERT INTO objects (objectid, accessioned, accessionnum, locationid, title, displayDate, beginYear, 
+                    endYear, visualBrowserTimeSpan, medium, dimensions, inscription, markings, attributionInverted, 
+                    attribution, provenanceText, creditLine, classification, subClassification, visualBrowserClassification, 
+                    parentid, isVirtual, departmentabbr, portfolio, series, volume, watermarks, lastDetectedModification, 
+                    wikidataid, customPrintURL)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, 
+                    %s, %s, %s, %s, %s, %s, %s, 
+                    %s, %s, %s, %s, %s, %s, 
+                    %s, %s, %s, %s, %s, %s, 
+                    %s, %s, %s, %s);
+                '''
+                cursor.execute(query, [objectDTO.objectid, objectDTO.accessioned, objectDTO.accessionnum, objectDTO.locationid, objectDTO.title, objectDTO.displayDate, objectDTO.beginYear, 
+                    objectDTO.endYear, objectDTO.visualBrowserTimeSpan, objectDTO.medium, objectDTO.dimensions, objectDTO.inscription, objectDTO.markings, objectDTO.attributionInverted, 
+                    objectDTO.attribution, objectDTO.provenanceText, objectDTO.creditLine, objectDTO.classification, objectDTO.subClassification, objectDTO.visualBrowserClassification, 
+                    objectDTO.parentid, objectDTO.isVirtual, objectDTO.departmentabbr, objectDTO.portfolio, objectDTO.series, objectDTO.volume, objectDTO.watermarks, objectDTO.lastDetectedModification, 
+                    objectDTO.wikidataid, objectDTO.customPrintURL])
+                self.connection.commit()
+        except Exception as e:
+            print(f"Error adding object to the database: {e}")
+            self.connection.rollback()
+    
+    def update_object(self, objectDTO):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                UPDATE objects
+                SET accessioned = %s, accessionnum = %s, locationid = %s, title = %s, displayDate = %s, beginYear = %s, 
+                    endYear = %s, visualBrowserTimeSpan = %s, medium = %s, dimensions = %s, inscription = %s, markings = %s, attributionInverted = %s, 
+                    attribution = %s, provenanceText = %s, creditLine = %s, classification = %s, subClassification = %s, visualBrowserClassification = %s, 
+                    parentid = %s, isVirtual = %s, departmentabbr = %s, portfolio = %s, series = %s, volume = %s, watermarks = %s, lastDetectedModification = %s, 
+                    wikidataid = %s, customPrintURL = %s
+                WHERE objectid = %s;
+                '''
+                cursor.execute(query, [objectDTO.accessioned, objectDTO.accessionnum, objectDTO.locationid, objectDTO.title, objectDTO.displayDate, objectDTO.beginYear, 
+                    objectDTO.endYear, objectDTO.visualBrowserTimeSpan, objectDTO.medium, objectDTO.dimensions, objectDTO.inscription, objectDTO.markings, objectDTO.attributionInverted, 
+                    objectDTO.attribution, objectDTO.provenanceText, objectDTO.creditLine, objectDTO.classification, objectDTO.subClassification, objectDTO.visualBrowserClassification, 
+                    objectDTO.parentid, objectDTO.isVirtual, objectDTO.departmentabbr, objectDTO.portfolio, objectDTO.series, objectDTO.volume, objectDTO.watermarks, objectDTO.lastDetectedModification, 
+                    objectDTO.wikidataid, objectDTO.customPrintURL, objectDTO.objectid])
+                self.connection.commit()
+        except Exception as e:
+            print(f"Error updating object in the database: {e}")
+            self.connection.rollback()
+    
+    def delete_object(self, objectid):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                DELETE FROM objects
+                WHERE objectid = %s;
+                '''
+                cursor.execute(query, [objectid])
+                self.connection.commit()
+        except Exception as e:
+            print(f"Error deleting object from the database: {e}")
+            self.connection.rollback()
