@@ -443,26 +443,7 @@ def init():
     cursor.execute(query)
     db.commit()
     
-    query = ''' 
-        CREATE TABLE IF NOT EXISTS media_relationships(    
-        mediaid INTEGER,
-        relatedid INTEGER,
-        relatedentity VARCHAR(50),
-        PRIMARY KEY (mediaid)
-    );
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = f'''
-        LOAD DATA LOCAL INFILE '{path}media_relationships.csv'
-        INTO TABLE media_relationships
-        FIELDS TERMINATED BY ','
-        IGNORE 1 ROWS;
-    '''
-    cursor.execute(query)
-    db.commit()
-
+   
     query = ''' 
         CREATE TABLE IF NOT EXISTS published_images(    
         uuid VARCHAR(50),
@@ -486,28 +467,26 @@ def init():
     query = f'''
         LOAD DATA LOCAL INFILE '{path}published_images.csv'
         INTO TABLE published_images
-        FIELDS TERMINATED BY ','
+        FIELDS TERMINATED BY ';'
         IGNORE 1 ROWS;
     '''
     cursor.execute(query)
     db.commit()
 
-    # query = f'''
-    #     UPDATE published_images
-    #     SET iiifthumburl = CONCAT(iiifthumburl, ',200/0/default.jpg')
-
-    # '''
-    # cursor.execute(query)
-    # db.commit()
-
-    query = f'''
+    query_template = '''
         UPDATE published_images
-        SET iiifthumburl = TRIM('"' FROM iiifthumburl);
-
+        SET {column_name} = REPLACE({column_name}, 'WILLCHANGE', ',');
     '''
-    cursor.execute(query)
-    db.commit()
+    cursor.execute("SHOW COLUMNS FROM published_images")
+    columns = [column[0] for column in cursor.fetchall()]
 
+
+    for column in columns:
+        query = query_template.format(column_name=column)
+        cursor.execute(query)
+        db.commit()
+
+    
     
     query = ''' 
         CREATE TABLE IF NOT EXISTS media_items(    
@@ -535,11 +514,23 @@ def init():
     query = f'''
         LOAD DATA LOCAL INFILE '{path}media_items.csv'
         INTO TABLE media_items
-        FIELDS TERMINATED BY '\t'
+        FIELDS TERMINATED BY ';'
         IGNORE 1 ROWS;
     '''
     cursor.execute(query)
     db.commit()
+
+    query_template = '''
+        UPDATE media_items
+        SET {column_name} = REPLACE({column_name}, 'WILLCHANGE', ',');
+    '''
+    cursor.execute("SHOW COLUMNS FROM media_items")
+    columns = [column[0] for column in cursor.fetchall()]
+
+    for column in columns:
+        query = query_template.format(column_name=column)
+        cursor.execute(query)
+        db.commit()
 
     query = ''' 
         CREATE TABLE IF NOT EXISTS object_media(    
@@ -559,6 +550,7 @@ def init():
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
         PRIMARY KEY (mediaid)
+        FOREIGN KEY(mediaid) references objects(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
     );
     '''
     cursor.execute(query)
@@ -568,12 +560,23 @@ def init():
     query = f'''
         LOAD DATA LOCAL INFILE '{path}object_media.csv'
         INTO TABLE object_media
-        FIELDS TERMINATED BY ','
+        FIELDS TERMINATED BY ';'
         IGNORE 1 ROWS;
     '''
     cursor.execute(query)
     db.commit()
 
+    query_template = '''
+        UPDATE object_media
+        SET {column_name} = REPLACE({column_name}, 'WILLCHANGE', ',');
+    '''
+    cursor.execute("SHOW COLUMNS FROM object_media")
+    columns = [column[0] for column in cursor.fetchall()]
+
+    for column in columns:
+        query = query_template.format(column_name=column)
+        cursor.execute(query)
+        db.commit()
 
 
     query = ''' 
@@ -594,6 +597,7 @@ def init():
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
         PRIMARY KEY (mediaid)
+        FOREIGN KEY(mediaid) references constituents(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
     );
     '''
     cursor.execute(query)
@@ -602,11 +606,24 @@ def init():
     query = f'''
         LOAD DATA LOCAL INFILE '{path}constituents_media.csv'
         INTO TABLE constituents_media
-        FIELDS TERMINATED BY ','
+        FIELDS TERMINATED BY ';'
         IGNORE 1 ROWS;
     '''
     cursor.execute(query)
     db.commit()
+
+    query_template = '''
+        UPDATE constituents_media
+        SET {column_name} = REPLACE({column_name}, 'WILLCHANGE', ',');
+    '''
+    cursor.execute("SHOW COLUMNS FROM constituents_media")
+    columns = [column[0] for column in cursor.fetchall()]
+
+    for column in columns:
+        query = query_template.format(column_name=column)
+        cursor.execute(query)
+        db.commit()
+
 
     query = '''
         CREATE TABLE IF NOT EXISTS objects_historical_data (

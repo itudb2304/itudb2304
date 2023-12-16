@@ -1,23 +1,27 @@
 {% extends "header.html" %}
 {% block title %}{{ object.title }}{% endblock %}
+{% set js_script = '''
+
+''' %}
+
 {% block content %}
 <title>{{ object.title }} Detailed</title>
 {% if object %}
-
 <body>
-
   <h2>Artwork Details</h2>
+    <button id="updateButton">Update</button>
+    <button id="deleteButton">Delete</button>
 
   <div class="endisdiv">
     <div class="photoOfArtwork">
       <img
-        src="https://www.yalovahayat.com/static/do/donence-emir-kimdir-atakan-hosgoren-kim-donence-emir-gercek-adi-sevgilisi-var-mi-nereli-kilosu-boyu-kac-1690052327-310-x750.webp"
+        src="https://media.nga.gov/iiif/1c778a35-9e33-4fbf-8573-bd3665b437fc/full/!588,600/0/default.jpg"
         alt="Artwork Photo">
     </div>
     <div class="objectDescription">
       <h3>Artist Name</h3>
       <p class="subtitle">{{ object.title }}</p>
-      <h3>View Status</h3>
+      <h3>is Virtual</h3>
       <p>{{ object.isVirtual }}</p>
       <hr>
       <h3>Medium</h3>
@@ -37,8 +41,7 @@
 
       <h3>Location: </h3>
       <h4>Site<h4>
-          <p> <a href="{{ url_for('locations.location_page', location=objectLocation.site) }}"> {{ objectLocation.site
-              }}</a></p>
+          <p> {{ objectLocation.site}}</a></p>
           <h4>Room</h4>
           <p>{{objectLocation.room}} </p>
           <h4>desc</h4>
@@ -53,6 +56,41 @@
     <p>{{ object.provenanceText }}</p>
   </div>
 
+  <script>
+    console.log("OBJECT SCRIPT!");
+    document.addEventListener("DOMContentLoaded", function () {
+      const updateButton = document.getElementById("updateButton");
+      const deleteButton = document.getElementById("deleteButton");
 
+      updateButton.addEventListener("click", function () {
+        window.location.href = "/update/" + "{{ object.objectid }}";
+      });
+
+      deleteButton.addEventListener("click", function () {
+        const isConfirmed = confirm("Are you sure you want to delete this art object?");
+
+        if (isConfirmed) {
+          // Send a POST request to the server to delete the object
+          fetch("/objects/{{ object.objectid }}", {
+            method: "POST",
+          })
+            .then(data => {
+              // Redirect to the objects page after successful deletion
+              if (data.success) {
+                window.location.href = "/objects";
+              } else {
+                alert("Failed to redirect");
+              }
+            })
+            .catch(error => {
+              console.error("Error deleting object:", error);
+              alert("An error occurred while deleting the object.");
+            });
+        }
+      });
+    });
+  </script>
+
+  </body>
   {% endif %}
   {% endblock %}

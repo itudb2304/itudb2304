@@ -5,117 +5,125 @@
 {% block title %} Artworks {% endblock %}
 
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>National Art Gallery</title>
-    <style>
-        ul {
-            list-style: none;
-            padding: 0;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>National Art Gallery</title>
+        <style>
+            ul {
+                list-style: none;
+                padding: 0;
+            }
 
-        li {
-            display: inline-block;
-            margin: 10px 0 10px 10px;
-            transition: transform 0.3s ease-in-out; /* Add transition for a smooth effect */
-        }
+            li {
+                display: inline-block;
+                margin: 10px 0 10px 10px;
+                transition: transform 0.3s ease-in-out; /* Add transition for a smooth effect */
+            }
 
-        li:hover {
-            transform: scale(1.2); /* Increase the size on hover */
-        }
+            li:hover {
+                transform: scale(1.2); /* Increase the size on hover */
+            }
 
-        img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            cursor: pointer;
-        }
+            img {
+                width: 200px;
+                height: 200px;
+                object-fit: cover;
+                cursor: pointer;
+            }
 
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.8);
-        }
+            /* Modal styles */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.8);
+            }
 
-        .modal-content {
-            margin: 10% auto;
-            display: block;
-            max-width: 10%; 
-            max-height: 100%;
-        }
+            .modal-content {
+                margin: 10% auto;
+                display: block;
+                max-width: 10%;
+                max-height: 100%;
+            }
 
-        .close {
-            color: #fff;
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 2em;
-            cursor: pointer;
-        }
+            .close {
+                color: #fff;
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                font-size: 2em;
+                cursor: pointer;
+            }
 
-        .info-container {
-            color: #fff;
-            text-align: center;
-            margin-top: 0;
-        }
-    </style>
-</head>
+            .info-container {
+                color: #fff;
+                text-align: center;
+                margin-top: 0;
+            }
+        </style>
+    </head>
 
-<body>
-    
-    <div>
-        <h2>Artworks</h2>
-        <ul>
-            {% for i in range(images|length) %}
-                <li>
-                    <img src="{{ images[i] }}" alt="Artwork" onclick="openModal('{{ images[i] }}', '{{ text[i] }}', '{{ width[i] }}', '{{height[i]}}')">
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+    <body>
+        <button><a href="{{ url_for('artwork.create_artwork')}}">Add/Edit Artwork</a></button>
 
-    <!-- Modal -->
-    <div id="myModal" class="modal">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <img id="modalImage" class="modal-content" alt="Full-size Artwork">
-        <div id="infoContainer" class="info-container"></div>
-    </div>
+        <div class="field is-grouped">
+            <div class="control">
+              <a class="button is-primary is-outlined is-small"
+                 href="{{url_for('artwork.create_artwork', id=artwork[4])}}">Edit</a>
+            </div>
+        </div>  
+        <div class="field is-grouped">
+            <div class="control">
+            <button class="button is-danger is-small"><a href="{{ url_for('artwork.delete_artwork')}}">Delete</button>
+            </div>
+        </div>
+        <div>
+            <h2>Artworks</h2>
+            <ul>
+                {% for artwork in artwork %}
+                    <li>
+                        <img src="{{ artwork[0] }}" alt="Artwork" onclick="openModal('{{ artwork[0] }}', '{{ artwork[1] }}', '{{ artwork[2] }}', '{{ artwork[3] }}')">
+                    </li>
+                {% endfor %}
 
-    <script>
-    function openModal(imageSrc, createdText, width, height) {
-        var modal = document.getElementById('myModal');
-        var modalImage = document.getElementById('modalImage');
-        var infoContainer = document.getElementById('infoContainer');
+            </ul>
+        </div>
 
-        modalImage.src = imageSrc;
-        infoContainer.innerHTML = "Creation Date: " + createdText + "<br>Dimensions: " + width +"x" + height;
+        
+        
 
-        modal.style.display = 'block';
+        <!-- Modal -->
+        <div id="myModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" class="modal-content" alt="Full-size Artwork">
+            <div id="infoContainer" class="info-container"></div>
+        </div>
 
-        modalImage.style.scale= "2"; // Adjust the percentage as needed
-      
-    }
+        <script>
+            function openModal(imageSrc, createdText, width, height) {
+                var modal = document.getElementById('myModal');
+                var modalImage = document.getElementById('modalImage');
+                var infoContainer = document.getElementById('infoContainer');
 
-    function closeModal() {
-        var modal = document.getElementById('myModal');
-        var modalImage = document.getElementById('modalImage');
+                modalImage.src = imageSrc;
+                infoContainer.innerHTML = "Creation Date: " + createdText + "<br>Dimensions: " + width + "x" + height;
 
-      
+                modal.style.display = 'block';
+            }
 
-        modal.style.display = 'none';
-    }
-
-    </script>
-</body>
+            function closeModal() {
+                var modal = document.getElementById('myModal');
+                modal.style.display = 'none';
+            }
+        </script>
+    </body>
 {% endblock %}
 
 </html>
