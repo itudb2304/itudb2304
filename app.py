@@ -21,7 +21,9 @@ def create_app():
         database="national_art"  #the database created in mySQL and it is in use (mySQL is UP!)
     )
 
-    app.register_blueprint(constituents_bp(connection=connection))
+    cursor = connection.cursor()
+
+    app.register_blueprint(constituents_bp(cursor=cursor))
     app.register_blueprint(admin_bp(connection=connection))
     app.register_blueprint(locations_bp(connection=connection))
     app.register_blueprint(objects_bp(connection=connection))
@@ -29,7 +31,6 @@ def create_app():
     app.register_blueprint(artwork_bp(connection=connection))
 
     return app
-
 
 if __name__ == "__main__":
     app = create_app()
