@@ -2,8 +2,6 @@
 <html lang="en">
 
 
-{% extends "header.html" %}
-{% block title %} media {% endblock %}
 
 {% block content %}
 <head>
@@ -75,21 +73,6 @@
 </head>
 
 <body>
-    <button><a href="{{ url_for('media.create_media')}}">Add/Edit Media</a></button>
-
-    <div class="field is-grouped">
-        <div class="control">
-          <a class="button is-primary is-outlined is-small"
-             href="{{url_for('media.create_media', id=media[0])}}">Edit</a>
-        </div>
-    </div>  
-    <div class="field is-grouped">
-        <div class="control">
-        <button class="button is-danger is-small"><a href="{{ url_for('media.delete_media')}}">Delete</button>
-        </div>
-    </div>
-    
-<body>
     
     <div>
         <h2>media</h2>
@@ -103,10 +86,6 @@
             {% endfor %}
         </ul>
     </div>
-
-
-   
-     
 
     <div id="myModal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>

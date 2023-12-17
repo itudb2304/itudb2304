@@ -480,6 +480,7 @@ def init():
     cursor.execute("SHOW COLUMNS FROM published_images")
     columns = [column[0] for column in cursor.fetchall()]
 
+
     for column in columns:
         query = query_template.format(column_name=column)
         cursor.execute(query)
@@ -651,6 +652,34 @@ def init():
     query = ''' 
         UPDATE objects_historical_data
         SET invertedText = REPLACE(invertedText, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        CREATE TABLE IF NOT EXISTS objects_constituents (
+            objectID INTEGER NOT NULL,
+            constituentID INTEGER NOT NULL,
+            displayOrder INTEGER NOT NULL,
+            roleType VARCHAR(64) NOT NULL,
+            role VARCHAR(64) NOT NULL,
+            prefix VARCHAR(64),
+            suffix VARCHAR(64),
+            displayDate VARCHAR(128),
+            beginYear INTEGER,
+            endYear INTEGER,
+            country VARCHAR(64),
+            zipCode VARCHAR(16)
+        );
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}objects_constituents.csv'
+        INTO TABLE objects_constituents
+        FIELDS TERMINATED BY ','
+        IGNORE 1 ROWS;
     '''
     cursor.execute(query)
     db.commit()
