@@ -27,6 +27,33 @@ def objects_bp(connection):
             return render_template('object.html', object=object, objectLocation=objectLocation)
         else:
             repository.delete_object(objectid)
-            return redirect(url_for('objects.objects_page'))
-        
+            print("Deleted object with objectid successfuly", objectid)
+            return jsonify(success=True)
+
+    @objects.route('/<int:objectid>/edit', methods=["GET", "POST"])
+    def object_edit_page(objectid):
+        if request.method == "GET":
+            object = repository.get_object_by_objectid(objectid)
+            return render_template('object_edit.html',objectDTO=object)
+        else:
+            objectDTO = repository.get_object_by_objectid(objectid)
+            # update the objectDTO with the form data
+            objectDTO.accessioned = request.form["accessioned"]
+            objectDTO.accessionnum = request.form["accessionnum"]
+            objectDTO.title = request.form["title"]
+            objectDTO.beginYear = request.form["beginYear"]
+            objectDTO.endYear = request.form["endYear"]
+            objectDTO.medium = request.form["medium"]
+            objectDTO.attribution = request.form["attribution"]
+            objectDTO.creditLine = request.form["creditLine"]
+            objectDTO.classification = request.form["classification"]
+            objectDTO.isVirtual = request.form["isVirtual"]
+
+            print(objectDTO)
+            print("Form data:", request.form)
+            
+            # update the object in the database
+            repository.update_object(objectDTO)
+            return redirect(url_for('objects.object_page', objectid=objectid))
+
     return objects
