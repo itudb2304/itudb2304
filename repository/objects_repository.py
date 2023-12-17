@@ -18,7 +18,7 @@ class LocationDTO:
     def _handle_none_values(self, data):
         return tuple(None if value is None else value for value in data)
 
-visual_browser_classification_elements = ["painting", "print", "sculpture", "drawing","volume", "portfolio","photograph","new media","decorative art","technical material"]
+classification_elements = ["Painting", "Print", "Sculpture", "Drawing","Volume", "Portfolio","Photograph","New Media","Decorative Art","Technical Material"]
 
 class ObjectsRepository:
     def __init__(self, connection):
@@ -104,18 +104,13 @@ class ObjectsRepository:
             with self.connection.cursor() as cursor:
                 query = '''
                 UPDATE objects
-                SET accessioned = %s, accessionnum = %s, locationid = %s, title = %s, displayDate = %s, beginYear = %s, 
-                    endYear = %s, visualBrowserTimeSpan = %s, medium = %s, dimensions = %s, inscription = %s, markings = %s, attributionInverted = %s, 
-                    attribution = %s, provenanceText = %s, creditLine = %s, classification = %s, subClassification = %s, visualBrowserClassification = %s, 
-                    parentid = %s, isVirtual = %s, departmentabbr = %s, portfolio = %s, series = %s, volume = %s, watermarks = %s, lastDetectedModification = %s, 
-                    wikidataid = %s, customPrintURL = %s
+                SET accessioned = %s, accessionnum = %s, title = %s, displayDate = %s, beginYear = %s, endYear = %s, 
+                    medium = %s, attribution = %s, creditLine = %s, classification = %s, isVirtual = %s
                 WHERE objectid = %s;
                 '''
-                cursor.execute(query, [objectDTO.accessioned, objectDTO.accessionnum, objectDTO.locationid, objectDTO.title, objectDTO.displayDate, objectDTO.beginYear, 
-                    objectDTO.endYear, objectDTO.visualBrowserTimeSpan, objectDTO.medium, objectDTO.dimensions, objectDTO.inscription, objectDTO.markings, objectDTO.attributionInverted, 
-                    objectDTO.attribution, objectDTO.provenanceText, objectDTO.creditLine, objectDTO.classification, objectDTO.subClassification, objectDTO.visualBrowserClassification, 
-                    objectDTO.parentid, objectDTO.isVirtual, objectDTO.departmentabbr, objectDTO.portfolio, objectDTO.series, objectDTO.volume, objectDTO.watermarks, objectDTO.lastDetectedModification, 
-                    objectDTO.wikidataid, objectDTO.customPrintURL, objectDTO.objectid])
+                cursor.execute(query, [objectDTO.accessioned, objectDTO.accessionnum, objectDTO.title, objectDTO.displayDate, objectDTO.beginYear, objectDTO.endYear, 
+                    objectDTO.medium, objectDTO.attribution, objectDTO.creditLine, objectDTO.classification, objectDTO.isVirtual, objectDTO.objectid])
+              
                 self.connection.commit()
         except Exception as e:
             print(f"Error updating object in the database: {e}")
