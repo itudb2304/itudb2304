@@ -549,8 +549,8 @@ def init():
         presentationdate VARCHAR(30),
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
+        relatedid INTEGER,
         PRIMARY KEY (mediaid)
-        FOREIGN KEY(mediaid) references objects(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
     );
     '''
     cursor.execute(query)
@@ -579,6 +579,33 @@ def init():
         db.commit()
 
 
+    query = '''
+    UPDATE object_media
+    INNER JOIN media_relationships ON object_media.mediaid = media_relationships.mediaid
+    SET object_media.relatedid = media_relationships.relatedid;
+
+'''
+
+    query = '''
+        CREATE TABLE IF NOT EXISTS media_relationships (
+        mediaid INTEGER,
+        relatedid INTEGER,
+        relatedentity VARCHAR(50)
+        );
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}media_relationships.csv'
+        INTO TABLE media_relationships
+        FIELDS TERMINATED BY ','
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+    
+
     query = ''' 
         CREATE TABLE IF NOT EXISTS constituents_media(    
         mediaid INTEGER,
@@ -596,8 +623,9 @@ def init():
         presentationdate VARCHAR(30),
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
+        relatedid INTEGER,
         PRIMARY KEY (mediaid)
-        FOREIGN KEY(mediaid) references constituents(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
+        
     );
     '''
     cursor.execute(query)
@@ -611,6 +639,7 @@ def init():
     '''
     cursor.execute(query)
     db.commit()
+    
 
     query_template = '''
         UPDATE constituents_media
@@ -623,6 +652,18 @@ def init():
         query = query_template.format(column_name=column)
         cursor.execute(query)
         db.commit()
+
+    query = '''
+    UPDATE constituents_media
+    INNER JOIN media_relationships ON constituents_media.mediaid = media_relationships.mediaid
+    SET constituents_media.relatedid = media_relationships.relatedid;
+
+'''
+
+    cursor.execute(query)
+    db.commit()
+
+
 
 
     query = '''
