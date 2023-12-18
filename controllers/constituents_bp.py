@@ -18,7 +18,10 @@ def constituents_bp(cursor):
 
         if request.method == 'GET':
             req = request.args.get('q')
-            return redirect( url_for('.constituent_by_name', name=req) )
+            if (req):
+                return redirect( url_for('.constituent_by_name', name=req) )
+            else:
+                return render_template('constituents.html', constituents=constituents)
 
         return render_template('constituents.html', constituents=constituents)
     

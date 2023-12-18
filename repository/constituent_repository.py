@@ -22,6 +22,8 @@ class ConstituentRepository:
             
     def get_constituents_by_name(self, name):
         constituents = []
+        if (len(name) == 0):
+            return self.get_all_constituents()
         query = f"SELECT * FROM constituents c WHERE c.forwarddisplayname LIKE '%{name}%';"
         self.cursor.execute(query)
         constituents = self.cursor.fetchall()
