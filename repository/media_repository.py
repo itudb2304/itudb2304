@@ -23,11 +23,21 @@ class MediaRepository:
 
         return media
     
-
-    def get_object_media(self):
+    def get_constituent_media_by_id(self, id):
         cursor = self.connection.cursor()
 
-        query = f"SELECT thumbnailurl FROM object_media;"
+        query = f"SELECT thumbnailurl FROM constituents_media WHERE relatedid = {id}"
+
+        cursor.execute(query)
+        media = cursor.fetchall()
+
+        return media
+    
+
+    def get_object_media(self, id):
+        cursor = self.connection.cursor()
+
+        query = f"SELECT thumbnailurl FROM object_media WHERE relatedid = {id};"
 
         cursor.execute(query)
         media = cursor.fetchall()

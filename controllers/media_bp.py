@@ -24,10 +24,6 @@ def media_bp(connection):
             for id in ids:
                 repository.delete_media(id)
             return redirect(url_for("media.media_page"))
-        
-
-
-    
 
 
         
@@ -59,13 +55,13 @@ def media_bp(connection):
         
 
 
-    @media.route('/<mediaid>/edit', methods=['GET', 'POST'])
-    def media_edit_page(mediaid):
+    @media.route('/edit', methods=['GET', 'POST'])
+    def media_edit_page():
         if request.method == "GET":
-            media = repository.get_media(mediaid)
-            values = {"title": "", "description": "", "thumbnailurl": "", "playurl": ""}
+            values = {"mediaid": "", "title": "", "description": "", "thumbnailurl": "", "playurl": ""}
             return render_template("edit_media.html", values = values)
         else:
+            mediaid = request.form["mediaid"]
             title = request.form["title"]
             description = request.form["description"]
             url = request.form["thumbnailurl"]
