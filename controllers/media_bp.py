@@ -17,7 +17,7 @@ def media_bp(connection):
     def media_page():
         if request.method == "GET":
             page = request.args.get('page', 1, type=int)
-            media = repository.get_media(page)
+            media = repository.get_constituent_media(page)
             return render_template('media.html', media=media)
         else:
             ids = request.form.getlist("mediaid")
@@ -25,6 +25,9 @@ def media_bp(connection):
                 repository.delete_media(id)
             return redirect(url_for("media.media_page"))
         
+
+
+    
 
 
         
