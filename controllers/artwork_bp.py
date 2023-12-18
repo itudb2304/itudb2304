@@ -59,19 +59,18 @@ def artwork_bp(connection):
         
 
 
-    @artwork.route('/<uuid>/edit', methods=['GET', 'POST'])
-    def artwork_edit_page(uuid):
+    @artwork.route('/edit', methods=['GET', 'POST'])
+    def artwork_edit_page():
         if request.method == "GET":
-            artwork = repository.get_artwork(uuid)
-            values = {"url": "", "modified": "", "maxpixels": "", "height": ""}
+            values = {"id": "", "url": "", "modified": "", "maxpixels": "", "height": ""}
             return render_template("edit_artwork.html", values = values)
         else:
+            artwork_id = request.form["id"]
             artwork_url = request.form["url"]
             artwork_modified = request.form["modified"]
             artwork_maxpixels = request.form["maxpixels"]
             artwork_height = request.form["height"]
-            artwork = Artwork(uuid, artwork_url, artwork_modified, artwork_maxpixels, artwork_height)
-            print(artwork.uuid)
+            artwork = Artwork(artwork_id, artwork_url, artwork_modified, artwork_maxpixels, artwork_height)
             repository.update_artwork(artwork)
             return redirect(url_for("artwork.artwork_page"))
 
