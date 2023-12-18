@@ -3,7 +3,6 @@
 
 
 {% extends "header.html" %}
-{% block title %} media {% endblock %}
 
 {% block content %}
 <head>
@@ -75,12 +74,12 @@
 </head>
 
 <body>
-    <button><a href="{{ url_for('media.create_media')}}">Add/Edit Media</a></button>
+    <button><a href="{{ url_for('media.create_media')}}">Add Media</a></button>
 
     <div class="field is-grouped">
         <div class="control">
-          <a class="button is-primary is-outlined is-small"
-             href="{{url_for('media.create_media', id=media[0])}}">Edit</a>
+          <button class="button is-primary is-outlined is-small">
+             <a href="{{url_for('media.media_edit_page')}}">Edit Media</a></button> 
         </div>
     </div>  
     <div class="field is-grouped">
@@ -88,7 +87,7 @@
         <button class="button is-danger is-small"><a href="{{ url_for('media.delete_media')}}">Delete</button>
         </div>
     </div>
-    
+</body>
 <body>
     
     <div>
@@ -153,6 +152,7 @@ function loadMoreContent() {
     xhr.send();
 }
     function openModal(imageSrc, createdText) {
+        event.preventDefault();
         var modal = document.getElementById('myModal');
         var modalImage = document.getElementById('modalImage');
         var infoContainer = document.getElementById('infoContainer');
@@ -168,6 +168,7 @@ function loadMoreContent() {
     }
 
     function closeModal() {
+        event.preventDefault();
         var modal = document.getElementById('myModal');
         var modalImage = document.getElementById('modalImage');
 
