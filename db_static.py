@@ -139,7 +139,7 @@ def init():
         objectid                    INT,
         accessioned                 INT NOT NULL,
         accessionnum                VARCHAR(32) NOT NULL,
-        locationid                  INT NOT NULL,
+        locationid                  INT,
         title                       TEXT NOT NULL,
         displayDate                 VARCHAR(256),
         beginYear                   INT,
@@ -158,12 +158,12 @@ def init():
         visualBrowserClassification VARCHAR(32),
         parentid                    INT,
         isVirtual                   INT NOT NULL,
-        departmentabbr              VARCHAR(32) NOT NULL,
+        departmentabbr              VARCHAR(32),
         portfolio                   TEXT,
         series                      VARCHAR(850),
         volume                      VARCHAR(850),
         watermarks                  VARCHAR(512),
-        lastDetectedModification    TIME NOT NULL,
+        lastDetectedModification    TIME,
         wikidataid                  VARCHAR(64),
         customPrintURL              TEXT,
         PRIMARY KEY(objectid),
@@ -173,6 +173,24 @@ def init():
     cursor.execute(query)
     db.commit()
 
+    query = f'''
+        CREATE TRIGGER IF NOT EXISTS update_lastDetectedModification
+        BEFORE UPDATE ON objects
+        FOR EACH ROW
+        SET NEW.lastDetectedModification = CURRENT_TIME();
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        CREATE TRIGGER IF NOT EXISTS add_lastDetectedModification
+        BEFORE INSERT ON objects
+        FOR EACH ROW
+        SET NEW.lastDetectedModification = CURRENT_TIME();
+    '''
+    cursor.execute(query)
+    db.commit()
+    
     query = f'''
         LOAD DATA LOCAL INFILE '{path}objects.csv'
         INTO TABLE objects
