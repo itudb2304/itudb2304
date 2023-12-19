@@ -97,13 +97,13 @@ def init():
         forwarddisplayname VARCHAR(256),
         lastname VARCHAR(256),
         displaydate VARCHAR(256),
-        artistofngaobject INTEGER,
+        artistofngaobject INTEGER NOT NULL,
         beginyear INTEGER,
         endyear INTEGER,
         visualbrowsertimespan VARCHAR(32),
         nationality VARCHAR(128),
         visualbrowsernationality VARCHAR(128),
-        constituenttype VARCHAR(30),
+        constituenttype VARCHAR(30) NOT NULL,
         wikidataid VARCHAR(64),
         PRIMARY KEY (constituentid)
     );
@@ -663,9 +663,6 @@ def init():
     cursor.execute(query)
     db.commit()
 
-
-
-
     query = '''
         CREATE TABLE IF NOT EXISTS objects_historical_data (
             dataType VARCHAR(32) NOT NULL,
@@ -710,7 +707,9 @@ def init():
             beginYear INTEGER,
             endYear INTEGER,
             country VARCHAR(64),
-            zipCode VARCHAR(16)
+            zipCode VARCHAR(16),
+            FOREIGN KEY (objectID) REFERENCES objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE,
+            FOREIGN KEY (constituentID) REFERENCES constituents(constituentid) ON DELETE CASCADE ON UPDATE CASCADE
         );
     '''
     cursor.execute(query)
@@ -721,6 +720,13 @@ def init():
         INTO TABLE objects_constituents
         FIELDS TERMINATED BY ','
         IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = ''' 
+        UPDATE objects_constituents
+        SET prefix = REPLACE(prefix, '/', ',');
     '''
     cursor.execute(query)
     db.commit()
