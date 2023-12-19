@@ -1,0 +1,31 @@
+{% extends "header.html" %}
+{% block title %} Objects {% endblock %}
+{% block content %}
+    <h1>{{ room.name}} </h1>
+    <h2> Objects </h2>
+    <form action="" method="post">
+        <div class="field is-grouped">
+            <div class="control">
+              <a class="button is-primary is-outlined is-small"
+                 href="{{url_for('locations.room_edit_page', room_id=room.key)}}">Edit</a>
+            </div>
+        </div>   
+
+        <table class="table">
+            {% if objects %}
+            <table>
+                {% for object in objects%}
+                    <li>{{object[0]}}</li>
+                {% endfor %}
+            </table>
+            {% endif %}
+        </table>
+        <div class="field is-grouped">
+            <div class="control">
+                <label class="button">
+                    <button class="button is-danger" type="submit" name="delete">DELETE ROOM</button>
+                </label>  
+            </div>
+        </div>
+    </form>
+{% endblock %}

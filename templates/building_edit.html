@@ -1,0 +1,62 @@
+{% extends "header.html" %}
+{% block title %} Locations {% endblock %}
+{% block content %}
+    <h1 class=" title"> Building Add/Edit Page </h1>
+    <form action="" method="post" name="building_edit">
+
+        <div class="field">
+            <label for="name" class="label">Name</label>
+            <div class = "control"> 
+                <input type="text" name="name" class="input" required="required" value="{{ values['name'] }}"/>
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="is_public" class="label">IsPublic</label>
+            <div class = "control"> 
+                <input list = "publicity" type="text" name="isPublic" required="required" value="{{ values['isPublic'] }}"/>
+                <datalist id = "publicity" >
+                    <option value="Yes">
+                    <option value= "No">
+                </datalist>
+            </div> 
+        </div>
+
+        {% if values['floors'] %}
+            {% for floor in values['floors']%}  
+                <li>{{floor[0]}}</li>                               
+            {% endfor %}   
+        {% endif %}
+        <div class="field">
+            <label for="floors[]" class="label">Floors</label>
+            <div class = "control" id = "floorInputContainer"> 
+                <input type="text" name="floors[]" required="option"/>
+            </div> 
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-primary is-small" id="addFloorBtn">Add Floor</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-primary is-small">Save</button>
+            </div>
+        </div>
+        
+    </form>
+    <script>
+        document.getElementById('addFloorBtn').addEventListener('click', function () {
+            // Create a new input field
+            var newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.name = 'floors[]'; // Use an array if you expect multiple floor inputs
+            newInput.placeholder = 'Enter floor name';
+            newInput.required = true;
+    
+            // Append the new input field to the container
+            document.getElementById('floorInputContainer').appendChild(newInput);
+        });
+    </script>
+{% endblock %}
