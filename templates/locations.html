@@ -17,7 +17,7 @@
                         </div>
                     </div>   
                     {% for floor in location[2]%}  
-                        <li><a href="{{url_for('locations.floor_page', floor_id=floor[1])}}">{{floor[0]}}</a></li>                               
+                        <li><a href="{{url_for('locations.floor_page', floor_id=floor[1], building_id = location[1])}}">{{floor[0]}}</a></li>                               
                     {% endfor %}                     
                 </div>
             {% endfor %}
