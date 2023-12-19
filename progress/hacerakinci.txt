@@ -26,3 +26,7 @@ week 9
 
 week 10
 - CRUD operations are implemented for building
+
+week 11
+- CRUD operations are implemented for floor, room
+- Object additon to room is implemented
