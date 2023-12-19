@@ -9,3 +9,26 @@ week 6
 week 7
 - created admin and table templates
 - added get_table_names and get_table_content in database.py
+- mvc architecture implemented for admin
+
+week 8
+- object csv's rearranged
+- admin idea is discarded
+- object in mvc architecture created:
+    - created objects_bp.py in controllers
+    - created objects_repository.py and 
+    - created object and objects html files for basic viewing
+- some necessary css elements added
+
+week 9
+- delete object button with a script and its functionality added
+- create update functionality in repository added but not implemented
+
+week 10
+- object create operation added in objects page
+- object update operation added in object page 
+
+week 11
+- arranged the connection between object and objects htmls
+- trigger for modification time on update and insert
+- filter on classification property of the object added
