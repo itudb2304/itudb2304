@@ -93,3 +93,8 @@ tr:nth-child(even) {
   border: 0;
   font-size: medium;
 }
+
+.required:after {
+  content:" *";
+  color: red;
+}
