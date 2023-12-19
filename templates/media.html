@@ -96,14 +96,23 @@
             {% for media in media %}
                 
                 <li>
-                    <img src="{{ media[0] }}" alt="Artwork" onclick="openModal('{{ media[0] }}', '{{ media[1] }}')" onerror="this.parentNode.classList.add('hidden'); ">
-                    <iframe width="50%" height="250" scrolling="yes" frameborder="no" src="{{ media[3] }}"></iframe>
+                    <img src="{{ media[0] }}" alt="Artwork" loading="lazy" onclick="openModal('{{ media[0] }}', '{{ media[1] }}')" onerror="this.parentNode.classList.add('hidden'); ">
+                    <iframe width="50%" height="250" loading="lazy" scrolling="yes" frameborder="no" src="{{ media[3] }}"></iframe>
         </li>
             {% endfor %}
         </ul>
     </div>
 
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Iterate over iframes and add a delay
+            document.querySelectorAll('iframe').forEach(function (iframe, index) {
+                setTimeout(function () {
+                    iframe.src = iframe.dataset.src;
+                }, 500 * index);  // 500 milliseconds delay multiplied by the index
+            });
+        });
+    </script>
    
      
 
@@ -113,44 +122,23 @@
         <div id="infoContainer" class="info-container"></div>
     </div>
     <div id="scroll-container"></div>
+
     <script>
-        var page = 1; // Initial page
-var loading = false; // Flag to prevent multiple requests
+        var loading = false; // Flag to prevent multiple requests
+        var interval = 10000; // 10 seconds
 
-window.addEventListener('scroll', function() {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000 && !loading) {
-        // Load more content when scrolling near the bottom
-        page++;
+        // Initial content load
         loadMoreContent();
-    }
-});
 
-function loadMoreContent() {
-    loading = true;
-    
-    // Send an AJAX request to your Flask server to get more content
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/media?page=' + page, true);
+        // Set interval to load more content periodically
+        setInterval(function () {
+            if (!loading) {
+                loadMoreContent();
+            }
+        }, interval);
 
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            // Append new content to the scroll-container
-            var container = document.getElementById('scroll-container');
-            container.insertAdjacentHTML('beforeend', xhr.responseText);
-        } else {
-            console.error('Error loading more content:', xhr.status, xhr.statusText);
-        }
 
-        loading = false;
-    };
 
-    xhr.onerror = function() {
-        console.error('Network error occurred while loading more content');
-        loading = false;
-    };
-
-    xhr.send();
-}
     function openModal(imageSrc, createdText) {
         event.preventDefault();
         var modal = document.getElementById('myModal');

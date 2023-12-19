@@ -16,8 +16,7 @@ def media_bp(connection):
     @media.route('/', methods=['GET', 'POST'])
     def media_page():
         if request.method == "GET":
-            page = request.args.get('page', 1, type=int)
-            media = repository.get_constituent_media(page)
+            media = repository.get_constituent_media()
             return render_template('media.html', media=media)
         else:
             ids = request.form.getlist("mediaid")

@@ -11,14 +11,13 @@ class MediaRepository:
     def __init__(self, connection):
         self.connection = connection
 
-    def get_constituent_media(self, page, per_page=50):
-        offset = (page - 1) * per_page
+    def get_constituent_media(self):
         cursor = self.connection.cursor()
 
         # Use LIMIT and OFFSET for pagination
-        query = f"SELECT thumbnailurl, title, description, playurl FROM constituents_media LIMIT %s OFFSET %s;"
+        query = f"SELECT thumbnailurl, title, description, playurl FROM constituents_media;"
 
-        cursor.execute(query, (per_page, offset))
+        cursor.execute(query)
         media = cursor.fetchall()
 
         return media
@@ -36,11 +35,11 @@ class MediaRepository:
 
     def get_object_media(self, id):
         cursor = self.connection.cursor()
-
+        relatdid = id
         query = f"SELECT thumbnailurl FROM object_media WHERE relatedid = {id};"
 
         cursor.execute(query)
-        media = cursor.fetchall()
+        media = cursor.fetchone()
 
         return media
     
