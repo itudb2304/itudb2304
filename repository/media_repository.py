@@ -24,7 +24,7 @@ class MediaRepository:
     
     def get_constituent_media_by_id(self, id):
         cursor = self.connection.cursor()
-
+        
         query = f"SELECT thumbnailurl FROM constituents_media WHERE relatedid = {id}"
 
         cursor.execute(query)
@@ -32,16 +32,38 @@ class MediaRepository:
 
         return media
     
-
-    def get_object_media(self, id):
+    def get_object_media(self, obj):
         cursor = self.connection.cursor()
-        relatdid = id
-        query = f"SELECT thumbnailurl FROM object_media WHERE relatedid = {id};"
 
-        cursor.execute(query)
-        media = cursor.fetchone()
+        # Use parameterized queries to avoid SQL injection
+        query1 = '''
+            SELECT media_relationships.mediaid FROM media_relationships
+            WHERE media_relationships.relatedid = %s;
+        '''
+        cursor.execute(query1, (obj.objectid,))
 
-        return media
+        # Fetch the result
+        id_result = cursor.fetchall()
+
+        # Check if there is a result before proceeding
+        if id_result:
+            # Extract the mediaid from the result
+            media_id = id_result[0][0]
+
+            if media_id is not None:
+                # Use parameterized query for the second query
+                query2 = "SELECT thumbnailurl FROM object_media WHERE mediaid = %s;"
+                cursor.execute(query2, (media_id,))
+
+                # Fetch all the results
+                media = cursor.fetchall()
+
+
+                return media
+
+    # Return None if there is no mediaid found
+        return None
+
     
     
     def create_media(self, media):
