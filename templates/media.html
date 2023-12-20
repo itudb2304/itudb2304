@@ -96,13 +96,17 @@
         <div class="control">
           <button class="button is-primary is-outlined is-small">
              <a href="{{url_for('media.media_edit_page')}}">Edit Media</a></button> 
-        </div>
+        </div>  
     </div>  
+    
     <div class="field is-grouped">
         <div class="control">
-        <button class="button is-danger is-small"><a href="{{ url_for('media.delete_media')}}">Delete</button>
+            <button class="button is-primary is-outlined is-small">
+            <a href="{{ url_for('media.delete_media')}}" >Delete</a>
         </div>
     </div>
+    
+
 </body>
 <body>
     
@@ -111,7 +115,7 @@
         <ul>
             {% for media_item in media %}
                 <li class="{% if media_item[0] is none %}hidden{% endif %}">
-                    <img src="{{ media_item[0] }}" alt="Artwork" loading="lazy" onclick="openModal('{{ media_item[0] }}', '{{ media_item[1] }}')" onerror="this.parentNode.classList.add('hidden');">
+                    <img src="{{ media_item[0] }}" alt="Artwork" loading="lazy" onclick="showImage('{{ media_item[0] }}', '{{ media_item[1] }}')" onerror="this.parentNode.classList.add('hidden');">
                     <iframe width="50%" height="250" loading="lazy" scrolling="yes" frameborder="no" src="{{ media_item[3] }}" data-src="{{ media_item[3] }}"></iframe>
                 </li>
             {% endfor %}
@@ -155,7 +159,7 @@
 
 
 
-    function openModal(imageSrc, createdText) {
+    function showImage(imageSrc, createdText) {
         event.preventDefault();
         var modal = document.getElementById('myModal');
         var modalImage = document.getElementById('modalImage');
