@@ -74,6 +74,21 @@
     </style>
 </head>
 
+<form action="{{ url_for('media.media_page') }}" method="POST">
+    <div class="container mt-2">
+        <div class="row d-flex justify-content-center ">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="input-box">
+                        <input type="text" name="media-search" id="media-search" placeholder="Search by ID" class="form-control">
+                        <i class="fa fa-search"></i>               
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</form>
+
 <body>
     <button><a href="{{ url_for('media.create_media')}}">Add Media</a></button>
 
@@ -92,17 +107,17 @@
 <body>
     
     <div>
-        <h2>media</h2>
+        <h2>Media</h2>
         <ul>
-            {% for media in media %}
-                
-                <li>
-                    <img src="{{ media[0] }}" alt="Artwork" loading="lazy" onclick="openModal('{{ media[0] }}', '{{ media[1] }}')" onerror="this.parentNode.classList.add('hidden'); ">
-                    <iframe width="50%" height="250" loading="lazy" scrolling="yes" frameborder="no" src="{{ media[3] }}"></iframe>
-        </li>
+            {% for media_item in media %}
+                <li class="{% if media_item[0] is none %}hidden{% endif %}">
+                    <img src="{{ media_item[0] }}" alt="Artwork" loading="lazy" onclick="openModal('{{ media_item[0] }}', '{{ media_item[1] }}')" onerror="this.parentNode.classList.add('hidden');">
+                    <iframe width="50%" height="250" loading="lazy" scrolling="yes" frameborder="no" src="{{ media_item[3] }}" data-src="{{ media_item[3] }}"></iframe>
+                </li>
             {% endfor %}
         </ul>
     </div>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

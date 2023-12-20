@@ -5,6 +5,18 @@
     <h1 class=" title"> Media Add/Edit/Delete Page </h1>
     <form action="" method="post" name="movie_edit">
 
+      <div class="field">
+        <label for="id" class="label">Table</label>
+        <div class="control">
+            <select name="table" class="select" required="no">
+                <option value="Object" {% if values['table'] == 'Object' %}selected{% endif %}>Object</option>
+                <option value="Constituent" {% if values['table'] == 'Constituent' %}selected{% endif %}>Constituent</option>
+            </select>
+        </div>
+    </div>
+    
+    
+
         <div class="field">
             <label for="id" class="label">ID</label>
             <div class = "control"> 
@@ -15,28 +27,28 @@
         <div class="field">
             <label for="id" class="label">Title</label>
             <div class = "control"> 
-              <input type="text" name="title" class="input" required="no" value="{{ values['title'] }}"/>
+              <input type="text" name="title" class="input" value="{{ values['title'] }}"/>
           </div>
         </div>
 
         <div class="field">
           <label for="id" class="label">Description</label>
           <div class = "control"> 
-            <input type="text" name="description" class="input" required="no" value="{{ values['description'] }}"/>
+            <input type="text" name="description" class="input" value="{{ values['description'] }}"/>
         </div>
       </div>
 
       <div class="field">
         <label for="id" class="label">ThumbnailUrl</label>
         <div class = "control"> 
-          <input type="text" name="thumbnailurl" class="input" required="no" value="{{ values['thumbnailurl'] }}"/>
+          <input type="text" name="thumbnailurl" class="input" value="{{ values['thumbnailurl'] }}"/>
       </div>
     </div>
 
     <div class="field">
       <label for="id" class="label">PlayUrl</label>
       <div class = "control"> 
-        <input type="text" name="playurl" class="input" required="no" value="{{ values['playurl'] }}"/>
+        <input type="text" name="playurl" class="input" value="{{ values['playurl'] }}"/>
     </div>
   </div>
 

@@ -550,6 +550,28 @@ def init():
         cursor.execute(query)
         db.commit()
 
+
+        query = '''
+        CREATE TABLE IF NOT EXISTS media_relationships (
+        mediaid INTEGER,
+        relatedid INTEGER,
+        relatedentity VARCHAR(50),
+        FOREIGN KEY(relatedid) references objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE,
+        FOREIGN KEY(relatedid) references constituents(constituentid) ON DELETE CASCADE ON UPDATE CASCADE
+        );
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}media_relationships.csv'
+        INTO TABLE media_relationships
+        FIELDS TERMINATED BY ','
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
     query = ''' 
         CREATE TABLE IF NOT EXISTS object_media(    
         mediaid INTEGER,
@@ -567,7 +589,8 @@ def init():
         presentationdate VARCHAR(30),
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid)
+        PRIMARY KEY (mediaid),
+        FOREIGN KEY (mediaid) references media_relationships(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
     );
     '''
     cursor.execute(query)
@@ -617,7 +640,8 @@ def init():
         presentationdate VARCHAR(30),
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid)
+        PRIMARY KEY (mediaid),
+        FOREIGN KEY (mediaid) references media_relationships(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
     );
     '''
     cursor.execute(query)
@@ -647,28 +671,7 @@ def init():
 
     
 
-        query = '''
-        CREATE TABLE IF NOT EXISTS media_relationships (
-        mediaid INTEGER,
-        relatedid INTEGER,
-        relatedentity VARCHAR(50),
-        FOREIGN KEY(mediaid) references object_media(mediaid) ON DELETE CASCADE ON UPDATE CASCADE,
-        FOREIGN KEY(mediaid) references constituents_media(mediaid) ON DELETE CASCADE ON UPDATE CASCADE, 
-        FOREIGN KEY(relatedid) references objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE,
-        FOREIGN KEY(relatedid) references constituents(constituentid) ON DELETE CASCADE ON UPDATE CASCADE
-        );
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = f'''
-        LOAD DATA LOCAL INFILE '{path}media_relationships.csv'
-        INTO TABLE media_relationships
-        FIELDS TERMINATED BY ','
-        IGNORE 1 ROWS;
-    '''
-    cursor.execute(query)
-    db.commit()
+   
     
 
 
