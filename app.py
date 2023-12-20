@@ -12,6 +12,7 @@ from controllers.artwork_bp import artwork_bp
 
 def create_app():
     app = Flask(__name__ )
+    app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
     app.add_url_rule("/", view_func=views.home_page)
 
     connection = mysql.connector.connect(

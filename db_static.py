@@ -91,7 +91,7 @@ def init():
 
     query = '''
         CREATE TABLE IF NOT EXISTS constituents(
-        constituentid INTEGER,
+        constituentid INTEGER AUTO_INCREMENT,
         ulanid VARCHAR(32),
         preferreddisplayname VARCHAR(256),
         forwarddisplayname VARCHAR(256),
