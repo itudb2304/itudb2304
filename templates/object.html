@@ -15,8 +15,13 @@
 
   <div class="endisdiv">
     <div class="photoOfArtwork">
-      <img src={{ media }}>
-        alt="Artwork Photo">
+      {% for m in media %}
+                
+      <li>
+        <img src="{{ m[0] }}" alt="Artwork">
+        
+      </li>
+  {% endfor %}
     </div>
     <div class="objectDescription">
       <h3>Artist Name</h3>
