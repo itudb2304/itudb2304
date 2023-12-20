@@ -13,6 +13,7 @@ def objects_bp(connection):
     )
 
     repository = ObjectsRepository(connection=connection)
+    media_repository = MediaRepository(connection=connection)
 
     @objects.route('/', methods=['GET', 'POST'])
     def objects_page():
@@ -55,7 +56,7 @@ def objects_bp(connection):
             object = repository.get_object_by_objectid(objectid)
             print(object.locationid)
             objectLocation = repository.get_location_by_locationid(object.locationid) if object.locationid else None
-            media = None # fill later
+            media = media_repository.get_object_media(object)
             if media is None:
                 media = "https://via.placeholder.com/150"
             return render_template('object.html', object=object, objectLocation=objectLocation, media=media)

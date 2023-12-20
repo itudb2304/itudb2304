@@ -13,7 +13,7 @@
                 <div class="card">
                     <div class="input-box">
                         <input type="text" name="constituent-search" id="constituent-search" placeholder="Search" class="form-control">
-                        <i class="fa fa-search"></i>                    
+                        <i class="fa fa-search"></i>               
                     </div>
                 </div> 
             </div>
@@ -21,14 +21,26 @@
     </div>
 </form>
 
-<ul>
-    {% for constituent in constituents_list %}
+<ol id="constituents-list"> 
+    {% for constituent in constituents %} 
       <form action="{{ url_for('constituents.constituents_page') }}" method="post">
         <li>
-          <a href="{{ url_for('constituents.constituent_objects', id=constituent.constituentid) }}">{{ constituent.preferreddisplayname }}</a>
+          <a href="{{ url_for('constituents.constituent_objects', id=constituent.constituentid) }}">
+            <span class="constituent-name" data-constituent-id="{{ constituent.constituentid }}">
+                {{ constituent.preferreddisplayname }}
+            </span>
+            <div class="media-container">
+                {% set media = get_constituent_media_by_id(constituent.constituentid) %}
+                {% if media is not none %}
+                    {% for m in media %}
+                        <img src="{{ m[0] }}" alt="Constituent Image">
+                    {% endfor %}
+                {% endif %}
+            </div>
+            </a>
         </li>
-      </form>
+        </form>
     {% endfor %}
-  </ul>
-  
+</ol>
+
 {% endblock %}

@@ -21,29 +21,49 @@ class MediaRepository:
         media = cursor.fetchall()
 
         return media
-    
+
     def get_constituent_media_by_id(self, id):
+        if id is None:
+            return []  # Return an empty list or handle appropriately
+
         cursor = self.connection.cursor()
 
-        query = f"SELECT thumbnailurl FROM constituents_media WHERE relatedid = {id}"
+        query = '''
+            SELECT thumbnailurl
+            FROM constituents_media
+            WHERE mediaid IN (
+                SELECT mediaid
+                FROM media_relationships
+                WHERE relatedid = %s
+                AND BINARY relatedentity = 'nga:art:tms:constituents\r');
+        '''
 
-        cursor.execute(query)
+        cursor.execute(query, (id,))
         media = cursor.fetchall()
 
         return media
-    
 
-    def get_object_media(self, id):
+
+    def get_object_media(self, obj):
         cursor = self.connection.cursor()
-        relatdid = id
-        query = f"SELECT thumbnailurl FROM object_media WHERE relatedid = {id};"
 
-        cursor.execute(query)
-        media = cursor.fetchone()
+        # Use parameterized queries to avoid SQL injection
+        query = '''
+            SELECT thumbnailurl
+                FROM object_media
+                WHERE mediaid IN (
+                    SELECT mediaid
+                    FROM media_relationships
+                    WHERE relatedid = %s
+                    AND BINARY relatedentity = 'nga:art:tms:objects\r');'''
+        cursor.execute(query, (obj.objectid,))
+        media = cursor.fetchall()
 
         return media
-    
-    
+
+
+
+
     def create_media(self, media):
         media.mediaid = media.mediaid
         return id
@@ -55,7 +75,7 @@ class MediaRepository:
         cursor.execute(query, (media.mediaid, media.title, media.description, media.thumbnailurl, media.playurl))
         self.connection.commit()
         return id
-    
+
     def update_media(self, media):
         print(media.mediaid)
         cursor = self.connection.cursor()
@@ -68,4 +88,3 @@ class MediaRepository:
         query = '''DELETE FROM constituents_media WHERE mediaid = %s'''
         cursor.execute(query, [media.mediaid])
         self.connection.commit() 
-
