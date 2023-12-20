@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from repository.constituent_repository import ConstituentRepository
 
 def constituents_bp(connection):
@@ -11,6 +11,21 @@ def constituents_bp(connection):
     )
 
     repository = ConstituentRepository(connection=connection)
+
+    constituent_attributes = [
+        "ulanid",
+        "preferred-display-name",
+        "forward-display-name",
+        "lastname",
+        "display-date",
+        "artist-of-nga-object",
+        "birthyear",
+        "deathyear",
+        "visualbrowsertimespan",
+        "nationality",
+        "constituent-type",
+        "wikidataid"
+    ]
 
     @constituents.route('/', methods=['GET', 'POST'])
     def constituents_page():
@@ -44,8 +59,17 @@ def constituents_bp(connection):
     
     @constituents.route('/add', methods=['GET','POST'])
     def add_constituent():
-        attributes = request.args.get('list')
-        return render_template('constituents_add.html')
-
+        if request.method == 'GET':
+            return render_template('constituents_add.html')
+        else:
+            attributes = []
+            for key in constituent_attributes:
+                if key in request.form and len(request.form[key]):
+                    attributes.append(request.form[key])
+                else:
+                    attributes.append(None)
+            repository.add_constituent(attributes=attributes)
+            flash('Constituent has been added successfully.')
+            return render_template('constituents_add.html')
 
     return constituents

@@ -38,7 +38,6 @@ class ConstituentRepository:
         constituent = Constituent(attributes=attributes)
         with self.connection.cursor() as cursor:
             query = '''INSERT INTO constituents (
-                                constituentid, 
                                 ulanid, 
                                 preferreddisplayname, 
                                 forwarddisplayname, 
@@ -48,14 +47,12 @@ class ConstituentRepository:
                                 beginyear, 
                                 endyear, 
                                 visualbrowsertimespan, 
-                                nationality, 
-                                visualbrowsernationality, 
+                                nationality,
                                 constituenttype, 
                                 wikidataid
                                 ) 
-            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
-            cursor.execute(query, (constituent.constituentid,
-                                        constituent.ulanid,
+            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
+            cursor.execute(query, (constituent.ulanid,
                                         constituent.preferreddisplayname,
                                         constituent.forwarddisplayname,
                                         constituent.lastname,
@@ -65,11 +62,10 @@ class ConstituentRepository:
                                         constituent.endyear,
                                         constituent.visualbrowsertimespan,
                                         constituent.nationality,
-                                        constituent.visualbrowsernationality,
                                         constituent.constituenttype,
                                         constituent.wikidataid))
         self.connection.commit()
-        return constituent.constituentid
+        return True
     
     def constituent_objects(self, constituentid: int):
         objects = []
