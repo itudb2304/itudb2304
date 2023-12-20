@@ -38,12 +38,7 @@ def constituents_bp(connection):
                 return redirect(url_for('.add_constituent'))
         else:
             constituents = repository.get_all_constituents()
-            return render_template('constituents.html', constituents=constituents)
-    
-    @constituents.route('/<int:id>')
-    def constituent_by_id(id: int):
-        constituent = repository.get_constituent_by_id(id)
-        return f"{constituent.forwarddisplayname}"
+            return render_template('constituents.html', constituents_list=constituents)
     
     @constituents.route('/<string:name>', methods=['GET', 'POST'])
     def constituent_by_name(name: str):
@@ -55,7 +50,7 @@ def constituents_bp(connection):
             elif 'add-constituent' in request.form:
                 req = request.form['add-constituent']
                 return redirect(url_for('.add_constituent'))
-        return render_template('constituents.html', constituents=constituents)
+        return render_template('constituents.html', constituents_list=constituents)
     
     @constituents.route('/add', methods=['GET','POST'])
     def add_constituent():
@@ -71,5 +66,12 @@ def constituents_bp(connection):
             repository.add_constituent(attributes=attributes)
             flash('Constituent has been added successfully.')
             return render_template('constituents_add.html')
+        
+    @constituents.route('/<int:id>')
+    def constituent_objects(id: int):
+        constituent_objects = repository.constituent_objects(id)
+        print(constituent_objects)
+        return render_template('constituent_objects.html',constituent_objects=constituent_objects)
+
 
     return constituents

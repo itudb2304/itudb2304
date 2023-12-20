@@ -21,9 +21,14 @@
     </div>
 </form>
 
-<ol> 
-    {% for  constituent in constituents %} 
-        <li>{{ constituent.preferreddisplayname }} </li>
+<ul>
+    {% for constituent in constituents_list %}
+      <form action="{{ url_for('constituents.constituents_page') }}" method="post">
+        <li>
+          <a href="{{ url_for('constituents.constituent_objects', id=constituent.constituentid) }}">{{ constituent.preferreddisplayname }}</a>
+        </li>
+      </form>
     {% endfor %}
-</ol>
+  </ul>
+  
 {% endblock %}
