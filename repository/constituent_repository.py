@@ -1,4 +1,5 @@
 from models.constituent import Constituent
+from models.constituent_objects import ConstituentObjects
 
 class ConstituentRepository:
     def __init__(self, connection):
@@ -68,6 +69,21 @@ class ConstituentRepository:
         return True
     
     def constituent_objects(self, constituentid: int):
-        objects = []
+        objects_info = []
+        with self.connection.cursor() as cursor:
+            query = '''SELECT oc.objectID, oc.constituentID, oc.roleType,
+            oc.role, oc.displayDate, oc.country, o.title, c.forwarddisplayname 
+            FROM constituents c
+            LEFT JOIN objects_constituents oc on c.constituentid = oc.constituentID
+            LEFT JOIN objects o on o.objectid = oc.objectID
+            WHERE c.constituentid = %s;
+            ;
+            '''
+            cursor.execute(query, (constituentid,))
+            objects_info = cursor.fetchall()
+            objects_info = [ConstituentObjects(i) for i in objects_info]
+            self.connection.commit()
+            return objects_info
+
 
         
