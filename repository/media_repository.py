@@ -36,33 +36,19 @@ class MediaRepository:
         cursor = self.connection.cursor()
 
         # Use parameterized queries to avoid SQL injection
-        query1 = '''
-            SELECT media_relationships.mediaid FROM media_relationships
-            WHERE media_relationships.relatedid = %s;
-        '''
-        cursor.execute(query1, (obj.objectid,))
+        query = '''
+            SELECT thumbnailurl
+                FROM object_media
+                WHERE mediaid IN (
+                    SELECT mediaid
+                    FROM media_relationships
+                    WHERE relatedid = %s
+                    AND BINARY relatedentity = 'nga:art:tms:objects\r');'''
+        cursor.execute(query, (obj.objectid,))
+        media = cursor.fetchall()
 
-        # Fetch the result
-        id_result = cursor.fetchall()
+        return media
 
-        # Check if there is a result before proceeding
-        if id_result:
-            # Extract the mediaid from the result
-            media_id = id_result[0][0]
-
-            if media_id is not None:
-                # Use parameterized query for the second query
-                query2 = "SELECT thumbnailurl FROM object_media WHERE mediaid = %s;"
-                cursor.execute(query2, (media_id,))
-
-                # Fetch all the results
-                media = cursor.fetchall()
-
-
-                return media
-
-    # Return None if there is no mediaid found
-        return None
 
     
     
