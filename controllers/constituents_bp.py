@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from repository.constituent_repository import ConstituentRepository
+from repository.media_repository import MediaRepository
 
 def constituents_bp(connection):
     constituents = Blueprint(
@@ -11,7 +12,7 @@ def constituents_bp(connection):
     )
 
     repository = ConstituentRepository(connection=connection)
-
+    media_repository = MediaRepository(connection=connection)
     constituent_attributes = [
         "ulanid",
         "preferred-display-name",
@@ -37,14 +38,18 @@ def constituents_bp(connection):
                 req = request.form['add-constituent']
                 return redirect(url_for('.add_constituent'))
         else:
+
             constituents = repository.get_all_constituents()
-            return render_template('constituents.html', constituents=constituents)
-    
+            constituent_id = request.args.get('constituent_id')
+            media = media_repository.get_constituent_media_by_id(constituent_id)
+            return render_template('constituents.html', constituents=constituents,  media=media, get_constituent_media_by_id=media_repository.get_constituent_media_by_id)
+
     @constituents.route('/<int:id>')
     def constituent_by_id(id: int):
         constituent = repository.get_constituent_by_id(id)
         return f"{constituent.forwarddisplayname}"
-    
+
+
     @constituents.route('/<string:name>', methods=['GET', 'POST'])
     def constituent_by_name(name: str):
         constituents = repository.get_constituents_by_name(name=name)
@@ -56,7 +61,7 @@ def constituents_bp(connection):
                 req = request.form['add-constituent']
                 return redirect(url_for('.add_constituent'))
         return render_template('constituents.html', constituents=constituents)
-    
+
     @constituents.route('/add', methods=['GET','POST'])
     def add_constituent():
         if request.method == 'GET':

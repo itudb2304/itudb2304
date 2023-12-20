@@ -21,17 +21,29 @@ class MediaRepository:
         media = cursor.fetchall()
 
         return media
-    
-    def get_constituent_media_by_id(self, id):
-        cursor = self.connection.cursor()
-        
-        query = f"SELECT thumbnailurl FROM constituents_media WHERE relatedid = {id}"
 
-        cursor.execute(query)
+    def get_constituent_media_by_id(self, id):
+        if id is None:
+            return []  # Return an empty list or handle appropriately
+
+        cursor = self.connection.cursor()
+
+        query = '''
+            SELECT thumbnailurl
+            FROM constituents_media
+            WHERE mediaid IN (
+                SELECT mediaid
+                FROM media_relationships
+                WHERE relatedid = %s
+                AND BINARY relatedentity = 'nga:art:tms:constituents\r');
+        '''
+
+        cursor.execute(query, (id,))
         media = cursor.fetchall()
 
         return media
-    
+
+
     def get_object_media(self, obj):
         cursor = self.connection.cursor()
 
@@ -50,8 +62,8 @@ class MediaRepository:
         return media
 
 
-    
-    
+
+
     def create_media(self, media):
         media.mediaid = media.mediaid
         return id
@@ -63,7 +75,7 @@ class MediaRepository:
         cursor.execute(query, (media.mediaid, media.title, media.description, media.thumbnailurl, media.playurl))
         self.connection.commit()
         return id
-    
+
     def update_media(self, media):
         print(media.mediaid)
         cursor = self.connection.cursor()
@@ -76,4 +88,3 @@ class MediaRepository:
         query = '''DELETE FROM constituents_media WHERE mediaid = %s'''
         cursor.execute(query, [media.mediaid])
         self.connection.commit() 
-
