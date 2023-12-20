@@ -2,6 +2,50 @@
 {% block content %}
 
 <h1>Objects Constituted by {{constituent_objects[0].constituent_forward_display_name}}</h1>
+
+<form action="" method="post">
+    <div style="margin: 15px;">
+        <button type="submit" class="btn btn-primary btn-lg custom-bg" name="add-constituent-object" id="add-constituent-object"><i class="fa-solid fa-plus"></i> Add Constituent Object</button>
+    </div>
+</form>
+
+<!-- <div class="container">
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="custom-box">
+        <div class="custom-box-content">
+          <p>This is a multiline text inside Box 1.</p>
+          <p>It spans across multiple lines.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="custom-box">
+        <div class="custom-box-content">
+          <p>This is a multiline text inside Box 2.</p>
+          <p>It also spans across multiple lines.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="custom-box">
+        <div class="custom-box-content">
+          <p>This is a multiline text inside Box 3.</p>
+          <p>Again, it spans across multiple lines.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="custom-box">
+        <div class="custom-box-content">
+          <p>This is a multiline text inside Box 4.</p>
+          <p>Yep, it spans across multiple lines.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
 <ol>
 {% for object_info in constituent_objects %}
     <li>

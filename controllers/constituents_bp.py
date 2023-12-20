@@ -44,11 +44,6 @@ def constituents_bp(connection):
             media = media_repository.get_constituent_media_by_id(constituent_id)
             return render_template('constituents.html', constituents=constituents,  media=media, get_constituent_media_by_id=media_repository.get_constituent_media_by_id)
 
-    @constituents.route('/<int:id>')
-    def constituent_by_id(id: int):
-        constituent = repository.get_constituent_by_id(id)
-        return f"{constituent.forwarddisplayname}"
-
     @constituents.route('/<string:name>', methods=['GET', 'POST'])
     def constituent_by_name(name: str):
         constituents = repository.get_constituents_by_name(name=name)
@@ -76,10 +71,16 @@ def constituents_bp(connection):
             flash('Constituent has been added successfully.')
             return render_template('constituents_add.html')
         
-    @constituents.route('/<int:id>')
+    @constituents.route('/<int:id>', methods=['GET', 'POST'])
     def constituent_objects(id: int):
-        constituent_objects = repository.constituent_objects(id)
-        print(constituent_objects)
-        return render_template('constituent_objects.html',constituent_objects=constituent_objects)
+        if request == 'GET':
+            constituent_objects = repository.constituent_objects(id)
+            return render_template('constituent_objects.html',constituent_objects=constituent_objects)
+        else:
+            return redirect(url_for('.add_constituent_object', id=id))
+    
+    @constituents.route('/<int:id>/add-object', methods=['GET', 'POST'])
+    def add_constituent_object(id: int):
+        return render_template("add_constituent_object.html")
 
     return constituents
