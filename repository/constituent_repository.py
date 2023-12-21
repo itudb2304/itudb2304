@@ -85,14 +85,7 @@ class ConstituentRepository:
             self.connection.commit()
             return objects_info
         
-    def add_constituent_object(self,
-                               objectID: int,
-                               constituentID: int,
-                               role_type: str,
-                               role: str,
-                               display_date: str,
-                               country: str
-                               ):
+    def add_constituent_object(self, attributes: list):
         with self.connection.cursor() as cursor:
             query = '''INSERT INTO objects_constituents (
                                    objectID,
@@ -100,20 +93,48 @@ class ConstituentRepository:
                                    roleType,
                                    role,
                                    displayDate,
+                                   displayOrder,
                                    country
                                    )
-                                   VALUES (%s, %s, %s, %s, %s, %s);'''
-            cursor.execute(query, (objectID, constituentID, role_type, role, display_date, country))
+                                   VALUES (%s, %s, %s, %s, %s, %s, %s);'''
+            cursor.execute(query, (attributes[0], attributes[1], attributes[2], attributes[3], attributes[4], attributes[5], attributes[6]))
         self.connection.commit()
 
     # TODO: later move this function to objects repository
+    # TODO: remove limit
     def get_object_ids(self):
-        object_ids = set()
+        object_ids = []
         with self.connection.cursor() as cursor:
-            query = '''SELECT objectid FROM objects;'''
+            query = '''SELECT title FROM objects LIMIT 10;'''
             cursor.execute(query)
             object_ids = cursor.fetchall()
         self.connection.commit()
         return object_ids
-
+    
+    # TODO: remove limit
+    def get_constituent_ids(self):
+        constituent_ids = []
+        with self.connection.cursor() as cursor:
+            query = '''SELECT preferreddisplayname FROM constituents LIMIT 10;'''
+            cursor.execute(query)
+            constituent_ids = cursor.fetchall()
+        return constituent_ids
+    
+    def update_constituent_object(self, attributes: list):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''UPDATE objects_constituents SET
+                                    objectID = %s,
+                                    constituentID = %s,
+                                    roleType = %s,
+                                    role = %s,
+                                    displayDate = %s,
+                                    displayOrder = %s,
+                                    country = %s
+                                    WHERE (objectID, constituentID) = (%s, %s);'''
+                cursor.execute(query, (attributes[0], attributes[1], attributes[2], attributes[3], attributes[4], attributes[5], attributes[6], attributes[0], attributes[1]))
+            self.connection.commit()
+        except Exception as e:
+            print(f"Error updating constituent object in the database: {e}")
+            self.connection.rollback()
 

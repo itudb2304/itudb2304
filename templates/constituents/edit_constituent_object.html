@@ -2,7 +2,7 @@
 {% block content %}
 <form class="row g-3" action="{{ url_for('constituents.add_constituent_object', id=current_constituentID) }}" method="post">
   <div class="col-md-4">
-    <label for="objectid" class="form-label required">Object Name</label>
+    <label for="objectid" class="form-label required">Object ID</label>
     <select id="objectid" name="objectid" class="form-select" required="required">
       {% for i in object_ids %}
       <option>{{ i[0] }}</option>
@@ -10,7 +10,7 @@
     </select>
   </div>
   <div class="col-md-4">
-    <label for="constituentid" class="form-label required">Constituent Name</label>
+    <label for="constituentid" class="form-label required">Constituent ID</label>
     <select id="constituentid" name="constituentid" class="form-select" required="required">
       {% for i in constituent_ids %}
       <option>{{ i[0] }}</option>
