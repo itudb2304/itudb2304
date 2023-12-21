@@ -1,13 +1,21 @@
 {% extends 'header.html' %}
 {% block content %}
-<form class="row g-3" action="{{ url_for('constituents.add_constituent') }}" method="post">
+<form class="row g-3" action="{{ url_for('constituents.add_constituent_object', id=current_constituentID) }}" method="post">
   <div class="col-md-4">
     <label for="objectid" class="form-label required">Object ID</label>
-    <input type="number" class="form-control" id="objectid" name="objectid">
+    <select id="objectid" name="objectid" class="form-select" required="required">
+      {% for i in object_ids %}
+      <option>{{ i[0] }}</option>
+      {% endfor %}
+    </select>
   </div>
   <div class="col-md-4">
     <label for="constituentid" class="form-label required">Constituent ID</label>
-    <input type="number" class="form-control" id="constituentid" name="constituentid">
+    <select id="constituentid" name="constituentid" class="form-select" required="required">
+      {% for i in constituent_ids %}
+      <option>{{ i[0] }}</option>
+      {% endfor %}
+    </select>
   </div>
   <div class="col-md-4">
     <label for="roletype" class="form-label required">Role Type of the Constituent</label>
@@ -24,6 +32,10 @@
   <div class="col-md-4">
     <label for="displaydate" class="form-label">Display Date</label>
     <input type="text" maxlength="128" class="form-control" id="displaydate" name="displaydate">
+  </div>
+  <div class="col-md-4">
+    <label for="displayorder" class="form-label required">Display Order</label>
+    <input type="number" class="form-control" id="displayorder" name="displayorder">
   </div>
   <div class="col-md-4">
     <label for="country" class="form-label">Country</label>

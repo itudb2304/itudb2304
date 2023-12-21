@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from repository.constituent_repository import ConstituentRepository
 from repository.media_repository import MediaRepository
+from repository.objects_repository import ObjectsRepository
 
 def constituents_bp(connection):
     constituents = Blueprint(
@@ -12,6 +13,7 @@ def constituents_bp(connection):
     )
 
     repository = ConstituentRepository(connection=connection)
+    objects_repository = ObjectsRepository(connection=connection)
     media_repository = MediaRepository(connection=connection)
     constituent_attributes = [
         "ulanid",
@@ -28,6 +30,16 @@ def constituents_bp(connection):
         "wikidataid"
     ]
 
+    constituent_objects_attributes = [
+        "objectid",
+        "constituentid",
+        "roletype",
+        "role",
+        "displaydate",
+        "displayorder",
+        "country"
+    ]
+
     @constituents.route('/', methods=['GET', 'POST'])
     def constituents_page():
         if request.method == 'POST':
@@ -38,7 +50,6 @@ def constituents_bp(connection):
                 req = request.form['add-constituent']
                 return redirect(url_for('.add_constituent'))
         else:
-
             constituents = repository.get_all_constituents()
             constituent_id = request.args.get('constituent_id')
             media = media_repository.get_constituent_media_by_id(constituent_id)
@@ -73,14 +84,27 @@ def constituents_bp(connection):
         
     @constituents.route('/<int:id>', methods=['GET', 'POST'])
     def constituent_objects(id: int):
-        if request == 'GET':
+        if request.method == 'GET':
             constituent_objects = repository.constituent_objects(id)
-            return render_template('constituent_objects.html',constituent_objects=constituent_objects)
+            return render_template('constituent_objects.html',constituent_objects=constituent_objects, constituentID=id)
         else:
             return redirect(url_for('.add_constituent_object', id=id))
     
     @constituents.route('/<int:id>/add-object', methods=['GET', 'POST'])
     def add_constituent_object(id: int):
-        return render_template("add_constituent_object.html")
+        if request.method == 'GET':
+            return render_template("add_constituent_object.html", object_ids=repository.get_object_ids(), constituent_ids=repository.get_constituent_ids(), current_constituentID=id)
+        else:
+            attributes = []
+            for att in constituent_objects_attributes:
+                if att in request.form:
+                    attributes.append(request.form[att])
+                else:
+                    attributes.append(None)
+            attributes.append(objects_repository.get_object_by_objectid(attributes[0]).title)
+            attributes.append(repository.get_constituent_by_id(attributes[1]).forwarddisplayname)
+            repository.add_constituent_object(attributes=attributes)
+            flash('Constituent has been added successfully.')
+            return render_template("add_constituent_object.html", object_ids=repository.get_object_ids(), constituent_ids=repository.get_constituent_ids(), current_constituentID=id)
 
     return constituents
