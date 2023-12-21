@@ -1,0 +1,40 @@
+{% extends "header.html" %}
+{% block title %} Locations {% endblock %}
+, location{% block content %}
+    <h1 class=" title"> Locations </h1>
+    {% if locations %}
+    <form action="" method="post">       
+            {% for location in locations%}                      
+                <div id = location[1]>
+                    <label class="checkbox">
+                        <input type="hidden" name="location_key" value="{{ location[1] }}">
+                        {{location[0]}}  
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-danger is-small">
+                              <a class="button is-primary is-outlined is-small"
+                                 href="{{url_for('locations.building_edit_page', building_id=location[1])}}">Edit</a>
+                                </button>
+                                <button class="button is-danger is-small" name = "delete" onclick="return confirmDelete()">Delete</button>
+                            </div>
+                        </div>  
+
+                    </label>    
+                     
+                    {% for floor in location[2]%}  
+                        <li><a href="{{url_for('locations.floor_page', floor_id=floor[1], building_id = location[1])}}">{{floor[0]}}</a></li>                               
+                    {% endfor %}                     
+                </div>
+            {% endfor %}
+        
+  
+    </form>
+    {% endif %}
+    <button><a href="{{ url_for('locations.building_add_page')}}">Add Building</a></button>
+    <script>
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this item');
+        }
+    </script>
+
+{% endblock %}

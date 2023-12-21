@@ -41,22 +41,26 @@
 
         <div class="field is-grouped">
             <div class="control">
-                <button class="button is-primary is-small">Save</button>
+                <button class="button is-primary is-small" name = "cancel" onclick="cancelForm()">Cancel</button>
+                <button class="button is-primary is-small" name = "save">Save</button>
             </div>
         </div>
-        
+
     </form>
     <script>
         document.getElementById('addFloorBtn').addEventListener('click', function () {
-            // Create a new input field
             var newInput = document.createElement('input');
             newInput.type = 'text';
-            newInput.name = 'floors[]'; // Use an array if you expect multiple floor inputs
+            newInput.name = 'floors[]';
             newInput.placeholder = 'Enter floor name';
             newInput.required = true;
-    
-            // Append the new input field to the container
+
             document.getElementById('floorInputContainer').appendChild(newInput);
         });
+        function cancelForm() {
+            document.querySelector('input[name="name"]').removeAttribute('required');
+            document.querySelector('input[name="isPublic"]').removeAttribute('required');
+            document.querySelector('input[name="floors[]"]').removeAttribute('required');
+        }
     </script>
 {% endblock %}

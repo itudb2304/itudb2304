@@ -1027,10 +1027,10 @@ locationid,site,room,publicaccess,description,unitposition,mapimageurl
 14133,East Building,EU-407-A,1,East Bldg/ Upr Lvl Gal 407A (North Bridge),S,https://www.nga.gov/content/dam/ngaweb/LocationMaps/eb-upper.png
 14173,West Building,M-073-B,1,West Main Floor Gallery 73 B,CENTER,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wb-main.png
 14174,West Building,M-072,1,West Main Floor Gallery 72,CEILING,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wb-main.png
-14176,Sculpture Garden (WSG),NW-Quad,1,Sculpture Garden - NW,,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wsg.png
-14177,Sculpture Garden (WSG),NE-Quad,1,Sculpture Garden - NE,,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wsg.png
-14178,Sculpture Garden (WSG),SE-Quad,1,Sculpture Garden - SE,,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wsg.png
-14179,Sculpture Garden (WSG),SW-Quad,1,Sculpture Garden - SW,,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wsg.png
+14176,Sculpture Garden,NW-Quad,1,Sculpture Garden - NW,,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wsg.png
+14177,Sculpture Garden,NE-Quad,1,Sculpture Garden - NE,,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wsg.png
+14178,Sculpture Garden,SE-Quad,1,Sculpture Garden - SE,,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wsg.png
+14179,Sculpture Garden,SW-Quad,1,Sculpture Garden - SW,,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wsg.png
 14615,West Building,M-078-A,1,West Main Floor Gallery 78A,CENTER,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wb-main.png
 14631,West Building,M-014,1,West Main Floor Gallery 14,CENTER,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wb-main.png
 14632,West Building,M-011,1,West Main Floor Gallery 11,BAFFLE,https://www.nga.gov/content/dam/ngaweb/LocationMaps/wb-main.png
