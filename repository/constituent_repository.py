@@ -84,6 +84,36 @@ class ConstituentRepository:
             objects_info = [ConstituentObjects(i) for i in objects_info]
             self.connection.commit()
             return objects_info
-
-
         
+    def add_constituent_object(self,
+                               objectID: int,
+                               constituentID: int,
+                               role_type: str,
+                               role: str,
+                               display_date: str,
+                               country: str
+                               ):
+        with self.connection.cursor() as cursor:
+            query = '''INSERT INTO objects_constituents (
+                                   objectID,
+                                   constituentID,
+                                   roleType,
+                                   role,
+                                   displayDate,
+                                   country
+                                   )
+                                   VALUES (%s, %s, %s, %s, %s, %s);'''
+            cursor.execute(query, (objectID, constituentID, role_type, role, display_date, country))
+        self.connection.commit()
+
+    # TODO: later move this function to objects repository
+    def get_object_ids(self):
+        object_ids = set()
+        with self.connection.cursor() as cursor:
+            query = '''SELECT objectid FROM objects;'''
+            cursor.execute(query)
+            object_ids = cursor.fetchall()
+        self.connection.commit()
+        return object_ids
+
+

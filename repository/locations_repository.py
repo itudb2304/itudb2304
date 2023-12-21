@@ -182,6 +182,13 @@ class LocationsRepository:
                 print("This object_id is not valid")
                 return
             query = ''' UPDATE objects SET locationid = %s WHERE objectid = %s;'''
-            print(location_id[0])
+
             cursor.execute(query, (location_id[0], object_id))
+            self.connection.commit()
+
+    def remove_object(self, object_id, locationkey):
+        location_id = self.get_locationid(locationkey)
+        with self.connection.cursor() as cursor:
+            query = ''' UPDATE objects SET locationid = NULL WHERE objectid = %s;'''
+            cursor.execute(query, (object_id,))
             self.connection.commit()

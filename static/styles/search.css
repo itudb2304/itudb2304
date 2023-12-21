@@ -98,3 +98,15 @@ tr:nth-child(even) {
   content:" *";
   color: red;
 }
+
+.custom-box {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-box-content {
+  flex: 1;
+}
