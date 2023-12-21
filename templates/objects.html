@@ -12,9 +12,17 @@
   <h1>OBJECTS</h1>
   <button onclick="window.location.href='/objects/object_addition'">Add Object</button>
 
-  <div class="classificationFiltering">
-    <h2>Filter by Classification</h2>
-    <form action="/objects" method="GET">
+  <form action="/objects" method="GET">
+    <div class="searchBarfortitle">
+      <input type="text" name="title" placeholder="Search by Title">
+    </div>
+
+    <div class="searchBarforCreditLine">
+      <input type="text" name="creditLine" placeholder="Search by Credit Line">
+    </div>
+
+    <div class="classificationFiltering">
+      <h4>Filter by Classification</h4>
       <input type="checkbox" name="classification" value="Painting">Painting<br>
       <input type="checkbox" name="classification" value="Print">Print<br>
       <input type="checkbox" name="classification" value="Sculpture">Sculpture<br>
@@ -25,9 +33,9 @@
       <input type="checkbox" name="classification" value="New Media">New Media<br>
       <input type="checkbox" name="classification" value="Decorative Art">Decorative Art<br>
       <input type="checkbox" name="classification" value="Technical Material">Technical Material<br>
-      <input type="submit" value="Filter">
-    </form>
-  </div>
+    </div>
+    <input type="submit" value="Filter">
+  </form>
 
   <div class="tableDiv">
     <table class="table" id="objectsTable">
@@ -64,7 +72,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       document.querySelectorAll("#objectsTable tbody tr").forEach(function (row) {
-        row.addEventListener("click", function (event) {
+        row.addEventListener("dblclick", function (event) {
           event.preventDefault(); // sends ctrl+p if this line is not present
           window.location.href = "/objects/" + row.getAttribute("data-obj-id");
         });

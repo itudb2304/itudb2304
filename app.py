@@ -10,6 +10,8 @@ from controllers.objects_bp import objects_bp
 from controllers.media_bp import media_bp
 from controllers.artwork_bp import artwork_bp
 
+#import db_static
+
 def create_app():
     app = Flask(__name__ )
     app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -32,5 +34,6 @@ def create_app():
     return app
 
 if __name__ == "__main__":
+    #db_static.init()
     app = create_app()
     app.run(debug=True)

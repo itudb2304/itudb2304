@@ -15,50 +15,55 @@
 
   <div class="endisdiv">
     <div class="photoOfArtwork">
-      {% for m in media %}
-                
-      <li>
-        <img src="{{ m[0] }}" alt="Artwork">
-        
-      </li>
-  {% endfor %}
+      <img src={{ media }}>
+      alt="Artwork Photo">
     </div>
     <div class="objectDescription">
-      <h3>Artist Name</h3>
-      <p class="subtitle">{{ object.title }}</p>
-      <h3>is Virtual</h3>
-      <p>{{ object.isVirtual }}</p>
-      <hr>
-      <h3>Medium</h3>
-      <p>{{ object.medium }}</p>
-      <h3>Dimensions</h3>
-      <p>{{ object.dimensions }}</p>
-      <h3>Credit Line</h3>
-      <p>{{ object.creditLine }}</p>
-      <h3>Accession Number</h3>
-      <p>{{ object.accessionnum }}</p>
-      <h3>Artists / Makers</h3>
-      <p>{{ object.attribution }}</p>
-      <h3>Image Use</h3>
-      <p>{{ object.customPrintURL }}</p>
-      <h3>Status for Related Objects</h3>
-      <p>{{ object.visualBrowserClassification }}</p>
+      <p><strong>Artist Name:</strong></p>
+      <p><strong>Title: </strong>{{ object.title }}</p>
+      <p><strong>Is Virtual: </strong>{{ object.isVirtual }}</p>
+      <p><strong>Medium: </strong>{{ object.medium }}</p>
+      <p><strong>Dimensions: </strong>{{ object.dimensions }}</p>
+      <p><strong>Credit Line: </strong>{{ object.creditLine }}</p>
+      <p><strong>Accession Number: </strong>{{ object.accessionnum }}</p>
+      <p><strong>Artists / Makers: </strong>{{ object.attribution }}</p>
+      <p><strong>Image Use: </strong>{{ object.customPrintURL }}</p>
+      <p><strong>Classification: </strong>{{ object.classification }}</p>
 
-      <h3>Location: </h3>
-      <h4>Site<h4>
-          <p> {{ objectLocation.site}}</a></p>
-          <h4>Room</h4>
-          <p>{{objectLocation.room}} </p>
-          <h4>desc</h4>
-          <p>{{objectLocation.decription}} </p>
+      <h5>Location: </h5>
+
+      <p><strong>Site: </strong> {{ objectLocation.site}}</a></p>
+      <p><strong>Room: </strong>{{objectLocation.room}} </p>
+      <p><strong>desc: </strong>{{objectLocation.decription}} </p>
+
     </div>
   </div>
   <div class="div3">
-    <h2>Inscription</h2>
-    <p>{{ object.inscription }}</p>
-
-    <h2>Provenance</h2>
-    <p>{{ object.provenanceText }}</p>
+    <button onclick="showInscription()">Inscription</button>
+    <div id="insc">
+      <p>{{ object.inscription }}</p>
+    </div>
+    <hr>
+    <button onclick="showProvenance()">Provenance</button>
+    <div id="prov">
+      <p>{{ object.provenanceText }}</p>
+    </div>
+    <hr>
+    <button onclick="showBibliography()">Bibliography</button>
+    <div id="bib">
+      {% for entry in text_entry["bibliography"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+      {% endfor %}
+    </div>
+    <hr>
+    <button onclick="exhibition_history()">Exhibition History</button>
+    <div id="exh">
+      <ul>
+          {% for entry in text_entry["exhibition_history"] %}
+              <li>{{ entry[1] }}: {{ entry[0] }}</li>
+          {% endfor %}
+      </ul>
+    <hr>
   </div>
 
   <script>
@@ -89,6 +94,42 @@
         }
       });
     });
+
+    function showInscription() {
+      var x = document.getElementById("insc");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+
+    function showProvenance() {
+      var x = document.getElementById("prov");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+
+    function showBibliography() {
+      var x = document.getElementById("bib");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+
+    function exhibition_history() {
+      var x = document.getElementById("exh");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
   </script>
 
 </body>

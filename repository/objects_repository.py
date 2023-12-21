@@ -50,15 +50,36 @@ class LocationDTO:
     def _handle_none_values(self, data):
         return tuple(None if value is None else value for value in data)
 
+class objectTextEntryDTO:
+    texttypes = [ "bibliography", "exhibition_history", "lifetime_exhibition", "other_collections", "exhibition_history_footnote", "documentary_labels_inscriptions", "inscription_footnote"]
+
+    def __init__(self, data):
+        text_entries = {text_type: [] for text_type in self.texttypes}
+
+        for row in data:
+            text_type = row[2]
+            if text_type in self.texttypes:
+                text_entries[text_type].append([row[1], row[3]]) #text, year
+        self.text_entries = text_entries
+
 classification_elements = ["Painting", "Print", "Sculpture", "Drawing","Volume", "Portfolio","Photograph","New Media","Decorative Art","Technical Material"]
 
 class ObjectsRepository:
     def __init__(self, connection):
         self.connection = connection
     
-    def get_all_objects(self, selected_classifications=None):
+    def get_all_objects(self, selected_classifications=None, title_filter=None, credit_line_filter=None):
         try:
             with self.connection.cursor() as cursor:
+                execution_list = []
+                if selected_classifications:
+                    for classification in selected_classifications:
+                        execution_list.append(classification)
+                if title_filter:
+                    execution_list.append('%' + title_filter + '%')
+                if credit_line_filter:
+                    execution_list.append('%' + credit_line_filter + '%')
+                
                 query = '''
                 SELECT objectid, accessioned, accessionnum, locationid, title, displayDate, beginYear, 
                     endYear, visualBrowserTimeSpan, medium, dimensions, inscription, markings, attributionInverted, 
@@ -68,14 +89,39 @@ class ObjectsRepository:
                 FROM objects;'''
                 if selected_classifications:
                     query = query[:-1] + " WHERE classification IN (" + ",".join(["%s"] * len(selected_classifications)) + ");"
-                    cursor.execute(query, selected_classifications)
-                else:
-                    cursor.execute(query)
+                if title_filter:
+                    if selected_classifications:
+                        query = query[:-1] + " AND title LIKE %s;"
+                    else:
+                        query = query[:-1] + " WHERE title LIKE %s;"
+                if credit_line_filter:
+                    if selected_classifications or title_filter:
+                        query = query[:-1] + " AND creditLine LIKE %s;"
+                    else:
+                        query = query[:-1] + " WHERE creditLine LIKE %s;"
+                cursor.execute(query, execution_list)
                 objects = [ObjectDTO(row) for row in cursor.fetchall()]
             return objects
         except Exception as e:
             print(f"Error getting all objects from the database: {e}")
-    
+
+    def get_object_text_entries(self, objectid):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                SELECT o.objectid, ot.text, ot.texttype, ot.year
+                FROM objects o
+                LEFT JOIN objects_text_entries ot ON o.objectid = ot.objectid
+                WHERE o.objectid = %s;
+                '''
+                cursor.execute(query, [objectid])
+                rows = cursor.fetchall()
+                mappedentries = objectTextEntryDTO(rows)
+            return mappedentries
+        except Exception as e:
+            print(f"Error getting object text entries from the database: {e}")
+
+
     def get_object_by_objectid(self, objectid):
         try:
             with self.connection.cursor() as cursor:

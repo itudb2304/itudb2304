@@ -13,13 +13,14 @@ def objects_bp(connection):
     )
 
     repository = ObjectsRepository(connection=connection)
-    media_repository = MediaRepository(connection=connection)
 
     @objects.route('/', methods=['GET', 'POST'])
     def objects_page():
         if request.method == "GET":
             selected_classifications = request.args.getlist('classification')
-            objects = repository.get_all_objects(selected_classifications)
+            title_filter = request.args.get('title')
+            credit_line_filter = request.args.get('creditLine')
+            objects = repository.get_all_objects(selected_classifications, title_filter, credit_line_filter)
             return render_template("objects.html", objects=objects)
  
     @objects.route('/object_addition', methods=['GET', 'POST'])
@@ -54,12 +55,17 @@ def objects_bp(connection):
     def object_page(objectid):
         if request.method == "GET":
             object = repository.get_object_by_objectid(objectid)
-            print(object.locationid)
+            object_text_entries = repository.get_object_text_entries(objectid) # is a map of text_type to list of text entries
+           
             objectLocation = repository.get_location_by_locationid(object.locationid) if object.locationid else None
-            media = media_repository.get_object_media(object)
+            media = None # fill later
             if media is None:
                 media = "https://via.placeholder.com/150"
-            return render_template('object.html', object=object, objectLocation=objectLocation, media=media)
+
+            print("bibliography entries", object_text_entries.text_entries["bibliography"])
+            print("exhibition_history entries", object_text_entries.text_entries["exhibition_history"])
+            
+            return render_template('object.html', object=object, objectLocation=objectLocation, media=media, text_entry=object_text_entries.text_entries)
         else:
             repository.delete_object(objectid)
             print("Deleted object with objectid successfuly", objectid)
