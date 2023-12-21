@@ -111,7 +111,6 @@ M-046,room,West Building/ Main Floor - Gallery 46,0,rect,154/119/177/140,1-wb-ma
 M-083,room,West Building/ Main Floor - Gallery 83,0,rect,406/50/444/69,1-wb-main
 M-069,room,West Building/ Main Floor - Gallery 69,0,rect,530/133/548/164,1-wb-main
 M-103,room,West Building/ Main Floor - Lobby A,0,rect,57/97/78/115,1-wb-main
-ttb88,building,test Touch Building 88,0,,,
 sg,building,Sculpture Garden,1,,,
 8-sg-main,floor,Sculpture Garden,1,,,sg
 4-eb-ground,floor,East Building/ Ground Level,1,,,eb
