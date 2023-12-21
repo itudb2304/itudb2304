@@ -11,12 +11,20 @@
 <ol>
 {% for object_info in constituent_objects %}
 {% if object_info.objectID != None %}
-    <li>
-        <a href="{{url_for('objects.object_page', objectid=object_info.objectID)}}">
-            <h4>{{ object_info.object_title }}</h4>
-        </a>
-        <h5>Role of the constituent: {{ object_info.role }}</h4>
-    </li>
+<div class="list-div">
+    <div class="col-md-2">
+        <a class="margin-after"><i class="fa-regular fa-pen-to-square"></i> Edit</a>
+        <a class="margin-after"><i class="fa-solid fa-delete-left"></i> Delete</a>
+    </div>
+    <div class="col-md-10">
+        <li>
+            <a href="{{url_for('objects.object_page', objectid=object_info.objectID)}}">
+                <h4>{{ object_info.object_title }}</h4>
+            </a>
+            <h5>Role of the constituent: {{ object_info.role }}</h4>
+        </li>
+    </div>
+</div>
 {% endif %}
 {% endfor %}
 </ol>

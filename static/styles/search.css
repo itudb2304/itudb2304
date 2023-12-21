@@ -110,3 +110,15 @@ tr:nth-child(even) {
 .custom-box-content {
   flex: 1;
 }
+
+.list-div {
+  margin-bottom: 25px;
+}
+
+.margin-after {
+  margin-right: 10px;
+}
+
+a {
+  color: #212529;
+}

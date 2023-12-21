@@ -53,19 +53,25 @@ def constituents_bp(connection):
             constituents = repository.get_all_constituents()
             constituent_id = request.args.get('constituent_id')
             media = media_repository.get_constituent_media_by_id(constituent_id)
-            return render_template('constituents.html', constituents=constituents,  media=media, get_constituent_media_by_id=media_repository.get_constituent_media_by_id)
+            return render_template('constituents.html', constituents_list=constituents,  media=media, get_constituent_media_by_id=media_repository.get_constituent_media_by_id)
 
     @constituents.route('/<string:name>', methods=['GET', 'POST'])
     def constituent_by_name(name: str):
+        print("AAAAAAAAAAAAAAAAAAAAAAAA")
         constituents = repository.get_constituents_by_name(name=name)
+        
         if request.method == 'POST':
+            print("POST")
             if 'constituent-search' in request.form:
                 req = request.form['constituent-search']
                 return redirect( url_for('.constituent_by_name', name=req) )
             elif 'add-constituent' in request.form:
                 req = request.form['add-constituent']
                 return redirect(url_for('.add_constituent'))
-        return render_template('constituents.html', constituents_list=constituents)
+        
+        print("GET")
+        print(len(constituents))
+        return render_template('constituents.html', constituents_list=constituents, get_constituent_media_by_id=media_repository.get_constituent_media_by_id)
 
     @constituents.route('/add', methods=['GET','POST'])
     def add_constituent():
@@ -106,5 +112,5 @@ def constituents_bp(connection):
             repository.add_constituent_object(attributes=attributes)
             flash('Constituent has been added successfully.')
             return render_template("add_constituent_object.html", object_ids=repository.get_object_ids(), constituent_ids=repository.get_constituent_ids(), current_constituentID=id)
-
     return constituents
+

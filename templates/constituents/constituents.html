@@ -21,9 +21,8 @@
     </div>
 </form>
 
-<ol id="constituents-list"> 
-    {% for constituent in constituents %} 
-      
+<ol id="constituents_list"> 
+    {% for constituent in constituents_list %} 
         <li>
           <a href="{{ url_for('constituents.constituent_objects', id=constituent.constituentid) }}">
             <span class="constituent-name" data-constituent-id="{{ constituent.constituentid }}">
