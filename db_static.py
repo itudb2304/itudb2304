@@ -73,7 +73,7 @@ def init():
         unitposition VARCHAR(20),
         mapimageurl VARCHAR(1024),
         PRIMARY KEY (locationid),
-        FOREIGN KEY (room) REFERENCES preferred_locations(locationkey) ON DELETE CASCADE ON UPDATE CASCADE
+        FOREIGN KEY (room) REFERENCES preferred_locations(locationkey) ON DELETE SET NULL ON UPDATE CASCADE
     );
     '''
     cursor.execute(query)
@@ -176,6 +176,9 @@ def init():
         customPrintURL              TEXT,
         PRIMARY KEY(objectid),
         FOREIGN KEY(locationid) references locations(locationid) ON DELETE CASCADE ON UPDATE CASCADE
+        CHECK (accessioned IN (0, 1)),
+        CHECK (isVirtual IN (0, 1))
+        CHECK (beginYear <= endYear) kontrol edilmedi daha
         ); 
     '''
     cursor.execute(query)
@@ -468,6 +471,35 @@ def init():
     '''
     cursor.execute(query)
     db.commit()
+
+    
+    query = '''
+        CREATE TABLE IF NOT EXISTS objects_text_entries (
+        objectid INTEGER,
+        text TEXT,
+        texttype VARCHAR(32),
+        year INTEGER,
+        FOREIGN KEY (objectID) REFERENCES objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE
+        );
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}objects_text_entries.csv'
+        INTO TABLE objects_text_entries
+        FIELDS TERMINATED BY ','
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects_text_entries
+        SET text = REPLACE(text, '/', ',');
+    '''
+    cursor.execute(query)
+    db.commit()
     
    
     query = ''' 
@@ -597,8 +629,7 @@ def init():
         presentationdate VARCHAR(30),
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid),
-        FOREIGN KEY (mediaid) references media_relationships(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
+        PRIMARY KEY (mediaid)
     );
     '''
     cursor.execute(query)
@@ -648,8 +679,7 @@ def init():
         presentationdate VARCHAR(30),
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid),
-        FOREIGN KEY (mediaid) references media_relationships(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
+        PRIMARY KEY (mediaid)
     );
     '''
     cursor.execute(query)
