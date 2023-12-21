@@ -57,17 +57,16 @@ def constituents_bp(connection):
 
     @constituents.route('/<string:name>', methods=['GET', 'POST'])
     def constituent_by_name(name: str):
-        constituents = repository.get_constituents_by_name(name=name)
-        
         if request.method == 'POST':
-            print("POST")
             if 'constituent-search' in request.form:
                 req = request.form['constituent-search']
                 return redirect( url_for('.constituent_by_name', name=req) )
             elif 'add-constituent' in request.form:
                 req = request.form['add-constituent']
                 return redirect(url_for('.add_constituent'))
-        return render_template('constituents.html', constituents_list=constituents, get_constituent_media_by_id=media_repository.get_constituent_media_by_id)
+        else:
+            constituents = repository.get_constituents_by_name(name=name)
+            return render_template('constituents.html', constituents_list=constituents, get_constituent_media_by_id=media_repository.get_constituent_media_by_id)
 
     @constituents.route('/add', methods=['GET','POST'])
     def add_constituent():

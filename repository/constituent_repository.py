@@ -28,10 +28,11 @@ class ConstituentRepository:
     def get_constituents_by_name(self, name):
         constituents = []
         with self.connection.cursor() as cursor:
-            query = "SELECT * FROM constituents c WHERE c.forwarddisplayname LIKE '%s';"
-            cursor.execute(query, (name,))
+            query = "SELECT * FROM constituents c WHERE c.forwarddisplayname LIKE %s;"
+            cursor.execute(query, ('%' + name + '%', ))
             constituents = cursor.fetchall()
             constituents = [Constituent(x) for x in constituents]
+        print("AAaaaaa" + str(len(constituents)))
         self.connection.commit()
         return constituents
     
@@ -164,4 +165,3 @@ class ConstituentRepository:
         except Exception as e:
             print(f"Error deleting constituent object from the database: {e}")
             self.connection.rollback()
-            
