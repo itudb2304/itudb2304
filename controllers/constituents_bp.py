@@ -127,7 +127,9 @@ def constituents_bp(connection):
             constituent_objects = repository.constituent_objects(constituentid=constituent_id)
             return redirect(url_for('.constituent_objects', id=constituent_id))
 
-
+    @constituents.route('/<int:constituentid>/<int:relationid>/delete', methods=['GET','POST'])
+    def delete_constituent_object(constituentid: int, relationid: int):
+        repository.delete_constituent_object(relationid=relationid)
+        return redirect(url_for('.constituent_objects', id=constituentid))
 
     return constituents
-

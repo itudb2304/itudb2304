@@ -152,3 +152,16 @@ class ConstituentRepository:
             print(f"Error updating constituent object in the database: {e}")
             self.connection.rollback()
 
+    def delete_constituent_object(self, relationid: int):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                DELETE FROM objects_constituents
+                WHERE id=%s;
+                '''
+                cursor.execute(query, (relationid,))
+                self.connection.commit()
+        except Exception as e:
+            print(f"Error deleting constituent object from the database: {e}")
+            self.connection.rollback()
+            
