@@ -6,13 +6,30 @@ db = mysql.connector.connect(
     host="localhost",
     user="root",  # root in default
     password= maskPassword.maskPsw(), # your mySQL password written in maskPassword.py file!
-    database="national_art",  #the database created in mySQL and it is in use (mySQL is UP!)
     allow_local_infile=True
 )
 
 cursor = db.cursor()
 
 def init():
+    query = '''
+        DROP DATABASE IF EXISTS national_art;
+    '''
+    cursor.execute(query)
+    db.commit()
+    
+    query = '''
+        CREATE DATABASE national_art;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        USE national_art;
+    '''
+    cursor.execute(query)
+    db.commit()
+
     query = ''' 
         CREATE TABLE IF NOT EXISTS preferred_locations(    
         locationkey VARCHAR(32),
@@ -79,15 +96,6 @@ def init():
     '''
     cursor.execute(query)
     db.commit()
-
-    query = ''' 
-        UPDATE locations
-        SET site = "Sculpture Garden"
-        WHERE site = "Sculpture Garden (WSG)";
-    '''
-    cursor.execute(query)
-    db.commit()
-    
 
     query = '''
         CREATE TABLE IF NOT EXISTS constituents(
