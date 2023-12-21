@@ -62,9 +62,6 @@ def objects_bp(connection):
             if media is None:
                 media = "https://via.placeholder.com/150"
 
-            print("bibliography entries", object_text_entries.text_entries["bibliography"])
-            print("exhibition_history entries", object_text_entries.text_entries["exhibition_history"])
-            
             return render_template('object.html', object=object, objectLocation=objectLocation, media=media, text_entry=object_text_entries.text_entries)
         else:
             repository.delete_object(objectid)

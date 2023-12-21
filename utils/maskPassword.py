@@ -1,6 +1,6 @@
 import base64
 
-string = ""  # enter your mySQL password here
+string = "qwerty"  # enter your mySQL password here
  
 def maskPsw():
     encode = base64.b64encode(string.encode("utf-8"))

@@ -1,1 +1,1 @@
-path = '/Users/Aydan/Desktop/itudb2304/csv/' # the path of data set folder 
+path = '/Users/jbfmf/Desktop/itudb2304/csv/' # the path of data set folder 

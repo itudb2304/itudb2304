@@ -176,9 +176,6 @@ def init():
         customPrintURL              TEXT,
         PRIMARY KEY(objectid),
         FOREIGN KEY(locationid) references locations(locationid) ON DELETE CASCADE ON UPDATE CASCADE
-        CHECK (accessioned IN (0, 1)),
-        CHECK (isVirtual IN (0, 1))
-        CHECK (beginYear <= endYear) kontrol edilmedi daha
         ); 
     '''
     cursor.execute(query)
