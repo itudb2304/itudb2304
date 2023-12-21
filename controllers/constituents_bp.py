@@ -57,7 +57,6 @@ def constituents_bp(connection):
 
     @constituents.route('/<string:name>', methods=['GET', 'POST'])
     def constituent_by_name(name: str):
-        print("AAAAAAAAAAAAAAAAAAAAAAAA")
         constituents = repository.get_constituents_by_name(name=name)
         
         if request.method == 'POST':
@@ -68,9 +67,6 @@ def constituents_bp(connection):
             elif 'add-constituent' in request.form:
                 req = request.form['add-constituent']
                 return redirect(url_for('.add_constituent'))
-        
-        print("GET")
-        print(len(constituents))
         return render_template('constituents.html', constituents_list=constituents, get_constituent_media_by_id=media_repository.get_constituent_media_by_id)
 
     @constituents.route('/add', methods=['GET','POST'])
@@ -108,9 +104,30 @@ def constituents_bp(connection):
                 else:
                     attributes.append(None)
             attributes.append(objects_repository.get_object_by_objectid(attributes[0]).title)
+            print(attributes)
             attributes.append(repository.get_constituent_by_id(attributes[1]).forwarddisplayname)
             repository.add_constituent_object(attributes=attributes)
-            flash('Constituent has been added successfully.')
+            flash('Constituent object has been added successfully.')
             return render_template("add_constituent_object.html", object_ids=repository.get_object_ids(), constituent_ids=repository.get_constituent_ids(), current_constituentID=id)
+    
+    @constituents.route('/<int:constituent_id>/<int:relation_id>/', methods=['GET', 'POST'])
+    def update_constituent_object(constituent_id: int, relation_id: int):
+        if request.method == 'GET':
+            constituent_object = repository.get_constituent_object_by_id(relation_id)
+            return render_template("edit_constituent_object.html", constituent_object = constituent_object)
+        else:
+            attributes = []
+            for att in constituent_objects_attributes:
+                if att in request.form:
+                    attributes.append(request.form[att])
+                else:
+                    attributes.append(None)
+            repository.update_constituent_object(attributes=attributes, relationid=relation_id)
+            flash('Constituent has been updated successfully.')
+            constituent_objects = repository.constituent_objects(constituentid=constituent_id)
+            return redirect(url_for('.constituent_objects', id=constituent_id))
+
+
+
     return constituents
 

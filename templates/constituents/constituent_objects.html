@@ -13,7 +13,7 @@
 {% if object_info.objectID != None %}
 <div class="list-div">
     <div class="col-md-2">
-        <a class="margin-after"><i class="fa-regular fa-pen-to-square"></i> Edit</a>
+        <a class="margin-after" href="{{ url_for('constituents.update_constituent_object', constituent_id=object_info.constituentID, relation_id=object_info.id) }}"><i class="fa-regular fa-pen-to-square"></i> Edit</a>
         <a class="margin-after"><i class="fa-solid fa-delete-left"></i> Delete</a>
     </div>
     <div class="col-md-10">

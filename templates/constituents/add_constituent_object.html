@@ -12,9 +12,7 @@
   <div class="col-md-4">
     <label for="constituentid" class="form-label required">Constituent Name</label>
     <select id="constituentid" name="constituentid" class="form-select" required="required">
-      {% for i in constituent_ids %}
-      <option>{{ i[0] }}</option>
-      {% endfor %}
+      <option selected> {{ current_constituentID }} </option>
     </select>
   </div>
   <div class="col-md-4">
@@ -35,7 +33,7 @@
   </div>
   <div class="col-md-4">
     <label for="displayorder" class="form-label required">Display Order</label>
-    <input type="number" class="form-control" id="displayorder" name="displayorder">
+    <input type="number" class="form-control" id="displayorder" name="displayorder" required="required">
   </div>
   <div class="col-md-4">
     <label for="country" class="form-label">Country</label>

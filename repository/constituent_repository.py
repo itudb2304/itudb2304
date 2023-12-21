@@ -28,8 +28,8 @@ class ConstituentRepository:
     def get_constituents_by_name(self, name):
         constituents = []
         with self.connection.cursor() as cursor:
-            query = f"SELECT * FROM constituents c WHERE c.forwarddisplayname LIKE '%{name}%';"
-            cursor.execute(query)
+            query = "SELECT * FROM constituents c WHERE c.forwarddisplayname LIKE '%s';"
+            cursor.execute(query, (name,))
             constituents = cursor.fetchall()
             constituents = [Constituent(x) for x in constituents]
         self.connection.commit()
@@ -71,8 +71,8 @@ class ConstituentRepository:
     def constituent_objects(self, constituentid: int):
         objects_info = []
         with self.connection.cursor() as cursor:
-            query = '''SELECT oc.objectID, oc.constituentID, oc.roleType,
-            oc.role, oc.displayDate, oc.country, o.title, c.forwarddisplayname 
+            query = '''SELECT DISTINCT oc.id, oc.objectID, oc.constituentID, oc.roleType,
+            oc.role, oc.displayDate, oc.displayOrder, oc.country, o.title, c.forwarddisplayname 
             FROM constituents c
             LEFT JOIN objects_constituents oc on c.constituentid = oc.constituentID
             LEFT JOIN objects o on o.objectid = oc.objectID
@@ -100,12 +100,28 @@ class ConstituentRepository:
             cursor.execute(query, (attributes[0], attributes[1], attributes[2], attributes[3], attributes[4], attributes[5], attributes[6]))
         self.connection.commit()
 
+    def get_constituent_object_by_id(self, id: int):
+
+        with self.connection.cursor() as cursor:
+            query = '''
+            SELECT DISTINCT oc.id, oc.objectID, oc.constituentID, oc.roleType,
+            oc.role, oc.displayDate, oc.displayOrder, oc.country, o.title, c.forwarddisplayname 
+            FROM constituents c
+            LEFT JOIN objects_constituents oc on c.constituentid = oc.constituentID
+            LEFT JOIN objects o on o.objectid = oc.objectID
+            WHERE oc.id = %s;
+            '''
+            cursor.execute(query, (id,))
+            constituent_object = (cursor.fetchall())[0]
+            constituent_object = ConstituentObjects(constituent_object)
+            return constituent_object
+
     # TODO: later move this function to objects repository
     # TODO: remove limit
     def get_object_ids(self):
         object_ids = []
         with self.connection.cursor() as cursor:
-            query = '''SELECT title FROM objects LIMIT 10;'''
+            query = '''SELECT objectid FROM objects LIMIT 10;'''
             cursor.execute(query)
             object_ids = cursor.fetchall()
         self.connection.commit()
@@ -115,24 +131,22 @@ class ConstituentRepository:
     def get_constituent_ids(self):
         constituent_ids = []
         with self.connection.cursor() as cursor:
-            query = '''SELECT preferreddisplayname FROM constituents LIMIT 10;'''
+            query = '''SELECT constituentid FROM constituents LIMIT 10;'''
             cursor.execute(query)
             constituent_ids = cursor.fetchall()
         return constituent_ids
     
-    def update_constituent_object(self, attributes: list):
+    def update_constituent_object(self, attributes: list, relationid: int):
         try:
             with self.connection.cursor() as cursor:
                 query = '''UPDATE objects_constituents SET
-                                    objectID = %s,
-                                    constituentID = %s,
                                     roleType = %s,
                                     role = %s,
                                     displayDate = %s,
                                     displayOrder = %s,
                                     country = %s
-                                    WHERE (objectID, constituentID) = (%s, %s);'''
-                cursor.execute(query, (attributes[0], attributes[1], attributes[2], attributes[3], attributes[4], attributes[5], attributes[6], attributes[0], attributes[1]))
+                                    WHERE id = %s;'''
+                cursor.execute(query, (attributes[2], attributes[3], attributes[4], attributes[5], attributes[6], relationid))
             self.connection.commit()
         except Exception as e:
             print(f"Error updating constituent object in the database: {e}")

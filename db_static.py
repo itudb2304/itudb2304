@@ -744,6 +744,7 @@ def init():
 
     query = '''
         CREATE TABLE IF NOT EXISTS objects_constituents (
+            id INTEGER PRIMARY KEY AUTO_INCREMENT,
             objectID INTEGER NOT NULL,
             constituentID INTEGER NOT NULL,
             displayOrder INTEGER NOT NULL,
