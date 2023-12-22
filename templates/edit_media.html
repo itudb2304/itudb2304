@@ -5,22 +5,11 @@
     <h1 class=" title"> Media Add/Edit/Delete Page </h1>
     <form action="" method="post" name="movie_edit">
 
-      <div class="field">
-        <label for="id" class="label">Table</label>
-        <div class="control">
-            <select name="table" class="select" required="no">
-                <option value="Object" {% if values['table'] == 'Object' %}selected{% endif %}>Object</option>
-                <option value="Constituent" {% if values['table'] == 'Constituent' %}selected{% endif %}>Constituent</option>
-            </select>
-        </div>
-    </div>
-    
-    
 
         <div class="field">
             <label for="id" class="label">ID</label>
             <div class = "control"> 
-                <input type="text" name="mediaid" class="input" required="required" value="{{ values['mediaid'] }}"/>
+                <input type="number" name="mediaid" min="0" class="input" required="required" value="{{ values['mediaid'] }}"/>
             </div>
         </div>
 
@@ -41,7 +30,7 @@
       <div class="field">
         <label for="id" class="label">ThumbnailUrl</label>
         <div class = "control"> 
-          <input type="text" name="thumbnailurl" class="input" value="{{ values['thumbnailurl'] }}"/>
+          <input type="text" name="thumbnailurl" pattern="^https:\/\/.*\.(jpg|png)$" class="input" value="{{ values['thumbnailurl'] }}"/>
       </div>
     </div>
 
@@ -52,16 +41,25 @@
     </div>
   </div>
 
-        <div class="field is-grouped">
-            <div class="control">
-                <button class="button is-primary is-small" >Save</button>
-            </div>
-        </div>
-        <div class="field is-grouped">
+
+
+  <div class="field">
+    <label for="id" class="label">Object of Media</label>
+    <div class = "control"> 
+      <input type="number" name="related" class="input" value="{{ values[related] }}"/>
+  </div>
+  </div>
+
+    <div class="field is-grouped">
           <div class="control">
-              <button class="button is-primary is-small" >Delete</button>
+              <button class="button is-primary is-small" >Save</button>
           </div>
       </div>
+      <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-primary is-small" >Delete</button>
+        </div>
+    </div>
         
     </form>
 {% endblock %}
