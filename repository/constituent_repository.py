@@ -5,12 +5,34 @@ class ConstituentRepository:
     def __init__(self, connection):
         self.connection = connection
 
-    def get_all_constituents(self):
+    def get_number_of_constituents(self):
+        try:
+            with self.connection.cursor() as cursor:
+                query = "SELECT COUNT(constituentid) FROM constituents;"
+                cursor.execute(query)
+                return cursor.fetchone()[0]
+        except Exception as e:
+            print(f"Error getting the number of constituents from the database: {e}")
+            self.connection.rollback()
+
+    def get_number_of_constituents_by_name(self, name):
+        try:
+            with self.connection.cursor() as cursor:
+                query = "SELECT COUNT(c.constituentid) FROM constituents c WHERE c.forwarddisplayname LIKE %s"
+                cursor.execute(query, ('%' + name + '%',))
+                temp= cursor.fetchone()[0]
+                print(temp)
+                return temp
+        except Exception as e:
+            print(f"Error getting the number of constituents from the database: {e}")
+            self.connection.rollback()
+
+    def get_all_constituents(self, limit: int, offset: int):
         try:
             constituents = []
             with self.connection.cursor() as cursor:
-                query = "SELECT * FROM constituents LIMIT 500;"
-                cursor.execute(query)
+                query = "SELECT * FROM constituents LIMIT %s,%s;"
+                cursor.execute(query, (offset, limit))
                 constituents = cursor.fetchall()
                 constituents = [Constituent(x) for x in constituents]
             self.connection.commit()
@@ -34,12 +56,12 @@ class ConstituentRepository:
             print(f"Error getting constituent by id from the database: {e}")
             self.connection.rollback()
             
-    def get_constituents_by_name(self, name):
+    def get_constituents_by_name(self, name, limit: int, offset: int):
         try:
             constituents = []
             with self.connection.cursor() as cursor:
-                query = "SELECT * FROM constituents c WHERE c.forwarddisplayname LIKE %s;"
-                cursor.execute(query, ('%' + name + '%', ))
+                query = "SELECT * FROM constituents c WHERE c.forwarddisplayname LIKE %s LIMIT %s,%s;"
+                cursor.execute(query, ('%' + name + '%', offset, limit))
                 constituents = cursor.fetchall()
                 constituents = [Constituent(x) for x in constituents]
             self.connection.commit()

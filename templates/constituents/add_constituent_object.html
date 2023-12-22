@@ -1,5 +1,6 @@
 {% extends 'header.html' %}
 {% block content %}
+<div style="margin: 25px 40px;">
 <form class="row g-3" action="{{ url_for('constituents.add_constituent_object', id=current_constituentID) }}" method="post">
   <div class="col-md-4">
     <label for="objectid" class="form-label required">Object Name</label>
@@ -51,4 +52,5 @@
     <button type="submit" class="btn btn-primary btn-lg custom-bg">Add constituent object</button>
   </div>
 </form>
+</div>
 {% endblock %}
