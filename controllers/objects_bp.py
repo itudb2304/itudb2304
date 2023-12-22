@@ -57,6 +57,7 @@ def objects_bp(connection):
             object = repository.get_object_by_objectid(objectid)
             object_text_entries = repository.get_object_text_entries(objectid) 
             constituentslist = repository.get_object_constituents(objectid)
+            print(constituentslist)
             objectLocation = repository.get_location_by_locationid(object.locationid) if object.locationid else None
             media = None # fill later
             if media is None:

@@ -180,10 +180,12 @@ def init():
     cursor.execute(query)
     db.commit()
 
-    query = f'''
+    query = f'''        
         LOAD DATA LOCAL INFILE '{path}objects.csv'
         INTO TABLE objects
         FIELDS TERMINATED BY ','
+        ENCLOSED BY '"'
+        LINES TERMINATED BY '\n'
         IGNORE 1 ROWS;
     '''
     cursor.execute(query)
@@ -194,29 +196,12 @@ def init():
         SET locationid = NULL WHERE locationid = 0;
     '''
     cursor.execute(query)
+    db.commit()
 
     query = '''
         ALTER TABLE objects
         ADD CONSTRAINT fk_locationid
         FOREIGN KEY (locationid) REFERENCES locations(locationid) ON DELETE SET NULL ON UPDATE CASCADE;
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = f'''
-        CREATE TRIGGER IF NOT EXISTS update_lastDetectedModification
-        BEFORE UPDATE ON objects
-        FOR EACH ROW
-        SET NEW.lastDetectedModification = CURRENT_TIME();
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = f'''
-        CREATE TRIGGER IF NOT EXISTS add_lastDetectedModification
-        BEFORE INSERT ON objects
-        FOR EACH ROW
-        SET NEW.lastDetectedModification = CURRENT_TIME();
     '''
     cursor.execute(query)
     db.commit()
@@ -325,8 +310,24 @@ def init():
     '''
     cursor.execute(query)
     db.commit()
-    
 
+    query = f'''
+        CREATE TRIGGER IF NOT EXISTS update_lastDetectedModification
+        BEFORE UPDATE ON objects
+        FOR EACH ROW
+        SET NEW.lastDetectedModification = CURRENT_TIME();
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        CREATE TRIGGER IF NOT EXISTS add_lastDetectedModification
+        BEFORE INSERT ON objects
+        FOR EACH ROW
+        SET NEW.lastDetectedModification = CURRENT_TIME();
+    '''
+    cursor.execute(query)
+    db.commit()
     
     query = '''
         CREATE TABLE IF NOT EXISTS objects_text_entries (
