@@ -67,31 +67,76 @@
                 text-align: center;
                 margin-top: 0;
             }
+
+            .media-item {
+        background-color: #fff; 
+        border: 1px solid #ddd; 
+        border-radius: 8px; 
+        overflow: hidden; 
+        transition: transform 0.3s ease-in-out;
+        margin-bottom: 20px; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    }
+
+    .media-item:hover {
+        transform: scale(1.02); 
+    }
+
+    .media-item img {
+        width: 100%; /* Make the image fill the container */
+        max-width: 200px; /* Limit the maximum width to 200 pixels */
+        height: auto; /* Maintain aspect ratio */
+        display: block; /* Remove extra space below inline images */
+        margin: 0 auto; /* Center the image within the container */
+    }
+
+    .media-details {
+        padding: 15px; /* Add padding inside the container */
+    }
+
+    .media-details b {
+        display: block; /* Ensure each title is on a new line */
+        font-size: 1.2em; /* Larger font size for titles */
+        margin-bottom: 10px; /* Add space between titles and content */
+    }
+
+    .media-details iframe {
+        width: 100%; /* Make the iframe fill the container */
+        height: 200px; /* Fixed height for consistency */
+    }
+
+   
         </style>
     </head>
 
     <body>
-        <button><a href="{{ url_for('artwork.create_artwork')}}">Add Artwork</a></button>
-
         <div class="field is-grouped">
             <div class="control">
-              <button class="button is-primary is-outlined is-small"><a href="{{url_for('artwork.artwork_edit_page')}}">Edit</a></button>
+                <button class="btn btn-primary btn-lg custom-bg"><a href="{{ url_for('artwork.create_artwork')}}">Add Artwork</a></button>
             </div>
         </div>  
         <div class="field is-grouped">
             <div class="control">
-            <button class="button is-danger is-small"><a href="{{ url_for('artwork.delete_artwork')}}">Delete</button>
+              <button class="btn btn-primary btn-lg custom-bg"><a href="{{url_for('artwork.artwork_edit_page')}}">Edit</a></button>
+            </div>
+        </div>  
+        <div class="field is-grouped">
+            <div class="control">
+            <button class="btn btn-primary btn-lg custom-bg"><a href="{{ url_for('artwork.delete_artwork')}}">Delete</button>
             </div>
         </div>
         <div>
             <h2>Artworks</h2>
             <ul>
                 {% for artwork in artwork %}
+                
                     <li>
-                        <img src="{{ artwork[0] }}" alt="Artwork" onclick="openModal('{{ artwork[0] }}', '{{ artwork[1] }}', '{{ artwork[2] }}', '{{ artwork[3] }}')">
+                        <div class = "media-item">
+                        <img src="{{ artwork[0] }}" alt="Artwork" onclick="showImage('{{ artwork[0] }}', '{{ artwork[1] }}', '{{ artwork[2] }}', '{{ artwork[3] }}')">
+                    </div>
                     </li>
                 {% endfor %}
-
+            
             </ul>
         </div>
 
@@ -104,9 +149,9 @@
             <img id="modalImage" class="modal-content" alt="Full-size Artwork">
             <div id="infoContainer" class="info-container"></div>
         </div>
-
+        <div id="scroll-container"></div>
         <script>
-            function openModal(imageSrc, createdText, width, height) {
+            function showImage(imageSrc, createdText, width, height) {
                 event.preventDefault();
                 var modal = document.getElementById('myModal');
                 var modalImage = document.getElementById('modalImage');

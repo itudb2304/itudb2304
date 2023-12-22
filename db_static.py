@@ -590,11 +590,10 @@ def init():
 
         query = '''
         CREATE TABLE IF NOT EXISTS media_relationships (
-        mediaid INTEGER,
+        mediaid INTEGER UNIQUE,
         relatedid INTEGER,
         relatedentity VARCHAR(50),
-        FOREIGN KEY(relatedid) references objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE,
-        FOREIGN KEY(relatedid) references constituents(constituentid) ON DELETE CASCADE ON UPDATE CASCADE
+        FOREIGN KEY(relatedid) references objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE
         );
     '''
     cursor.execute(query)
@@ -626,7 +625,8 @@ def init():
         presentationdate VARCHAR(30),
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid)
+        PRIMARY KEY (mediaid),
+        FOREIGN KEY (mediaid) references media_relationships(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
     );
     '''
     cursor.execute(query)

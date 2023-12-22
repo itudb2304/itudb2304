@@ -33,15 +33,14 @@ def media_bp(connection):
             return render_template("edit_media.html", values = values)
         else:
             media_id = request.form["mediaid"]
-            table = request.form["table"]
             new_artwork = Media(media_id, "","","","")
-            repository.delete_media(new_artwork, table)
+            repository.delete_media(new_artwork)
             return redirect(url_for("media.media_page"))
         
     @media.route('/create', methods=['GET', 'POST'])
     def create_media():
         if request.method == 'GET':
-            values = {"mediaid": "", "title": "", "description": "", "thumbnailurl": "", "playurl": "", "table":""}
+            values = {"mediaid": "", "title": "", "description": "", "thumbnailurl": "", "playurl": "", "related":""}
             return render_template("edit_media.html", values = values)
         else:
             id = request.form["mediaid"]
@@ -49,9 +48,9 @@ def media_bp(connection):
             description = request.form["description"]
             url = request.form["thumbnailurl"]
             play = request.form["playurl"]
-            table = request.form["table"]
+            related = request.form["related"]
             media = Media(id, title, description, url, play)
-            repository.add_media(media, table)
+            repository.add_media(media, related)
             return redirect(url_for("media.media_page"))
         
 
@@ -59,7 +58,7 @@ def media_bp(connection):
     @media.route('/edit', methods=['GET', 'POST'])
     def media_edit_page():
         if request.method == "GET":
-            values = {"mediaid": "", "title": "", "description": "", "thumbnailurl": "", "playurl": "", "table" : ""}
+            values = {"mediaid": "", "title": "", "description": "", "thumbnailurl": "", "playurl": ""}
             return render_template("edit_media.html", values = values)
         else:
             mediaid = request.form["mediaid"]
@@ -67,24 +66,9 @@ def media_bp(connection):
             description = request.form["description"]
             url = request.form["thumbnailurl"]
             play = request.form["playurl"]
-            table = request.form["table"]
             media = Media(mediaid, title, description, url, play)
-            repository.update_media(media, table)
+            repository.update_media(media)
             return redirect(url_for("media.media_page"))
 
 
     return media
-
-
-
-
-
-    
-
-    
-
-
-   
-
-
-

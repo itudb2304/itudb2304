@@ -15,55 +15,25 @@ class MediaRepository:
         cursor = self.connection.cursor()
 
         # Use LIMIT and OFFSET for pagination
-        queryobject = f"SELECT thumbnailurl, title, description, playurl FROM object_media;"
-
+        queryobject = """SELECT object_media.thumbnailurl, object_media.title, object_media.description, 
+           object_media.playurl, media_relationships.relatedid
+        FROM object_media
+        JOIN media_relationships ON object_media.mediaid = media_relationships.mediaid;"""
         cursor.execute(queryobject)
-        mediaobject = cursor.fetchall()
-        queryconstituent = f"SELECT thumbnailurl, title, description, playurl FROM constituents_media;"
-
-        cursor.execute(queryconstituent)
-        mediaconst = cursor.fetchall()
-        media = mediaobject + mediaconst
-        return media
+        mediaobj = cursor.fetchall()
+  
+        return mediaobj
     
 
-    def get_constituent_media_search(self, id):
+    def get_constituent_media_search(self, title):
         cursor = self.connection.cursor()
-
-        # Use LIMIT and OFFSET for pagination
-        
-        queryobject = "SELECT thumbnailurl, title, description, playurl FROM object_media WHERE mediaid = %s;"
-
-        cursor.execute(queryobject, (id,))
-        mediaobject = cursor.fetchall()
-        queryconstituent = "SELECT thumbnailurl, title, description, playurl FROM constituents_media WHERE mediaid = %s;"
-
-        cursor.execute(queryconstituent, (id,))
-        mediaconst = cursor.fetchall()
-        media = mediaobject + mediaconst
-        return media
-
-
-    def get_constituent_media_by_id(self, id):
-        if id is None:
-            return []  #
-
-        cursor = self.connection.cursor()
-
-        query = '''
-            SELECT thumbnailurl
-            FROM constituents_media
-            WHERE mediaid IN (
-                SELECT mediaid
-                FROM media_relationships
-                WHERE relatedid = %s
-                AND BINARY relatedentity = 'nga:art:tms:constituents\r');
-        '''
-
-        cursor.execute(query, (id,))
-        media = cursor.fetchall()
-
-        return media
+        queryobject = """SELECT object_media.thumbnailurl, object_media.title, object_media.description, 
+           object_media.playurl, media_relationships.relatedid
+        FROM object_media
+        JOIN media_relationships ON object_media.mediaid = media_relationships.mediaid WHERE title LIKE %s;"""
+        cursor.execute(queryobject, (f'{title}%',))
+        mediaobj = cursor.fetchall()
+        return mediaobj
 
 
     def get_object_media(self, obj):
@@ -71,7 +41,7 @@ class MediaRepository:
 
         # Use parameterized queries to avoid SQL injection
         query = '''
-            SELECT thumbnailurl
+            SELECT playurl, title
                 FROM object_media
                 WHERE mediaid IN (
                     SELECT mediaid
@@ -87,35 +57,30 @@ class MediaRepository:
         media.mediaid = media.mediaid
         return id
 
-    def add_media(self, media, table):
+    def add_media(self, media, related):
         id = self.create_media(media)
         cursor = self.connection.cursor()
-        if table == "Object":
-            query = '''INSERT INTO constituents_media (mediaid, title, description, thumbnailurl, playurl) VALUES(%s, %s, %s, %s, %s)'''
-        elif table == "Constituent":
-            query = '''INSERT INTO object_media (mediaid, title, description, thumbnailurl, playurl) VALUES(%s, %s, %s, %s, %s)'''
+        media_relationships_query = '''INSERT INTO media_relationships (mediaid, relatedid, relatedentity) VALUES (%s, %s, %s)'''
+        relatedentity = "nga:art:tms:objects"
+        cursor.execute(media_relationships_query, (media.mediaid,related, relatedentity))
+        self.connection.commit()
+        query = '''INSERT INTO object_media (mediaid, title, description, thumbnailurl, playurl) VALUES(%s, %s, %s, %s, %s)'''
         cursor.execute(query, (media.mediaid, media.title, media.description, media.thumbnailurl, media.playurl))
         self.connection.commit()
         return id
 
-    def update_media(self, media, table):
+    def update_media(self, media):
         print(media.mediaid)
         cursor = self.connection.cursor()
-        if table == "Object":
-            query = '''UPDATE object_media SET title = %s, description = %s, thumbnailurl = %s, playurl = %s WHERE mediaid = %s'''
-        elif table == "Constituent":
-            query = '''UPDATE constituents_media SET title = %s, description = %s, thumbnailurl = %s, playurl = %s WHERE mediaid = %s'''
-        cursor.execute(query, (media.mediaid, media.title, media.description, media.thumbnailurl, media.playurl))
+        query = '''UPDATE object_media SET title = %s, description = %s, thumbnailurl = %s, playurl = %s WHERE mediaid = %s'''
+       
+        cursor.execute(query, (media.title, media.description, media.thumbnailurl, media.playurl,media.mediaid))
         self.connection.commit()
     
 
-    def delete_media(self, media, table):
+    def delete_media(self, media):
         cursor = self.connection.cursor()
-        
-        if table == "Object":
-            query = '''DELETE FROM object_media WHERE mediaid = %s'''
+        query = '''DELETE FROM object_media WHERE mediaid = %s'''
             
-        elif table == "Constituent":
-            query = '''DELETE FROM constituents_media WHERE mediaid = %s'''
         cursor.execute(query, [media.mediaid])
         self.connection.commit()

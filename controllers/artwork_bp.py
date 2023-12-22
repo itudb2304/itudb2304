@@ -19,12 +19,8 @@ def artwork_bp(connection):
             artwork = repository.get_all_artwork()
             return render_template("artwork.html", artwork=artwork)
         else:
-            ids = request.form.getlist("uuid")
-            for id in ids:
-                repository.delete_artwork(id)
-            return redirect(url_for("artwork.artwork_page"))
-
-
+            return
+           
     @artwork.route('/delete', methods=['GET', 'POST'])
     def delete_artwork():
         if request.method == 'GET':
@@ -76,15 +72,3 @@ def artwork_bp(connection):
 
 
     return artwork
-
-
-
-
-
-    
-
-    
-
-
-   
-
