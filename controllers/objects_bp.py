@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, redirect, render_template, request, url_fo
 from repository.objects_repository import ObjectDTO, ObjectsRepository
 from flask import redirect, url_for, render_template, request, jsonify
 from repository.media_repository import MediaRepository
+from math import ceil
 
 def objects_bp(connection):
     objects = Blueprint(
@@ -18,11 +19,21 @@ def objects_bp(connection):
     def objects_page():
         if request.method == "GET":
             selected_classifications = request.args.getlist('classification')
+            print(selected_classifications)
             title_filter = request.args.get('title')
             credit_line_filter = request.args.get('creditLine')
+            page = request.args.get('page', default=1, type=int)
+            objects_per_page = 20
+
             objects = repository.get_all_objects(selected_classifications, title_filter, credit_line_filter)
-            return render_template("objects.html", objects=objects)
- 
+            total_pages = ceil(len(objects) / objects_per_page)
+
+            start_index = (page - 1) * objects_per_page
+            end_index = start_index + objects_per_page
+            paginated_objects = objects[start_index:end_index]
+
+            return render_template("objects.html", objects=paginated_objects, total_pages=total_pages, current_page=page, selected_classifications=selected_classifications, title_filter=title_filter, credit_line_filter=credit_line_filter)
+
     @objects.route('/object_addition', methods=['GET', 'POST'])
     def object_addition_page():
         newObject = ObjectDTO()

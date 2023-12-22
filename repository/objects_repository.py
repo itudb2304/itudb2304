@@ -134,7 +134,7 @@ class ObjectsRepository:
                 FROM objects
                 WHERE objectid = %s;
                 '''
-                cursor.execute(query, [objectid]) #objectid is a number but it is passed as a string
+                cursor.execute(query, [objectid])
                 row = cursor.fetchone()
                 object = ObjectDTO(row)
             return object

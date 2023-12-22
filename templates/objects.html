@@ -1,8 +1,6 @@
 {% extends "header.html" %}
 {% block title %}OBJECTS{% endblock %}
-{% set js_script = '''
-
-''' %}
+{% set js_script = '' %}
 
 {% block content %}
 <title>OBJECTS</title>
@@ -14,27 +12,38 @@
 
   <form action="/objects" method="GET">
     <div class="searchBarfortitle">
-      <input type="text" name="title" placeholder="Search by Title">
+      <input type="text" name="title" placeholder="Search by Title" {% if title_filter %} value="{{ title_filter }}" {%
+        endif %}>
     </div>
 
     <div class="searchBarforCreditLine">
-      <input type="text" name="creditLine" placeholder="Search by Credit Line">
+      <input type="text" name="creditLine" placeholder="Search by Credit Line" {% if credit_line_filter %}
+        value="{{ credit_line_filter }}" {% endif %}>
     </div>
 
     <div class="classificationFiltering">
       <h4>Filter by Classification</h4>
-      <input type="checkbox" name="classification" value="Painting">Painting<br>
-      <input type="checkbox" name="classification" value="Print">Print<br>
-      <input type="checkbox" name="classification" value="Sculpture">Sculpture<br>
-      <input type="checkbox" name="classification" value="Drawing">Drawing<br>
-      <input type="checkbox" name="classification" value="Volume">Volume<br>
-      <input type="checkbox" name="classification" value="Portfolio">Portfolio<br>
-      <input type="checkbox" name="classification" value="Photograph">Photograph<br>
-      <input type="checkbox" name="classification" value="New Media">New Media<br>
-      <input type="checkbox" name="classification" value="Decorative Art">Decorative Art<br>
-      <input type="checkbox" name="classification" value="Technical Material">Technical Material<br>
+      <input type="checkbox" name="classification" value="Painting" >Painting<br>
+      <input type="checkbox" name="classification" value="Print" >Print<br>
+      <input type="checkbox" name="classification" value="Sculpture" {% if "Sculpture" in selected_classifications %}
+        checked {% endif %}>Sculpture<br>
+      <input type="checkbox" name="classification" value="Drawing" {% if "Drawing" in selected_classifications %}
+        checked {% endif %}>Drawing<br>
+      <input type="checkbox" name="classification" value="Volume" {% if "Volume" in selected_classifications %}
+        checked {% endif %}>Volume<br>
+      <input type="checkbox" name="classification" value="Portfolio" {% if "Portfolio" in selected_classifications %}
+        checked {% endif %}>Portfolio<br>
+      <input type="checkbox" name="classification" value="Photograph" {% if "Photograph" in selected_classifications %}
+        checked {% endif %}>Photograph<br>
+      <input type="checkbox" name="classification" value="New Media" {% if "New Media" in selected_classifications %}
+        checked {% endif %}>New Media<br>
+      <input type="checkbox" name="classification" value="Decorative Art" {% if "Decorative Art" in selected_classifications %} 
+        checked {% endif %}>Decorative Art<br>
+      <input type="checkbox" name="classification" value="Technical Material" {% if "Technical Material" in selected_classifications %} 
+        checked {% endif %}>Technical Material<br>
     </div>
     <input type="submit" value="Filter">
+
   </form>
 
   <div class="tableDiv">
@@ -69,16 +78,18 @@
       </tbody>
     </table>
   </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       document.querySelectorAll("#objectsTable tbody tr").forEach(function (row) {
         row.addEventListener("dblclick", function (event) {
-          event.preventDefault(); // sends ctrl+p if this line is not present
+          event.preventDefault();
           window.location.href = "/objects/" + row.getAttribute("data-obj-id");
         });
       });
     });
   </script>
 </body>
+
 {% endif %}
 {% endblock %}

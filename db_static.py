@@ -12,17 +12,6 @@ db = mysql.connector.connect(
 cursor = db.cursor()
 
 def init():
-    query = '''
-        DROP DATABASE IF EXISTS national_art;
-    '''
-    cursor.execute(query)
-    db.commit()
-    
-    query = '''
-        CREATE DATABASE national_art;
-    '''
-    cursor.execute(query)
-    db.commit()
 
     query = '''
         USE national_art;
@@ -449,11 +438,10 @@ def init():
 
         query = '''
         CREATE TABLE IF NOT EXISTS media_relationships (
-        mediaid INTEGER,
+        mediaid INTEGER UNIQUE,
         relatedid INTEGER,
         relatedentity VARCHAR(50),
-        FOREIGN KEY(relatedid) references objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE,
-        FOREIGN KEY(relatedid) references constituents(constituentid) ON DELETE CASCADE ON UPDATE CASCADE
+        FOREIGN KEY(relatedid) references objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE
         );
     '''
     cursor.execute(query)
@@ -485,7 +473,8 @@ def init():
         presentationdate VARCHAR(30),
         releasedate VARCHAR(30),
         lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid)
+        PRIMARY KEY (mediaid),
+        FOREIGN KEY (mediaid) references media_relationships(mediaid) ON DELETE CASCADE ON UPDATE CASCADE
     );
     '''
     cursor.execute(query)
@@ -603,7 +592,6 @@ def init():
 
     query = '''
         CREATE TABLE IF NOT EXISTS objects_constituents (
-            id INTEGER PRIMARY KEY AUTO_INCREMENT,
             objectID INTEGER NOT NULL,
             constituentID INTEGER NOT NULL,
             displayOrder INTEGER NOT NULL,
@@ -615,9 +603,7 @@ def init():
             beginYear INTEGER,
             endYear INTEGER,
             country VARCHAR(64),
-            zipCode VARCHAR(16),
-            FOREIGN KEY (objectID) REFERENCES objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE,
-            FOREIGN KEY (constituentID) REFERENCES constituents(constituentid) ON DELETE CASCADE ON UPDATE CASCADE
+            zipCode VARCHAR(16)
         );
     '''
     cursor.execute(query)
@@ -628,6 +614,29 @@ def init():
         INTO TABLE objects_constituents
         FIELDS TERMINATED BY ','
         IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        ALTER TABLE objects_constituents
+        ADD CONSTRAINT fk_objectID
+        FOREIGN KEY (objectID) REFERENCES objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        ALTER TABLE objects_constituents
+        ADD CONSTRAINT fk_constituentID
+        FOREIGN KEY (constituentID) REFERENCES constituents(constituentid) ON DELETE CASCADE ON UPDATE CASCADE;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        ALTER TABLE objects_constituents
+        ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY FIRST;
     '''
     cursor.execute(query)
     db.commit()
