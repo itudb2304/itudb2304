@@ -55,14 +55,14 @@ def objects_bp(connection):
     def object_page(objectid):
         if request.method == "GET":
             object = repository.get_object_by_objectid(objectid)
-            object_text_entries = repository.get_object_text_entries(objectid) # is a map of text_type to list of text entries
-           
+            object_text_entries = repository.get_object_text_entries(objectid) 
+            constituentslist = repository.get_object_constituents(objectid)
             objectLocation = repository.get_location_by_locationid(object.locationid) if object.locationid else None
             media = None # fill later
             if media is None:
                 media = "https://via.placeholder.com/150"
 
-            return render_template('object.html', object=object, objectLocation=objectLocation, media=media, text_entry=object_text_entries.text_entries)
+            return render_template('object.html', object=object,constituentslist=constituentslist, objectLocation=objectLocation, media=media, text_entry=object_text_entries.text_entries)
         else:
             repository.delete_object(objectid)
             print("Deleted object with objectid successfuly", objectid)

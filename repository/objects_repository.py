@@ -156,6 +156,33 @@ class ObjectsRepository:
         except Exception as e:
             print(f"Error getting location from its locationid from the database: {e}")
     
+    def get_object_constituents(self, objectid):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                SELECT 
+                    oc.constituentid,
+                    c.preferreddisplayname,
+                    c.forwarddisplayname
+                FROM 
+                    objects_constituents oc
+                JOIN 
+                    objects o ON oc.objectid = o.objectid
+                JOIN 
+                    constituents c ON oc.constituentid = c.constituentid
+                WHERE 
+                    oc.objectid = %s 
+                    AND oc.roletype = "artist";
+                '''
+                cursor.execute(query, [objectid])
+                rows = cursor.fetchall()
+                constituents = []
+                for row in rows:
+                    constituents.append([row[0],row[1],row[2]])
+            return constituents
+        except Exception as e:
+            print(f"Error getting object constituents from the database: {e}")
+    
     def get_max_objectid(self):
         try:
             with self.connection.cursor() as cursor:

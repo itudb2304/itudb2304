@@ -174,9 +174,31 @@ def init():
         lastDetectedModification    TIME,
         wikidataid                  VARCHAR(64),
         customPrintURL              TEXT,
-        PRIMARY KEY(objectid),
-        FOREIGN KEY(locationid) references locations(locationid) ON DELETE CASCADE ON UPDATE CASCADE
+        PRIMARY KEY(objectid)
         ); 
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = f'''
+        LOAD DATA LOCAL INFILE '{path}objects.csv'
+        INTO TABLE objects
+        FIELDS TERMINATED BY ','
+        IGNORE 1 ROWS;
+    '''
+    cursor.execute(query)
+    db.commit()
+
+    query = '''
+        UPDATE objects
+        SET locationid = NULL WHERE locationid = 0;
+    '''
+    cursor.execute(query)
+
+    query = '''
+        ALTER TABLE objects
+        ADD CONSTRAINT fk_locationid
+        FOREIGN KEY (locationid) REFERENCES locations(locationid) ON DELETE SET NULL ON UPDATE CASCADE;
     '''
     cursor.execute(query)
     db.commit()
@@ -195,17 +217,6 @@ def init():
         BEFORE INSERT ON objects
         FOR EACH ROW
         SET NEW.lastDetectedModification = CURRENT_TIME();
-    '''
-    cursor.execute(query)
-    db.commit()
-    
-    query = f'''
-        LOAD DATA LOCAL INFILE '{path}objects.csv'
-        INTO TABLE objects
-        FIELDS TERMINATED BY ','
-        ENCLOSED BY '"'
-        LINES TERMINATED BY '\n'
-        IGNORE 1 ROWS;
     '''
     cursor.execute(query)
     db.commit()
@@ -314,160 +325,7 @@ def init():
     '''
     cursor.execute(query)
     db.commit()
-
-    query = '''
-        UPDATE objects
-        SET accessionnum = NULLIF(accessionnum, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET visualbrowsertimespan = NULLIF(visualbrowsertimespan, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET displaydate = NULLIF(displaydate, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET medium = NULLIF(medium, '');
-    '''
-    cursor.execute(query)
-    db.commit()
     
-    query = '''
-        UPDATE objects
-        SET dimensions = NULLIF(dimensions, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET inscription = NULLIF(inscription, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET markings = NULLIF(markings, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET displaydate = NULLIF(displaydate, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET attributioninverted = NULLIF(attributioninverted, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET attribution = NULLIF(attribution, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-    
-    query = '''
-        UPDATE objects
-        SET provenancetext = NULLIF(provenancetext, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET creditline = NULLIF(creditline, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET visualbrowserclassification = NULLIF(visualbrowserclassification, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET portfolio = NULLIF(portfolio, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET series = NULLIF(series, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET volume = NULLIF(volume, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET watermarks = NULLIF(watermarks, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET wikidataid = NULLIF(wikidataid, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET customPrintURL = NULLIF(customPrintURL, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET beginYear = NULLIF(beginYear, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET endYear = NULLIF(endYear, '');
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = '''
-        UPDATE objects
-        SET parentid = NULLIF(parentid, '');
-    '''
-    cursor.execute(query)
-    db.commit()
 
     
     query = '''

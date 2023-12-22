@@ -19,7 +19,10 @@
       alt="Artwork Photo">
     </div>
     <div class="objectDescription">
-      <p><strong>Artist Name:</strong></p>
+      <p>
+        <strong>Artist Name:</strong>
+        <a href="{{url_for('constituents.constituent_objects', id=constituentslist[0][0])}}" > {{ constituentslist[0][1] }}</a>
+      </p>      
       <p><strong>Title: </strong>{{ object.title }}</p>
       <p><strong>Is Virtual: </strong>{{ object.isVirtual }}</p>
       <p><strong>Medium: </strong>{{ object.medium }}</p>
