@@ -122,3 +122,43 @@ tr:nth-child(even) {
 a {
   color: #212529;
 }
+
+.pagination {
+  margin: 25px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.pagination-page-info {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  font-size: 12px;
+}
+.pagination-page-info b {
+  color: #212529;
+  background: rgb(236, 239, 245);
+  padding-left: 2px;
+  padding: .1em .25em;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover {
+    z-index: 3;
+    color: #212529;
+    border-color: #ddd;
+
+}
+
+.page-link {
+  color: #212529 !important;
+  background: rgb(236, 239, 245) !important;
+}
+
+.pagination>li.active>a {
+  background-color: #212529 !important;
+  border-color: #212529 !important;
+  color: rgb(236, 239, 245) !important;
+}

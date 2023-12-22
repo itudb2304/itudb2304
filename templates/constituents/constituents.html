@@ -3,7 +3,7 @@
 
 <form action="" method="post">
     <div>
-        <button type="submit" class="btn btn-primary btn-lg custom-bg" name="add-constituent" id="add-constituent"><i class="fa-solid fa-plus"></i> Add or Edit Constituent</button>
+        <button type="submit" class="btn btn-primary btn-lg custom-bg" name="add-constituent" id="add-constituent"><i class="fa-solid fa-plus"></i> Add Constituent</button>
     </div>
 </form>
 <form action="{{ url_for('constituents.constituents_page') }}" method="post">
@@ -21,25 +21,48 @@
     </div>
 </form>
 
+<div>
+    {{ pagination.info }}
+    {{ pagination.links }}
+</div>
+
 <ol id="constituents_list"> 
     {% for constituent in constituents_list %} 
-        <li>
+    {{ loop.index + (page - 1) * per_page }}
+        <td>
           <a href="{{ url_for('constituents.constituent_objects', id=constituent.constituentid) }}">
             <span class="constituent-name" data-constituent-id="{{ constituent.constituentid }}">
                 {{ constituent.forwarddisplayname }}
             </span>
+            <!-- <div id="constituent-info">
+                <ul>
+                    <li>Constituent ID: {{ constituent.constituentid }}</li>
+                </ul>
+            </div> -->
             <div class="media-container">
                 {% set media = get_constituent_media_by_id(constituent.constituentid) %}
                 {% if media is not none %}
                     {% for m in media %}
-                        <img src="{{ m[0] }}" alt="Constituent Image">
+                        <img src="{{ m[0] }}" alt="Constituent Image" loading="lazy">
                     {% endfor %}
                 {% endif %}
             </div>
             </a>
-        </li>
+        </td>
        
     {% endfor %}
 </ol>
+<div>
+{{ pagination.links }}
+<script>
+function showContent(id) {
+    var x = document.getElementById("id");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+}
+</script>
 
 {% endblock %}
