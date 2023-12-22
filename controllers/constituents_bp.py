@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from repository.constituent_repository import ConstituentRepository
 from repository.media_repository import MediaRepository
 from repository.objects_repository import ObjectsRepository
-from flask_paginate import Pagination, get_page_parameter, get_page_args
+from flask_paginate import Pagination, get_page_args
 
 def constituents_bp(connection):
     constituents = Blueprint(
