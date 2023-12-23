@@ -53,7 +53,7 @@ def constituents_bp(connection):
             page, per_page, offset = get_page_args(
                 page_parameter="page", per_page_parameter="per_page"
             )
-            per_page = 50
+            per_page = 48
             total = repository.get_number_of_constituents()
             pagination_constituents = repository.get_all_constituents(
                 offset=offset, limit=per_page
@@ -83,7 +83,7 @@ def constituents_bp(connection):
             page, per_page, offset = get_page_args(
                 page_parameter="page", per_page_parameter="per_page"
             )
-            per_page = 50
+            per_page = 48
             total = repository.get_number_of_constituents_by_name(name=name)
             pagination_constituents = repository.get_constituents_by_name(name=name, offset=offset, limit=per_page)
             pagination = Pagination(

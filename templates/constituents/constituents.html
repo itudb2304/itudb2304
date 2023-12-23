@@ -1,58 +1,72 @@
 {% extends 'header.html' %}
 {% block content %}
-
 <form action="" method="post">
-    <div>
-        <button type="submit" class="btn btn-primary btn-lg custom-bg" name="add-constituent" id="add-constituent"><i class="fa-solid fa-plus"></i> Add Constituent</button>
-    </div>
+  <div>
+    <button type="submit" class="btn btn-primary btn-lg custom-bg" name="add-constituent" id="add-constituent"><i class="fa-solid fa-plus"></i> Add Constituent</button>
+  </div>
 </form>
 <form action="{{ url_for('constituents.constituents_page') }}" method="post">
-    <div class="container mt-2">
-        <div class="row d-flex justify-content-center ">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="input-box">
-                        <input type="text" name="constituent-search" id="constituent-search" placeholder="Search" class="form-control">
-                        <i class="fa fa-search"></i>               
-                    </div>
-                </div> 
-            </div>
+  <div class="container mt-2">
+    <div class="row d-flex justify-content-center ">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="input-box">
+            <input type="text" name="constituent-search" id="constituent-search" placeholder="Search" class="form-control">
+            <i class="fa fa-search"></i>               
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </form>
-
 <div>
-    {{ pagination.info }}
-    {{ pagination.links }}
+  {{ pagination.info }}
+  {{ pagination.links }}
 </div>
-
-<ull id="constituents_list"> 
-    {% for constituent in constituents_list %} 
-    <!-- {{ loop.index + (page - 1) * per_page }} -->
-        <li>
-          <a href="{{ url_for('constituents.constituent_objects', id=constituent.constituentid) }}">
-            <span class="constituent-name" data-constituent-id="{{ constituent.constituentid }}">
+<div class="container px-2">
+  <div class="row">
+    {% for constituent in constituents_list %}
+    <div class="col-4 mb-4">
+      <div class="list-div p-3">
+        <div>
+          <ul id="constituents_list">
+            <li>
+              <h4>
+                <a href="{{ url_for('constituents.constituent_objects', id=constituent.constituentid) }}">
+                <span class="constituent-name" data-constituent-id="{{ constituent.constituentid }}">
                 {{ loop.index + (page - 1) * per_page }}. {{ constituent.forwarddisplayname }}
-            </span>
-            <!-- <div id="constituent-info">
-                <ul>
-                    <li>Constituent ID: {{ constituent.constituentid }}</li>
-                </ul>
-            </div> -->
+                </span>
             </a>
-        </li>
+              </h4>
+              <ul>
+                {% if constituent.constituenttype %}
+              <li>
+                <strong>Constituent Type:</strong> {{ constituent.constituenttype }}
+              </li>
+              {% endif %}
+                {% if constituent.ulanid %}
+              <li>
+                <strong>ULAN ID:</strong> {{ constituent.ulanid }}
+              </li>
+              {% endif %}
+              {% if constituent.beginyear or constituent.endyear %}
+              <li>
+                {% if constituent.beginyear %} <strong>Birth:</strong> {{ constituent.beginyear }}{% endif %}&nbsp;&nbsp;&nbsp;{% if constituent.endyear %}<strong>Death:</strong> {{ constituent.endyear }}{% endif %}
+              </li>
+              {% endif %}
+              {% if constituent.nationality %}
+              <li>
+                <strong>Nationality:</strong> {{ constituent.nationality }}
+              </li>
+              {% endif %}
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
     {% endfor %}
-</ul>
+  </div>
+</div>
 {{ pagination.links }}
-<script>
-function showContent(id) {
-    var x = document.getElementById("id");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
-    }
-}
-</script>
-
 {% endblock %}

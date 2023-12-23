@@ -172,3 +172,9 @@ a {
 .form-margin {
   margin: 25px;
 }
+
+.welcome {
+  display: flex;
+  justify-content: center;
+  color: #212529;
+}
