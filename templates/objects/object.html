@@ -9,69 +9,148 @@
 {% if object %}
 
 <body>
-  <h2>Artwork Details</h2>
+  <h6>Artwork Details</h6>
+  <h1>{{ object.title }}</h1> <h5>by {{ constituentslist[0][1] }}</h5>
   <button id="updateButton" onclick="window.location.href='/objects/{{ object.objectid }}/edit'">Update</button>
   <button id="deleteButton">Delete</button>
 
   <div class="endisdiv">
     <div class="photoOfArtwork">
       <img src={{ media }}>
-      alt="Artwork Photo">
     </div>
     <div class="objectDescription">
       {% if constituentslist|length > 0 %}
-        <p>
-          <strong>Artist Name:</strong>
-          <a href="{{ url_for('constituents.constituent_objects', id=constituentslist[0][0]) }}">
-            {{ constituentslist[0][1] }}
-          </a>
-        </p>
+      <p>
+        <strong>Artist Name:</strong>
+        <a href="{{ url_for('constituents.constituent_objects', id=constituentslist[0][0]) }}">
+          {{ constituentslist[0][1] }}
+        </a>
+      </p>
       {% endif %}
-          
+
       <p><strong>Title: </strong>{{ object.title }}</p>
       <p><strong>Is Virtual: </strong>{{ object.isVirtual }}</p>
       <p><strong>Medium: </strong>{{ object.medium }}</p>
       <p><strong>Dimensions: </strong>{{ object.dimensions }}</p>
-      <p><strong>Credit Line: </strong>{{ object.creditLine }}</p>
+      <p><strong>Credit Line: </strong> <a href="{{ url_for('objects.objects_page', creditLine=object.creditLine) }}" >{{ object.creditLine }}</a></p>
       <p><strong>Accession Number: </strong>{{ object.accessionnum }}</p>
-      <p><strong>Artists / Makers: </strong>{{ object.attribution }}</p>
+      <p><strong>Attribution: </strong>{{ object.attribution }}</p>
       <p><strong>Image Use: </strong>{{ object.customPrintURL }}</p>
       <p><strong>Classification: </strong>{{ object.classification }}</p>
 
+      {% if objectLocation %}
       <h5>Location: </h5>
-
+      {% if objectLocation.site %}
       <p><strong>Site: </strong> {{ objectLocation.site}}</a></p>
+      {% endif %}
+      {% if objectLocation.room %}
       <p><strong>Room: </strong>{{objectLocation.room}} </p>
+      {% endif %}
+      {% if objectLocation.decription %}
       <p><strong>desc: </strong>{{objectLocation.decription}} </p>
+      {% endif %}
+      {% endif %}
 
     </div>
   </div>
   <div class="div3">
-    <button onclick="showInscription()">Inscription</button>
+    {% if object.inscription %}
+    <button onclick="toggleVisibility('insc')">Inscription</button>
     <div id="insc">
-      <p>{{ object.inscription }}</p>
+      <p>{{ object.inscription|replace('\n', '<br>')|safe }}</p>
     </div>
     <hr>
-    <button onclick="showProvenance()">Provenance</button>
+    {% endif %}
+
+    {%if object.provenanceText %}
+    <button onclick="toggleVisibility('prov')">Provenance</button>
     <div id="prov">
-      <p>{{ object.provenanceText }}</p>
+      <p>{{ object.provenanceText|replace('\n', '<br>')|safe }}</p>
     </div>
     <hr>
-    <button onclick="showBibliography()">Bibliography</button>
+    {% endif %}
+
+    {%if text_entry["bibliography"] %}
+    <button onclick="toggleVisibility('bib')">Bibliography</button>
     <div id="bib">
       {% for entry in text_entry["bibliography"] %}
-        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+      <li>{{ entry[1] }}: {{ entry[0] }}</li>
       {% endfor %}
     </div>
     <hr>
-    <button onclick="exhibition_history()">Exhibition History</button>
+    {% endif %}
+
+    {%if text_entry["exhibition_history"] %}
+    <button onclick="toggleVisibility('exh')">Exhibition History</button>
     <div id="exh">
       <ul>
-          {% for entry in text_entry["exhibition_history"] %}
-              <li>{{ entry[1] }}: {{ entry[0] }}</li>
-          {% endfor %}
+        {% for entry in text_entry["exhibition_history"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
       </ul>
+    </div>
     <hr>
+    {% endif %}
+
+    {%if text_entry["lifetime_exhibition"] %}
+    <button onclick="toggleVisibility('life')">Lifetime Exhibition</button>
+    <div id="life">
+      <ul>
+        {% for entry in text_entry["lifetime_exhibition"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if text_entry["other_collections"] %}
+    <button onclick="toggleVisibility('other')">Other Collections</button>
+    <div id="other">
+      <ul>
+        {% for entry in text_entry["other_collections"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if text_entry["exhibition_history_footnote"] %}
+    <button onclick="toggleVisibility('exhfoot')">Exhibition History Footnote</button>
+    <div id="exhfoot">
+      <ul>
+        {% for entry in text_entry["exhibition_history_footnote"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if text_entry["documentary_labels_inscriptions"] %}
+    <button onclick="toggleVisibility('doc')">Documentary Labels Inscriptions</button>
+    <div id="doc">
+      <ul>
+        {% for entry in text_entry["documentary_labels_inscriptions"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if text_entry["inscription_footnote"] %}
+    <button onclick="toggleVisibility('insfoot')">Inscription Footnote</button>
+    <div id="insfoot">
+      <ul>
+        {% for entry in text_entry["inscription_footnote"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr>
+    {% endif %}
   </div>
 
   <script>
@@ -103,35 +182,8 @@
       });
     });
 
-    function showInscription() {
-      var x = document.getElementById("insc");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
-    }
-
-    function showProvenance() {
-      var x = document.getElementById("prov");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
-    }
-
-    function showBibliography() {
-      var x = document.getElementById("bib");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
-    }
-
-    function exhibition_history() {
-      var x = document.getElementById("exh");
+    function toggleVisibility(elementId) {
+      var x = document.getElementById(elementId);
       if (x.style.display === "none") {
         x.style.display = "block";
       } else {

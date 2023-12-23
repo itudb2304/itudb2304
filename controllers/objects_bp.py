@@ -21,7 +21,11 @@ def objects_bp(connection):
             selected_classifications = request.args.getlist('classification')
             title_filter = request.args.get('title')
             credit_line_filter = request.args.get('creditLine')
-            sort_by_title = request.args.get('sort')
+
+            if request.args.get('sort'):
+                sort_by_title = request.args.get('sort')
+            else:
+                sort_by_title = "none"
 
             page, per_page, offset = get_page_args(
                 page_parameter="page", per_page_parameter="per_page"
