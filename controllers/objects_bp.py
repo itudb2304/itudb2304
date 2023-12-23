@@ -19,12 +19,10 @@ def objects_bp(connection):
     def objects_page():
         if request.method == "GET":
             selected_classifications = request.args.getlist('classification')
-            print(selected_classifications)
             title_filter = request.args.get('title')
             credit_line_filter = request.args.get('creditLine')
             sort_by_title = request.args.get('sort')
-            print(sort_by_title)
-    
+
             page, per_page, offset = get_page_args(
                 page_parameter="page", per_page_parameter="per_page"
             )
@@ -80,7 +78,6 @@ def objects_bp(connection):
             object = repository.get_object_by_objectid(objectid)
             object_text_entries = repository.get_object_text_entries(objectid) 
             constituentslist = repository.get_object_constituents(objectid)
-            print(constituentslist)
             objectLocation = repository.get_location_by_locationid(object.locationid) if object.locationid else None
             media = None # fill later
             if media is None:
@@ -89,7 +86,6 @@ def objects_bp(connection):
             return render_template('object.html', object=object,constituentslist=constituentslist, objectLocation=objectLocation, media=media, text_entry=object_text_entries.text_entries)
         else:
             repository.delete_object(objectid)
-            print("Deleted object with objectid successfuly", objectid)
             return jsonify(success=True)
 
     @objects.route('/<int:objectid>/edit', methods=["GET", "POST"])
@@ -99,7 +95,6 @@ def objects_bp(connection):
             return render_template('object_edit.html',objectDTO=object)
         else:
             objectDTO = repository.get_object_by_objectid(objectid)
-            # update the objectDTO with the form data
             objectDTO.accessioned = request.form["accessioned"]
             objectDTO.accessionnum = request.form["accessionnum"]
             objectDTO.title = request.form["title"]
@@ -116,7 +111,6 @@ def objects_bp(connection):
             objectDTO.visualBrowserClassification = objectDTO.classification.lower()
             objectDTO.attributionInverted = " ".join(reversed(objectDTO.attribution.split(",")))
             
-            # update the object in the database
             repository.update_object(objectDTO)
             return redirect(url_for('objects.object_page', objectid=objectid))
 

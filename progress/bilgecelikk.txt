@@ -34,5 +34,5 @@ week 11
 - filter on classification property of the object added
 
 week 12
-- search by title and credit line
-- redirections to other pages added for integrity
+- search by title and credit line, sort by title
+- pagination on objects
