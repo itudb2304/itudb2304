@@ -18,13 +18,26 @@ class ConstituentRepository:
     def get_number_of_constituents_by_name(self, name):
         try:
             with self.connection.cursor() as cursor:
-                query = "SELECT COUNT(c.constituentid) FROM constituents c WHERE c.forwarddisplayname LIKE %s"
+                query = "SELECT COUNT(c.constituentid) FROM constituents c WHERE c.forwarddisplayname LIKE %s;"
                 cursor.execute(query, ('%' + name + '%',))
                 temp= cursor.fetchone()[0]
                 print(temp)
                 return temp
         except Exception as e:
             print(f"Error getting the number of constituents from the database: {e}")
+            self.connection.rollback()
+
+    def get_number_of_constituent_objects(self, constituentid: int):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''SELECT COUNT(objectID) FROM objects_constituents
+                WHERE constituentid = %s;
+                '''
+                cursor.execute(query, (constituentid,))
+                result = cursor.fetchone()[0]
+                return result
+        except Exception as e:
+            print(f"Error getting the number of constituent objects from the database: {e}")
             self.connection.rollback()
 
     def get_all_constituents(self, limit: int, offset: int):
@@ -106,8 +119,23 @@ class ConstituentRepository:
         except Exception as e:
             print(f"Error inserting constituent to the database: {e}")
             self.connection.rollback()
+
+    # def distinct_constituent_objectID(self, constituentid: int, limit: int, offset: int):
+    #     try:
+    #         constituent_objects = []
+    #         with self.connection.cursor() as cursor:
+    #             query = '''SELECT DISTINCT objectID FROM objects_constituents WHERE constituentID=%s LIMIT %s,%s;;'''
+    #             cursor.execute(query, (constituentid, offset, limit))
+    #             constituent_objects = cursor.fetchall()
+    #             return constituent_objects
+    #     except Exception as e:
+    #         print(f"Error getting distinct constituent objects from the database: {e}")
+    #         self.connection.rollback()
+
+    # def distinct_constituent_objects(self, constituentID: int, objectID: int):
+    #     try:
     
-    def constituent_objects(self, constituentid: int):
+    def constituent_objects(self, constituentid: int, limit: int, offset: int):
         try:
             objects_info = []
             with self.connection.cursor() as cursor:
@@ -116,10 +144,10 @@ class ConstituentRepository:
                 FROM constituents c
                 LEFT JOIN objects_constituents oc on c.constituentid = oc.constituentID
                 LEFT JOIN objects o on o.objectid = oc.objectID
-                WHERE c.constituentid = %s;
-                ;
+                WHERE c.constituentid = %s
+                LIMIT %s, %s;
                 '''
-                cursor.execute(query, (constituentid,))
+                cursor.execute(query, (constituentid, offset, limit))
                 objects_info = cursor.fetchall()
                 objects_info = [ConstituentObjects(i) for i in objects_info]
                 self.connection.commit()
@@ -164,6 +192,41 @@ class ConstituentRepository:
                 return constituent_object
         except Exception as e:
             print(f"Error getting constituent object by id from the database: {e}")
+            self.connection.rollback()
+
+    def number_of_constituent_objects_by_name(self, constituentid: int, name: str):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''SELECT COUNT(oc.objectID) FROM objects_constituents oc
+                LEFT JOIN objects o ON o.objectid = oc.objectID
+                WHERE oc.constituentID = %s
+                and o.title LIKE %s;
+                '''
+                cursor.execute(query, (constituentid, '%' + name + '%'))
+                result = cursor.fetchone()[0]
+                return result
+        except Exception as e:
+            print(f"Error getting the number of constituent object by name from the database: {e}")
+            self.connection.rollback()
+
+    def get_constituent_objects_by_name(self, constituentid: int, name: str, limit: int, offset: int):
+        try:
+            constituent_objects_by_name = []
+            with self.connection.cursor() as cursor:
+                query = '''SELECT DISTINCT oc.id, oc.objectID, oc.constituentID, oc.roleType,
+                oc.role, oc.displayDate, oc.displayOrder, oc.country, o.title, c.forwarddisplayname 
+                FROM constituents c
+                LEFT JOIN objects_constituents oc on c.constituentid = oc.constituentID
+                LEFT JOIN objects o on o.objectid = oc.objectID
+                WHERE oc.constituentID = %s
+                and o.title LIKE %s
+                LIMIT %s, %s;'''
+                cursor.execute(query, (constituentid, '%' + name + '%', offset, limit))
+                constituent_objects_by_name = cursor.fetchall()
+                constituent_objects_by_name = [ConstituentObjects(i) for i in constituent_objects_by_name]
+                return constituent_objects_by_name
+        except Exception as e:
+            print(f"Error getting constituent object by name from the database: {e}")
             self.connection.rollback()
 
     # TODO: later move this function to objects repository
