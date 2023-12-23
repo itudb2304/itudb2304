@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from repository.constituent_repository import ConstituentRepository
-from repository.media_repository import MediaRepository
 from repository.objects_repository import ObjectsRepository
 from flask_paginate import Pagination, get_page_args
 
@@ -15,7 +14,6 @@ def constituents_bp(connection):
 
     repository = ConstituentRepository(connection=connection)
     objects_repository = ObjectsRepository(connection=connection)
-    media_repository = MediaRepository(connection=connection)
 
     constituent_attributes = [
         "ulanid",
@@ -64,12 +62,9 @@ def constituents_bp(connection):
                 page=page, per_page=per_page, total=total, css_framework='bootstrap4'
             )
             constituent_id = request.args.get("constituent_id")
-            media = media_repository.get_constituent_media_by_id(constituent_id)
             return render_template(
                 "constituents.html",
                 constituents_list=pagination_constituents,
-                media=media,
-                get_constituent_media_by_id=media_repository.get_constituent_media_by_id,
                 page=page,
                 per_page=per_page,
                 pagination=pagination
@@ -97,7 +92,6 @@ def constituents_bp(connection):
             return render_template(
                 "constituents.html",
                 constituents_list=pagination_constituents,
-                get_constituent_media_by_id=media_repository.get_constituent_media_by_id,
                 page=page,
                 per_page=per_page,
                 pagination=pagination

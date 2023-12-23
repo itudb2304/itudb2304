@@ -26,33 +26,23 @@
     {{ pagination.links }}
 </div>
 
-<ol id="constituents_list"> 
+<ull id="constituents_list"> 
     {% for constituent in constituents_list %} 
-    {{ loop.index + (page - 1) * per_page }}
-        <td>
+    <!-- {{ loop.index + (page - 1) * per_page }} -->
+        <li>
           <a href="{{ url_for('constituents.constituent_objects', id=constituent.constituentid) }}">
             <span class="constituent-name" data-constituent-id="{{ constituent.constituentid }}">
-                {{ constituent.forwarddisplayname }}
+                {{ loop.index + (page - 1) * per_page }}. {{ constituent.forwarddisplayname }}
             </span>
             <!-- <div id="constituent-info">
                 <ul>
                     <li>Constituent ID: {{ constituent.constituentid }}</li>
                 </ul>
             </div> -->
-            <div class="media-container">
-                {% set media = get_constituent_media_by_id(constituent.constituentid) %}
-                {% if media is not none %}
-                    {% for m in media %}
-                        <img src="{{ m[0] }}" alt="Constituent Image" loading="lazy">
-                    {% endfor %}
-                {% endif %}
-            </div>
             </a>
-        </td>
-       
+        </li>
     {% endfor %}
-</ol>
-<div>
+</ul>
 {{ pagination.links }}
 <script>
 function showContent(id) {
