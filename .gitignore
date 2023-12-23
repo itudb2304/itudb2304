@@ -7,7 +7,6 @@ utils/maskPassword.py
 *.pyc
 __pycache__/
 local_settings.py
-media
 
 ### Linux ###
 *~

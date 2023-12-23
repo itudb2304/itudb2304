@@ -6,7 +6,7 @@ def media_bp(connection):
     media = Blueprint(
         'media',
         __name__,
-        template_folder='templates/',
+        template_folder='../templates/media',
         static_folder='static/',
         url_prefix="/media"
     )
