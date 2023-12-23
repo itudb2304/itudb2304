@@ -163,3 +163,12 @@ a {
   border-color: #212529 !important;
   color: rgb(236, 239, 245) !important;
 }
+
+.back-icon {
+  padding-left: 50px;
+  margin-right: -10px;
+}
+
+.form-margin {
+  margin: 25px;
+}

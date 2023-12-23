@@ -1,6 +1,11 @@
 {% extends 'header.html' %}
 {% block content %}
-<form class="row g-3" action="{{ url_for('constituents.update_constituent_object', constituent_id=constituent_object.constituentID, relation_id=constituent_object.id) }}" method="post">
+<div class="col-md-1 back-icon">
+  <form>
+      <a href="{{ url_for('constituents.constituent_objects', id=constituent_object.constituentID) }}" style="color: #212529;" ><i class="fa-solid fa-arrow-left fa-2xl"></i></a>
+  </form>
+</div>
+<form class="row g-3 form-margin" action="{{ url_for('constituents.update_constituent_object', constituent_id=constituent_object.constituentID, relation_id=constituent_object.id) }}" method="post">
   <div class="col-md-4">
     <label for="objectid" class="form-label required">Object ID</label>
     <select id="objectid" name="objectid" class="form-select" required="required">
