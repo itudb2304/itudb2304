@@ -1,0 +1,197 @@
+{% extends "header.html" %}
+{% block title %}{{ object.title }}{% endblock %}
+{% set js_script = '''
+
+''' %}
+
+{% block content %}
+<title>{{ object.title }} Detailed</title>
+{% if object %}
+
+<body>
+  <h6>Artwork Details</h6>
+  <h1>{{ object.title }}</h1> <h5>by {{ constituentslist[0][1] }}</h5>
+  <button id="updateButton" onclick="window.location.href='/objects/{{ object.objectid }}/edit'">Update</button>
+  <button id="deleteButton">Delete</button>
+
+  <div class="endisdiv">
+    <div class="photoOfArtwork">
+      <img src={{ media }}>
+    </div>
+    <div class="objectDescription">
+      {% if constituentslist|length > 0 %}
+      <p>
+        <strong>Artist Name:</strong>
+        <a href="{{ url_for('constituents.constituent_objects', id=constituentslist[0][0]) }}">
+          {{ constituentslist[0][1] }}
+        </a>
+      </p>
+      {% endif %}
+
+      <p><strong>Title: </strong>{{ object.title }}</p>
+      <p><strong>Is Virtual: </strong>{{ object.isVirtual }}</p>
+      <p><strong>Medium: </strong>{{ object.medium }}</p>
+      <p><strong>Dimensions: </strong>{{ object.dimensions }}</p>
+      <p><strong>Credit Line: </strong> <a href="{{ url_for('objects.objects_page', creditLine=object.creditLine) }}" >{{ object.creditLine }}</a></p>
+      <p><strong>Accession Number: </strong>{{ object.accessionnum }}</p>
+      <p><strong>Attribution: </strong>{{ object.attribution }}</p>
+      <p><strong>Image Use: </strong>{{ object.customPrintURL }}</p>
+      <p><strong>Classification: </strong>{{ object.classification }}</p>
+
+      {% if objectLocation %}
+      <h5>Location: </h5>
+      {% if objectLocation.site %}
+      <p><strong>Site: </strong> {{ objectLocation.site}}</a></p>
+      {% endif %}
+      {% if objectLocation.room %}
+      <p><strong>Room: </strong>{{objectLocation.room}} </p>
+      {% endif %}
+      {% if objectLocation.decription %}
+      <p><strong>desc: </strong>{{objectLocation.decription}} </p>
+      {% endif %}
+      {% endif %}
+
+    </div>
+  </div>
+  <div class="div3">
+    {% if object.inscription %}
+    <button onclick="toggleVisibility('insc')">Inscription</button>
+    <div id="insc">
+      <p>{{ object.inscription|replace('\n', '<br>')|safe }}</p>
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if object.provenanceText %}
+    <button onclick="toggleVisibility('prov')">Provenance</button>
+    <div id="prov">
+      <p>{{ object.provenanceText|replace('\n', '<br>')|safe }}</p>
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if text_entry["bibliography"] %}
+    <button onclick="toggleVisibility('bib')">Bibliography</button>
+    <div id="bib">
+      {% for entry in text_entry["bibliography"] %}
+      <li>{{ entry[1] }}: {{ entry[0] }}</li>
+      {% endfor %}
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if text_entry["exhibition_history"] %}
+    <button onclick="toggleVisibility('exh')">Exhibition History</button>
+    <div id="exh">
+      <ul>
+        {% for entry in text_entry["exhibition_history"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if text_entry["lifetime_exhibition"] %}
+    <button onclick="toggleVisibility('life')">Lifetime Exhibition</button>
+    <div id="life">
+      <ul>
+        {% for entry in text_entry["lifetime_exhibition"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if text_entry["other_collections"] %}
+    <button onclick="toggleVisibility('other')">Other Collections</button>
+    <div id="other">
+      <ul>
+        {% for entry in text_entry["other_collections"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if text_entry["exhibition_history_footnote"] %}
+    <button onclick="toggleVisibility('exhfoot')">Exhibition History Footnote</button>
+    <div id="exhfoot">
+      <ul>
+        {% for entry in text_entry["exhibition_history_footnote"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if text_entry["documentary_labels_inscriptions"] %}
+    <button onclick="toggleVisibility('doc')">Documentary Labels Inscriptions</button>
+    <div id="doc">
+      <ul>
+        {% for entry in text_entry["documentary_labels_inscriptions"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr>
+    {% endif %}
+
+    {%if text_entry["inscription_footnote"] %}
+    <button onclick="toggleVisibility('insfoot')">Inscription Footnote</button>
+    <div id="insfoot">
+      <ul>
+        {% for entry in text_entry["inscription_footnote"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <hr>
+    {% endif %}
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const deleteButton = document.getElementById("deleteButton");
+
+      deleteButton.addEventListener("click", function () {
+        const isConfirmed = confirm("Are you sure you want to delete this art object?");
+
+        if (isConfirmed) {
+          // Send a POST request to the server to delete the object
+          fetch("/objects/{{ object.objectid }}", {
+            method: "POST",
+          })
+            .then(response => response.json())
+            .then(data => {
+              // Redirect to the objects page after successful deletion
+              if (data.success) {
+                window.location.href = "/objects";
+              } else {
+                alert("Failed to redirect");
+              }
+            })
+            .catch(error => {
+              console.error("Error deleting object:", error);
+              alert("An error occurred while deleting the object.");
+            });
+        }
+      });
+    });
+
+    function toggleVisibility(elementId) {
+      var x = document.getElementById(elementId);
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+{% endif %}
+{% endblock %}

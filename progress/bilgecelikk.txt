@@ -32,3 +32,7 @@ week 11
 - arranged the connection between object and objects htmls
 - trigger for modification time on update and insert
 - filter on classification property of the object added
+
+week 12
+- search by title and credit line, sort by title
+- pagination on objects

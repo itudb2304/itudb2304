@@ -12,17 +12,6 @@ db = mysql.connector.connect(
 cursor = db.cursor()
 
 def init():
-    query = '''
-        DROP DATABASE IF EXISTS national_art;
-    '''
-    cursor.execute(query)
-    db.commit()
-    
-    query = '''
-        CREATE DATABASE national_art;
-    '''
-    cursor.execute(query)
-    db.commit()
 
     query = '''
         USE national_art;
