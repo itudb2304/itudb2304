@@ -109,7 +109,7 @@ def constituents_bp(connection):
                 else:
                     attributes.append(None)
             repository.add_constituent(attributes=attributes)
-            flash("Constituent has been added successfully.")
+            flash("Constituent has been added successfully.", "success")
             return render_template("constituents_add.html")
 
     @constituents.route("/<int:id>", methods=["GET", "POST"])
@@ -118,7 +118,7 @@ def constituents_bp(connection):
             page, per_page, offset = get_page_args(
                 page_parameter="page", per_page_parameter="per_page"
             )
-            per_page = 50
+            per_page = 48
             total = repository.get_number_of_constituent_objects(id)
             pagination_constituent_objects = repository.constituent_objects(constituentid=id, offset=offset, limit=per_page)
             pagination = Pagination(
@@ -144,7 +144,7 @@ def constituents_bp(connection):
             page, per_page, offset = get_page_args(
                 page_parameter="page", per_page_parameter="per_page"
             )
-            per_page = 50
+            per_page = 48
             total = repository.number_of_constituent_objects_by_name(constituentid=constituentid, name=name)
             pagination_constituent_objects_by_name = repository.get_constituent_objects_by_name(constituentid=constituentid, name=name,limit=per_page, offset=offset)
             pagination = Pagination(
@@ -163,6 +163,7 @@ def constituents_bp(connection):
 
     @constituents.route("/<int:id>/add-object", methods=["GET", "POST"])
     def add_constituent_object(id: int):
+        # flash('This is a flash message!', 'success')  # Flash message with a category (e.g., 'info', 'error', 'success')
         if request.method == "GET":
             return render_template(
                 "add_constituent_object.html",
@@ -185,7 +186,7 @@ def constituents_bp(connection):
                 repository.get_constituent_by_id(attributes[1]).forwarddisplayname
             )
             repository.add_constituent_object(attributes=attributes)
-            flash("Constituent object has been added successfully.")
+            flash("Constituent object has been added successfully.", 'success')
             return render_template(
                 "add_constituent_object.html",
                 object_ids=repository.get_object_ids(),
@@ -212,11 +213,11 @@ def constituents_bp(connection):
             repository.update_constituent_object(
                 attributes=attributes, relationid=relation_id
             )
-            flash("Constituent has been updated successfully.")
-            constituent_objects = repository.constituent_objects(
-                constituentid=constituent_id
+            flash("Constituent has been updated successfully.", "success")
+            constituent_object = repository.get_constituent_object_by_id(relation_id)
+            return render_template(
+                "edit_constituent_object.html", constituent_object=constituent_object
             )
-            return redirect(url_for(".constituent_objects", id=constituent_id))
 
     @constituents.route(
         "/<int:constituentid>/<int:relationid>/delete", methods=["GET", "POST"]

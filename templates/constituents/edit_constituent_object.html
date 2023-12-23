@@ -1,10 +1,19 @@
 {% extends 'header.html' %}
 {% block content %}
-<div class="col-md-1 back-icon">
+<div class="col-md-1 back-icon" style="margin-bottom: 30px;">
   <form>
       <a href="{{ url_for('constituents.constituent_objects', id=constituent_object.constituentID) }}" style="color: #212529;" ><i class="fa-solid fa-arrow-left fa-2xl"></i></a>
   </form>
 </div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
 <form class="row g-3 form-margin" action="{{ url_for('constituents.update_constituent_object', constituent_id=constituent_object.constituentID, relation_id=constituent_object.id) }}" method="post">
   <div class="col-md-4">
     <label for="objectid" class="form-label required">Object ID</label>
@@ -51,7 +60,7 @@
     </div>
   </div> -->
   <div class="col-12">
-    <button type="submit" class="btn btn-primary btn-lg custom-bg">Add constituent object</button>
+    <button type="submit" class="btn btn-primary btn-lg custom-bg">Update constituent object</button>
   </div>
 </form>
 {% endblock %}
