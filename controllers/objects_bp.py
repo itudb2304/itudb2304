@@ -2,13 +2,13 @@ from flask import Blueprint, jsonify, redirect, render_template, request, url_fo
 from repository.objects_repository import ObjectDTO, ObjectsRepository
 from flask import redirect, url_for, render_template, request, jsonify
 from repository.media_repository import MediaRepository
-from math import ceil
+from flask_paginate import Pagination, get_page_args
 
 def objects_bp(connection):
     objects = Blueprint(
         'objects',
         __name__,
-        template_folder='templates/',
+        template_folder='../templates/objects',
         static_folder='static/',
         url_prefix="/objects",
     )
@@ -22,17 +22,29 @@ def objects_bp(connection):
             print(selected_classifications)
             title_filter = request.args.get('title')
             credit_line_filter = request.args.get('creditLine')
-            page = request.args.get('page', default=1, type=int)
-            objects_per_page = 20
-
-            objects = repository.get_all_objects(selected_classifications, title_filter, credit_line_filter)
-            total_pages = ceil(len(objects) / objects_per_page)
-
-            start_index = (page - 1) * objects_per_page
-            end_index = start_index + objects_per_page
-            paginated_objects = objects[start_index:end_index]
-
-            return render_template("objects.html", objects=paginated_objects, total_pages=total_pages, current_page=page, selected_classifications=selected_classifications, title_filter=title_filter, credit_line_filter=credit_line_filter)
+            sort_by_title = request.args.get('sort')
+            print(sort_by_title)
+    
+            page, per_page, offset = get_page_args(
+                page_parameter="page", per_page_parameter="per_page"
+            )
+            all_objects = repository.get_all_objects(selected_classifications, title_filter, credit_line_filter, sort_by_title)
+            objects = repository.get_all_objects(selected_classifications, title_filter, credit_line_filter, sort_by_title, limit=per_page, offset=offset)
+           
+            per_page = 20
+            totalLen = len(all_objects)
+            pagination = Pagination(
+                page=page, per_page=per_page, total=totalLen, css_framework='bootstrap4'
+            )
+            return render_template("objects.html", 
+                                objects=objects,
+                                page=page, 
+                                per_page=per_page,
+                                pagination=pagination, 
+                                selected_classifications=selected_classifications, 
+                                title_filter=title_filter, 
+                                credit_line_filter=credit_line_filter,
+                                sort=sort_by_title)
 
     @objects.route('/object_addition', methods=['GET', 'POST'])
     def object_addition_page():

@@ -68,7 +68,7 @@ class ObjectsRepository:
     def __init__(self, connection):
         self.connection = connection
     
-    def get_all_objects(self, selected_classifications=None, title_filter=None, credit_line_filter=None):
+    def get_all_objects(self, selected_classifications=None, title_filter=None, credit_line_filter=None, sort_by_title="None", limit=0, offset=0):
         try:
             with self.connection.cursor() as cursor:
                 execution_list = []
@@ -99,6 +99,18 @@ class ObjectsRepository:
                         query = query[:-1] + " AND creditLine LIKE %s;"
                     else:
                         query = query[:-1] + " WHERE creditLine LIKE %s;"
+                if sort_by_title != "None":
+                    if sort_by_title == "asc":
+                        query = query[:-1] + " ORDER BY title ASC;"
+                    else:
+                        query = query[:-1] + " ORDER BY title DESC;"
+                if limit:
+                    query = query[:-1] + " LIMIT %s;"
+                    execution_list.append(limit)
+                if offset:
+                    query = query[:-1] + " OFFSET %s;"
+                    execution_list.append(offset)
+                
                 cursor.execute(query, execution_list)
                 objects = [ObjectDTO(row) for row in cursor.fetchall()]
             return objects

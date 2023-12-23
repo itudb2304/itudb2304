@@ -4,7 +4,6 @@
 
 {% block content %}
 <title>OBJECTS</title>
-{% if objects %}
 
 <body>
   <h1>OBJECTS</h1>
@@ -22,29 +21,45 @@
     </div>
 
     <div class="classificationFiltering">
-      <h4>Filter by Classification</h4>
-      <input type="checkbox" name="classification" value="Painting" >Painting<br>
-      <input type="checkbox" name="classification" value="Print" >Print<br>
+      <h5>Filter by Classification</h5>
+      <input type="checkbox" name="classification" value="Painting">Painting<br>
+      <input type="checkbox" name="classification" value="Print">Print<br>
       <input type="checkbox" name="classification" value="Sculpture" {% if "Sculpture" in selected_classifications %}
         checked {% endif %}>Sculpture<br>
       <input type="checkbox" name="classification" value="Drawing" {% if "Drawing" in selected_classifications %}
         checked {% endif %}>Drawing<br>
-      <input type="checkbox" name="classification" value="Volume" {% if "Volume" in selected_classifications %}
-        checked {% endif %}>Volume<br>
+      <input type="checkbox" name="classification" value="Volume" {% if "Volume" in selected_classifications %} checked
+        {% endif %}>Volume<br>
       <input type="checkbox" name="classification" value="Portfolio" {% if "Portfolio" in selected_classifications %}
         checked {% endif %}>Portfolio<br>
       <input type="checkbox" name="classification" value="Photograph" {% if "Photograph" in selected_classifications %}
         checked {% endif %}>Photograph<br>
       <input type="checkbox" name="classification" value="New Media" {% if "New Media" in selected_classifications %}
         checked {% endif %}>New Media<br>
-      <input type="checkbox" name="classification" value="Decorative Art" {% if "Decorative Art" in selected_classifications %} 
-        checked {% endif %}>Decorative Art<br>
-      <input type="checkbox" name="classification" value="Technical Material" {% if "Technical Material" in selected_classifications %} 
-        checked {% endif %}>Technical Material<br>
+      <input type="checkbox" name="classification" value="Decorative Art" {% if "Decorative Art" in
+        selected_classifications %} checked {% endif %}>Decorative Art<br>
+      <input type="checkbox" name="classification" value="Technical Material" {% if "Technical Material" in
+        selected_classifications %} checked {% endif %}>Technical Material<br>
     </div>
-    <input type="submit" value="Filter">
 
+    <div class="sortByTitle">
+      <h6>Sorting Strategy on Title:</h6>
+      <select name="sort">
+        <option value="none" {% if sort == "none" %} selected {% endif %}>None</option>
+        <option value="asc" {% if sort == "asc" %} selected {% endif %}>Ascending</option>
+        <option value="desc" {% if sort == "desc" %} selected {% endif %}>Descending</option>
+      </select>
+    </div>
+    
+    <div class="submitbutton">
+      <input type="submit" value="Filter">
+    </div>
   </form>
+
+  <div>
+    {{ pagination.info }}
+    {{ pagination.links }}
+  </div>
 
   <div class="tableDiv">
     <table class="table" id="objectsTable">
@@ -63,8 +78,10 @@
       </thead>
       <tbody>
         {% for obj in objects %}
+        {% if obj.objectid != None %}
         <tr data-obj-id="{{ obj.objectid }}">
-          <td>{{ obj.title }}</td>
+          <!--title is also a href -->
+          <td><a href="/objects/{{ obj.objectid }}">{{ obj.title }}</a></td>
           <td>{{ obj.accessioned }}</td>
           <td>{{ obj.accessionnum }}</td>
           <td>{{ obj.beginYear }}</td>
@@ -74,6 +91,7 @@
           <td>{{ obj.creditLine }}</td>
           <td>{{ obj.classification }}</td>
         </tr>
+        {% endif %}
         {% endfor %}
       </tbody>
     </table>
@@ -88,8 +106,8 @@
         });
       });
     });
+
   </script>
 </body>
 
-{% endif %}
 {% endblock %}
