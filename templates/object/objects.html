@@ -1,0 +1,84 @@
+{% extends "header.html" %}
+{% block title %}OBJECTS{% endblock %}
+{% set js_script = '''
+
+''' %}
+
+{% block content %}
+<title>OBJECTS</title>
+{% if objects %}
+
+<body>
+  <h1>OBJECTS</h1>
+  <button onclick="window.location.href='/objects/object_addition'">Add Object</button>
+
+  <form action="/objects" method="GET">
+    <div class="searchBarfortitle">
+      <input type="text" name="title" placeholder="Search by Title">
+    </div>
+
+    <div class="searchBarforCreditLine">
+      <input type="text" name="creditLine" placeholder="Search by Credit Line">
+    </div>
+
+    <div class="classificationFiltering">
+      <h4>Filter by Classification</h4>
+      <input type="checkbox" name="classification" value="Painting">Painting<br>
+      <input type="checkbox" name="classification" value="Print">Print<br>
+      <input type="checkbox" name="classification" value="Sculpture">Sculpture<br>
+      <input type="checkbox" name="classification" value="Drawing">Drawing<br>
+      <input type="checkbox" name="classification" value="Volume">Volume<br>
+      <input type="checkbox" name="classification" value="Portfolio">Portfolio<br>
+      <input type="checkbox" name="classification" value="Photograph">Photograph<br>
+      <input type="checkbox" name="classification" value="New Media">New Media<br>
+      <input type="checkbox" name="classification" value="Decorative Art">Decorative Art<br>
+      <input type="checkbox" name="classification" value="Technical Material">Technical Material<br>
+    </div>
+    <input type="submit" value="Filter">
+  </form>
+
+  <div class="tableDiv">
+    <table class="table" id="objectsTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Accessioned</th>
+          <th>Accession Number</th>
+          <th>Begin Year</th>
+          <th>End Year</th>
+          <th>Medium</th>
+          <th>Attribution</th>
+          <th>Credit Line</th>
+          <th>Classification</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for obj in objects %}
+        <tr data-obj-id="{{ obj.objectid }}">
+          <td>{{ obj.title }}</td>
+          <td>{{ obj.accessioned }}</td>
+          <td>{{ obj.accessionnum }}</td>
+          <td>{{ obj.beginYear }}</td>
+          <td>{{ obj.endYear }}</td>
+          <td>{{ obj.medium }}</td>
+          <td>{{ obj.attribution }}</td>
+          <td>{{ obj.creditLine }}</td>
+          <td>{{ obj.classification }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("#objectsTable tbody tr").forEach(function (row) {
+        row.addEventListener("dblclick", function (event) {
+          event.preventDefault(); // sends ctrl+p if this line is not present
+          window.location.href = "/objects/" + row.getAttribute("data-obj-id");
+        });
+      });
+    });
+  </script>
+</body>
+{% endif %}
+{% endblock %}

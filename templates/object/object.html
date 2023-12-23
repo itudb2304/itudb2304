@@ -1,0 +1,137 @@
+{% extends "header.html" %}
+{% block title %}{{ object.title }}{% endblock %}
+{% set js_script = '''
+
+''' %}
+
+{% block content %}
+<title>{{ object.title }} Detailed</title>
+{% if object %}
+
+<body>
+  <h2>Artwork Details</h2>
+  <button id="updateButton" onclick="window.location.href='/objects/{{ object.objectid }}/edit'">Update</button>
+  <button id="deleteButton">Delete</button>
+
+  <div class="endisdiv">
+    <div class="photoOfArtwork">
+      <img src={{ media }}>
+      alt="Artwork Photo">
+    </div>
+    <div class="objectDescription">
+      <p><strong>Artist Name:</strong></p>
+      <p><strong>Title: </strong>{{ object.title }}</p>
+      <p><strong>Is Virtual: </strong>{{ object.isVirtual }}</p>
+      <p><strong>Medium: </strong>{{ object.medium }}</p>
+      <p><strong>Dimensions: </strong>{{ object.dimensions }}</p>
+      <p><strong>Credit Line: </strong>{{ object.creditLine }}</p>
+      <p><strong>Accession Number: </strong>{{ object.accessionnum }}</p>
+      <p><strong>Artists / Makers: </strong>{{ object.attribution }}</p>
+      <p><strong>Image Use: </strong>{{ object.customPrintURL }}</p>
+      <p><strong>Classification: </strong>{{ object.classification }}</p>
+
+      <h5>Location: </h5>
+
+      <p><strong>Site: </strong> {{ objectLocation.site}}</a></p>
+      <p><strong>Room: </strong>{{objectLocation.room}} </p>
+      <p><strong>desc: </strong>{{objectLocation.decription}} </p>
+
+    </div>
+  </div>
+  <div class="div3">
+    <button onclick="showInscription()">Inscription</button>
+    <div id="insc">
+      <p>{{ object.inscription }}</p>
+    </div>
+    <hr>
+    <button onclick="showProvenance()">Provenance</button>
+    <div id="prov">
+      <p>{{ object.provenanceText }}</p>
+    </div>
+    <hr>
+    <button onclick="showBibliography()">Bibliography</button>
+    <div id="bib">
+      {% for entry in text_entry["bibliography"] %}
+        <li>{{ entry[1] }}: {{ entry[0] }}</li>
+      {% endfor %}
+    </div>
+    <hr>
+    <button onclick="exhibition_history()">Exhibition History</button>
+    <div id="exh">
+      <ul>
+          {% for entry in text_entry["exhibition_history"] %}
+              <li>{{ entry[1] }}: {{ entry[0] }}</li>
+          {% endfor %}
+      </ul>
+    <hr>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const deleteButton = document.getElementById("deleteButton");
+
+      deleteButton.addEventListener("click", function () {
+        const isConfirmed = confirm("Are you sure you want to delete this art object?");
+
+        if (isConfirmed) {
+          // Send a POST request to the server to delete the object
+          fetch("/objects/{{ object.objectid }}", {
+            method: "POST",
+          })
+            .then(response => response.json())
+            .then(data => {
+              // Redirect to the objects page after successful deletion
+              if (data.success) {
+                window.location.href = "/objects";
+              } else {
+                alert("Failed to redirect");
+              }
+            })
+            .catch(error => {
+              console.error("Error deleting object:", error);
+              alert("An error occurred while deleting the object.");
+            });
+        }
+      });
+    });
+
+    function showInscription() {
+      var x = document.getElementById("insc");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+
+    function showProvenance() {
+      var x = document.getElementById("prov");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+
+    function showBibliography() {
+      var x = document.getElementById("bib");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+
+    function exhibition_history() {
+      var x = document.getElementById("exh");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+{% endif %}
+{% endblock %}

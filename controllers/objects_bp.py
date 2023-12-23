@@ -8,7 +8,7 @@ def objects_bp(connection):
     objects = Blueprint(
         'objects',
         __name__,
-        template_folder='../templates/objects',
+        template_folder='../templates/object',
         static_folder='static/',
         url_prefix="/objects",
     )

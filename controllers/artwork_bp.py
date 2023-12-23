@@ -6,7 +6,7 @@ def artwork_bp(connection):
     artwork = Blueprint(
         'artwork',
         __name__,
-        template_folder='templates/',
+        template_folder='../templates/artwork',
         static_folder='static/',
         url_prefix="/artwork"
     )
