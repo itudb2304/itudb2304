@@ -163,36 +163,52 @@ def constituents_bp(connection):
 
     @constituents.route("/<int:id>/add-object", methods=["GET", "POST"])
     def add_constituent_object(id: int):
-        # flash('This is a flash message!', 'success')  # Flash message with a category (e.g., 'info', 'error', 'success')
         if request.method == "GET":
             return render_template(
                 "add_constituent_object.html",
                 object_ids=repository.get_object_ids(),
                 constituent_ids=repository.get_constituent_ids(),
-                current_constituentID=id,
+                current_constituent=repository.get_constituent_by_id(id=id),
             )
         else:
-            attributes = []
-            for att in constituent_objects_attributes:
-                if att in request.form:
-                    attributes.append(request.form[att])
-                else:
-                    attributes.append(None)
-            attributes.append(
-                objects_repository.get_object_by_objectid(attributes[0]).title
-            )
-            print(attributes)
-            attributes.append(
-                repository.get_constituent_by_id(attributes[1]).forwarddisplayname
-            )
-            repository.add_constituent_object(attributes=attributes)
-            flash("Constituent object has been added successfully.", 'success')
-            return render_template(
-                "add_constituent_object.html",
-                object_ids=repository.get_object_ids(),
-                constituent_ids=repository.get_constituent_ids(),
-                current_constituentID=id,
-            )
+            # OBJECT ID VALIDATION
+            if "objectid" not in request.form:
+                flash("Object ID field cannot be empty.", 'warning')
+                return render_template(
+                    "add_constituent_object.html",
+                    object_ids=repository.get_object_ids(),
+                    constituent_ids=repository.get_constituent_ids(),
+                    current_constituent=repository.get_constituent_by_id(id=id),
+                )
+            elif repository.validate_object_id(request.form["objectid"])[0][0] > 0:
+                attributes = []
+                for att in constituent_objects_attributes:
+                    if att in request.form:
+                        attributes.append(request.form[att])
+                    else:
+                        attributes.append(None)
+                attributes.append(
+                    objects_repository.get_object_by_objectid(attributes[0]).title
+                )
+                attributes.append(
+                    repository.get_constituent_by_id(attributes[1]).forwarddisplayname
+                )
+                repository.add_constituent_object(attributes=attributes)
+                flash("Constituent object has been added successfully.", 'success')
+                return render_template(
+                    "add_constituent_object.html",
+                    object_ids=repository.get_object_ids(),
+                    constituent_ids=repository.get_constituent_ids(),
+                    current_constituent=repository.get_constituent_by_id(id=id),
+                )
+            else:
+                flash("Object ID invalid.", 'warning')
+                return render_template(
+                    "add_constituent_object.html",
+                    object_ids=repository.get_object_ids(),
+                    constituent_ids=repository.get_constituent_ids(),
+                    current_constituent=repository.get_constituent_by_id(id=id),
+                )
 
     @constituents.route(
         "/<int:constituent_id>/<int:relation_id>/", methods=["GET", "POST"]

@@ -2,7 +2,7 @@
 {% block content %}
 <div class="col-md-1 back-icon" style="margin-bottom: 30px;">
   <form>
-      <a href="{{ url_for('constituents.constituent_objects', id=current_constituentID) }}" style="color: #212529; margin: 25px; margin-top: 150px;" ><i class="fa-solid fa-arrow-left fa-2xl"></i></a>
+      <a href="{{ url_for('constituents.constituent_objects', id=current_constituent.constituentid) }}" style="color: #212529; margin: 25px; margin-top: 150px;" ><i class="fa-solid fa-arrow-left fa-2xl"></i></a>
   </form>
 </div>
 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -15,19 +15,20 @@
 {% endif %}
 {% endwith %}
 <div style="margin: 25px 40px;">
-<form class="row g-3" action="{{ url_for('constituents.add_constituent_object', id=current_constituentID) }}" method="post">
+<form class="row g-3" action="{{ url_for('constituents.add_constituent_object', id=current_constituent.constituentid) }}" method="post">
   <div class="col-md-4">
-    <label for="objectid" class="form-label required">Object Name</label>
-    <select id="objectid" name="objectid" class="form-select" required="required">
+    <label for="objectid" class="form-label required">Object ID</label>
+    <input type="number" class="form-control" id="objectid" name="objectid" required="required">
+    <!-- <select id="objectid" name="objectid" class="form-select" required="required">
       {% for i in object_ids %}
       <option>{{ i[0] }}</option>
       {% endfor %}
-    </select>
+    </select> -->
   </div>
   <div class="col-md-4">
     <label for="constituentid" class="form-label required">Constituent Name</label>
     <select id="constituentid" name="constituentid" class="form-select" required="required">
-      <option selected> {{ current_constituentID }} </option>
+      <option value="{{current_constituent.constituentid}}" selected> {{ current_constituent.forwarddisplayname }} </option>
     </select>
   </div>
   <div class="col-md-4">

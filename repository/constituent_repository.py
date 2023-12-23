@@ -21,7 +21,6 @@ class ConstituentRepository:
                 query = "SELECT COUNT(c.constituentid) FROM constituents c WHERE c.forwarddisplayname LIKE %s;"
                 cursor.execute(query, ('%' + name + '%',))
                 temp= cursor.fetchone()[0]
-                print(temp)
                 return temp
         except Exception as e:
             print(f"Error getting the number of constituents from the database: {e}")
@@ -38,6 +37,17 @@ class ConstituentRepository:
                 return result
         except Exception as e:
             print(f"Error getting the number of constituent objects from the database: {e}")
+            self.connection.rollback()
+
+    def validate_object_id(self, objectid: int):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''SELECT COUNT(objectid), title FROM objects where objectid=%s'''
+                cursor.execute(query, (objectid,))
+                result = cursor.fetchall()
+                return result
+        except Exception as e:
+            print(f"Error getting object from the database: {e}")
             self.connection.rollback()
 
     def get_all_constituents(self, limit: int, offset: int):
