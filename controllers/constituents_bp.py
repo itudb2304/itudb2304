@@ -115,14 +115,51 @@ def constituents_bp(connection):
     @constituents.route("/<int:id>", methods=["GET", "POST"])
     def constituent_objects(id: int):
         if request.method == "GET":
-            constituent_objects = repository.constituent_objects(id)
+            page, per_page, offset = get_page_args(
+                page_parameter="page", per_page_parameter="per_page"
+            )
+            per_page = 50
+            total = repository.get_number_of_constituent_objects(id)
+            pagination_constituent_objects = repository.constituent_objects(constituentid=id, offset=offset, limit=per_page)
+            pagination = Pagination(
+                page=page, per_page=per_page, total=total, css_framework='bootstrap4'
+            )
             return render_template(
                 "constituent_objects.html",
-                constituent_objects=constituent_objects,
+                constituent_objects=pagination_constituent_objects,
                 constituentID=id,
+                page=page,
+                per_page=per_page,
+                pagination=pagination
             )
         else:
-            return redirect(url_for(".add_constituent_object", id=id))
+            if 'add-constituent' in request.form:
+                return redirect(url_for(".add_constituent_object", id=id))
+            else:
+                return redirect(url_for('.constituent_objects_by_name', constituentid=id, name=request.form['constituent-search']))
+        
+    @constituents.route('/<int:constituentid>/<string:name>', methods=['GET', 'POST'])
+    def constituent_objects_by_name(constituentid: int, name: str):
+        if request.method == 'GET':
+            page, per_page, offset = get_page_args(
+                page_parameter="page", per_page_parameter="per_page"
+            )
+            per_page = 50
+            total = repository.number_of_constituent_objects_by_name(constituentid=constituentid, name=name)
+            pagination_constituent_objects_by_name = repository.get_constituent_objects_by_name(constituentid=constituentid, name=name,limit=per_page, offset=offset)
+            pagination = Pagination(
+                page=page, per_page=per_page, total=total, css_framework='bootstrap4'
+            )
+            return render_template(
+                "constituent_objects.html",
+                constituent_objects=pagination_constituent_objects_by_name,
+                constituentID=constituentid,
+                page=page,
+                per_page=per_page,
+                pagination=pagination
+            )
+        else:
+            return redirect(url_for('.constituent_objects_by_name', constituentid=constituentid, name=name))
 
     @constituents.route("/<int:id>/add-object", methods=["GET", "POST"])
     def add_constituent_object(id: int):
