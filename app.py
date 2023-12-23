@@ -2,7 +2,6 @@ from flask import Flask
 import mysql.connector
 import utils.maskPassword as maskPassword
 from controllers.constituents_bp import constituents_bp
-from controllers.admin_bp import admin_bp
 from controllers.locations_bp import locations_bp
 from controllers.objects_bp import objects_bp
 from controllers.media_bp import media_bp
@@ -24,7 +23,6 @@ def create_app():
 
     app.register_blueprint(home_bp())
     app.register_blueprint(constituents_bp(connection=connection))
-    app.register_blueprint(admin_bp(connection=connection))
     app.register_blueprint(locations_bp(connection=connection))
     app.register_blueprint(objects_bp(connection=connection))
     app.register_blueprint(media_bp(connection=connection))
