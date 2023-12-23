@@ -14,6 +14,7 @@
     {% endfor %}
 {% endif %}
 {% endwith %}
+<h1 style="margin-left: 50px;">Edit "{{ constituent_object.object_title }}" by {{ constituent_object.constituent_forward_display_name }} </h1>
 <form class="row g-3 form-margin" action="{{ url_for('constituents.update_constituent_object', constituent_id=constituent_object.constituentID, relation_id=constituent_object.id) }}" method="post">
   <div class="col-md-4">
     <label for="objectid" class="form-label required">Object ID</label>
