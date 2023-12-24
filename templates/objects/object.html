@@ -1,8 +1,5 @@
 {% extends "header.html" %}
 {% block title %}{{ object.title }}{% endblock %}
-{% set js_script = '''
-
-''' %}
 
 {% block content %}
 <title>{{ object.title }} Detailed</title>
@@ -10,15 +7,33 @@
 
 <body>
   <h6>Artwork Details</h6>
-  <h1>{{ object.title }}</h1> <h5>by {{ constituentslist[0][1] }}</h5>
+  <h1>{{ object.title }}</h1>
+  {% if constituentslist|length > 0 %}
+  <h5>by {{ constituentslist[0][1] }}</h5>
+  {% endif %}
   <button id="updateButton" onclick="window.location.href='/objects/{{ object.objectid }}/edit'">Update</button>
   <button id="deleteButton">Delete</button>
 
   <div class="endisdiv">
     <div class="photoOfArtwork">
-      <img src={{ media }}>
+      {% if media and media[0][0] %}
+      <img id="art" src="{{ media[0][0] }}" alt="Photo of Artwork">
+      {% else %}
+      <img src="https://via.placeholder.com/150" alt="Photo of Artwork">
+      {% endif %}
+
+      {% if media and media[0][1] %}
+      <p><em>Image Description</em></p>
+      <div id='desc-image'>
+        <p>{{ media[0][1] }}</p>
+      </div>
+      <hr>
+      {% endif %}
     </div>
     <div class="objectDescription">
+      <p><strong>Title: </strong>{{ object.title }}</p>
+      <p><strong>Credit Line: </strong> <a href="{{ url_for('objects.objects_page', creditLine=object.creditLine) }}">{{
+        object.creditLine }}</a></p>
       {% if constituentslist|length > 0 %}
       <p>
         <strong>Artist Name:</strong>
@@ -28,15 +43,27 @@
       </p>
       {% endif %}
 
-      <p><strong>Title: </strong>{{ object.title }}</p>
+      {%if object.isVirtual%}
       <p><strong>Is Virtual: </strong>{{ object.isVirtual }}</p>
+      {% endif %}
+      {%if object.medium%}
       <p><strong>Medium: </strong>{{ object.medium }}</p>
+      {% endif %}
+      {%if object.dimensions%}
       <p><strong>Dimensions: </strong>{{ object.dimensions }}</p>
-      <p><strong>Credit Line: </strong> <a href="{{ url_for('objects.objects_page', creditLine=object.creditLine) }}" >{{ object.creditLine }}</a></p>
+      {% endif %}
+      {%if object.accessionnum%}
       <p><strong>Accession Number: </strong>{{ object.accessionnum }}</p>
+      {% endif %}
+      {%if object.attribution%}
       <p><strong>Attribution: </strong>{{ object.attribution }}</p>
+      {% endif %}
+      {%if object.customPrintURL%}
       <p><strong>Image Use: </strong>{{ object.customPrintURL }}</p>
+      {% endif %}
+      {%if object.classification%}
       <p><strong>Classification: </strong>{{ object.classification }}</p>
+      {% endif %}
 
       {% if objectLocation %}
       <h5>Location: </h5>
@@ -53,141 +80,134 @@
 
     </div>
   </div>
-  <div class="div3">
+
+  <div class="descriptions">
     {% if object.inscription %}
-    <button onclick="toggleVisibility('insc')">Inscription</button>
-    <div id="insc">
-      <p>{{ object.inscription|replace('\n', '<br>')|safe }}</p>
-    </div>
-    <hr>
-    {% endif %}
+    <div class="div3">
+      <button onclick="toggleVisibility('insc')">Inscription</button>
+      <div id="insc">
+        <p>{{ object.inscription|replace('\n', '<br>')|safe }}</p>
+      </div>
+      <hr>
+      {% endif %}
 
-    {%if object.provenanceText %}
-    <button onclick="toggleVisibility('prov')">Provenance</button>
-    <div id="prov">
-      <p>{{ object.provenanceText|replace('\n', '<br>')|safe }}</p>
-    </div>
-    <hr>
-    {% endif %}
+      {%if object.provenanceText %}
+      <button onclick="toggleVisibility('prov')">Provenance</button>
+      <div id="prov">
+        <p>{{ object.provenanceText|replace('\n', '<br>')|safe }}</p>
+      </div>
+      <hr>
+      {% endif %}
 
-    {%if text_entry["bibliography"] %}
-    <button onclick="toggleVisibility('bib')">Bibliography</button>
-    <div id="bib">
-      {% for entry in text_entry["bibliography"] %}
-      <li>{{ entry[1] }}: {{ entry[0] }}</li>
-      {% endfor %}
-    </div>
-    <hr>
-    {% endif %}
-
-    {%if text_entry["exhibition_history"] %}
-    <button onclick="toggleVisibility('exh')">Exhibition History</button>
-    <div id="exh">
-      <ul>
-        {% for entry in text_entry["exhibition_history"] %}
+      {%if text_entry["bibliography"] %}
+      <button onclick="toggleVisibility('bib')">Bibliography</button>
+      <div id="bib">
+        {% for entry in text_entry["bibliography"] %}
         <li>{{ entry[1] }}: {{ entry[0] }}</li>
         {% endfor %}
-      </ul>
-    </div>
-    <hr>
-    {% endif %}
+      </div>
+      <hr>
+      {% endif %}
 
-    {%if text_entry["lifetime_exhibition"] %}
-    <button onclick="toggleVisibility('life')">Lifetime Exhibition</button>
-    <div id="life">
-      <ul>
-        {% for entry in text_entry["lifetime_exhibition"] %}
-        <li>{{ entry[1] }}: {{ entry[0] }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    <hr>
-    {% endif %}
+      {%if text_entry["exhibition_history"] %}
+      <button onclick="toggleVisibility('exh')">Exhibition History</button>
+      <div id="exh">
+        <ul>
+          {% for entry in text_entry["exhibition_history"] %}
+          <li>{{ entry[1] }}: {{ entry[0] }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <hr>
+      {% endif %}
 
-    {%if text_entry["other_collections"] %}
-    <button onclick="toggleVisibility('other')">Other Collections</button>
-    <div id="other">
-      <ul>
-        {% for entry in text_entry["other_collections"] %}
-        <li>{{ entry[1] }}: {{ entry[0] }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    <hr>
-    {% endif %}
+      {%if text_entry["lifetime_exhibition"] %}
+      <button onclick="toggleVisibility('life')">Lifetime Exhibition</button>
+      <div id="life">
+        <ul>
+          {% for entry in text_entry["lifetime_exhibition"] %}
+          <li>{{ entry[1] }}: {{ entry[0] }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <hr>
+      {% endif %}
 
-    {%if text_entry["exhibition_history_footnote"] %}
-    <button onclick="toggleVisibility('exhfoot')">Exhibition History Footnote</button>
-    <div id="exhfoot">
-      <ul>
-        {% for entry in text_entry["exhibition_history_footnote"] %}
-        <li>{{ entry[1] }}: {{ entry[0] }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    <hr>
-    {% endif %}
+      {%if text_entry["other_collections"] %}
+      <button onclick="toggleVisibility('other')">Other Collections</button>
+      <div id="other">
+        <ul>
+          {% for entry in text_entry["other_collections"] %}
+          <li>{{ entry[1] }}: {{ entry[0] }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <hr>
+      {% endif %}
 
-    {%if text_entry["documentary_labels_inscriptions"] %}
-    <button onclick="toggleVisibility('doc')">Documentary Labels Inscriptions</button>
-    <div id="doc">
-      <ul>
-        {% for entry in text_entry["documentary_labels_inscriptions"] %}
-        <li>{{ entry[1] }}: {{ entry[0] }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-    <hr>
-    {% endif %}
+      {%if text_entry["exhibition_history_footnote"] %}
+      <button onclick="toggleVisibility('exhfoot')">Exhibition History Footnote</button>
+      <div id="exhfoot">
+        <ul>
+          {% for entry in text_entry["exhibition_history_footnote"] %}
+          <li>{{ entry[1] }}: {{ entry[0] }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <hr>
+      {% endif %}
 
-    {%if text_entry["inscription_footnote"] %}
-    <button onclick="toggleVisibility('insfoot')">Inscription Footnote</button>
-    <div id="insfoot">
-      <ul>
-        {% for entry in text_entry["inscription_footnote"] %}
-        <li>{{ entry[1] }}: {{ entry[0] }}</li>
-        {% endfor %}
-      </ul>
+      {%if text_entry["documentary_labels_inscriptions"] %}
+      <button onclick="toggleVisibility('doc')">Documentary Labels Inscriptions</button>
+      <div id="doc">
+        <ul>
+          {% for entry in text_entry["documentary_labels_inscriptions"] %}
+          <li>{{ entry[1] }}: {{ entry[0] }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <hr>
+      {% endif %}
+
+      {%if text_entry["inscription_footnote"] %}
+      <button onclick="toggleVisibility('insfoot')">Inscription Footnote</button>
+      <div id="insfoot">
+        <ul>
+          {% for entry in text_entry["inscription_footnote"] %}
+          <li>{{ entry[1] }}: {{ entry[0] }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <hr>
+      {% endif %}
     </div>
-    <hr>
-    {% endif %}
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const deleteButton = document.getElementById("deleteButton");
-
-      deleteButton.addEventListener("click", function () {
-        const isConfirmed = confirm("Are you sure you want to delete this art object?");
-
-        if (isConfirmed) {
-          // Send a POST request to the server to delete the object
-          fetch("/objects/{{ object.objectid }}", {
-            method: "POST",
-          })
-            .then(response => response.json())
-            .then(data => {
-              // Redirect to the objects page after successful deletion
-              if (data.success) {
-                window.location.href = "/objects";
-              } else {
-                alert("Failed to redirect");
-              }
-            })
-            .catch(error => {
-              console.error("Error deleting object:", error);
-              alert("An error occurred while deleting the object.");
-            });
-        }
-      });
+      deleteButton.addEventListener("click", deleteArtObject);
     });
 
-    function toggleVisibility(elementId) {
-      var x = document.getElementById(elementId);
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
+    function deleteArtObject() {
+      const isConfirmed = confirm("Are you sure you want to delete this art object?");
+
+      if (isConfirmed) {
+        fetch("/objects/{{ object.objectid }}", {
+          method: "POST",
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              window.location.href = "/objects";
+            } else {
+              alert("Failed to redirect");
+            }
+          })
+          .catch(error => {
+            console.error("Error deleting object:", error);
+            alert("An error occurred while deleting the object.");
+          });
       }
     }
   </script>

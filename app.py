@@ -31,5 +31,6 @@ def create_app():
     return app
 
 if __name__ == "__main__":
+    #db_static.init()
     app = create_app()
     app.run(debug=True)

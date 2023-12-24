@@ -206,3 +206,21 @@ class ObjectsRepository:
         except Exception as e:
             print(f"Error deleting object from the database: {e}")
             self.connection.rollback()
+
+    def get_media_by_objectid(self, objectid):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                SELECT iiifthumburl, assistiveText
+                FROM published_images
+                WHERE depictstmsobjectid=%s;
+                '''
+                cursor.execute(query, [objectid])
+                rows = cursor.fetchall()
+                media = []
+                for row in rows:
+                    media.append([row[0],row[1]])
+            return media
+        except Exception as e:
+            print(f"Error getting media from the database: {e}")
+            self.connection.rollback()
