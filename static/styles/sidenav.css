@@ -31,7 +31,15 @@
     font-size: 15px; /* Increased text to enable scrolling */
     padding: 0px 10px;
 }
-  
+ 
+p.help.has-background-warning {
+    display: inline-block;
+    color: #d20a0a;
+    padding: 2px;
+    border-radius: 5px;
+    font-size: small;
+}
+
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
 }

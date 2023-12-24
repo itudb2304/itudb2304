@@ -60,7 +60,11 @@
                 {% endif %} 
                 </td>
                 <td>{{ location.type }}</td>
-                <td>{{ location.path["building"].name }}</td>
+                <td>
+                    {% if location.path["building"] %}
+                    {{ location.path["building"].name }}
+                    {% endif %} 
+                </td>
                 {% endfor %}
             {% else %}
                 <td><b>No locations found</b></td>

@@ -35,9 +35,11 @@ class LocationsRepository:
                 if len(filter["type"]): 
                     query = query[:-1] + " WHERE type IN (" + ",".join(["%s"] * len(filter["type"])) + ");"
                     for type in filter["type"]:
-                        execution_list.append(type)
+                        execution_list.append(type) 
+                elif not search and not len(filter["public"]):
+                    query = query[:-1] + ''' WHERE type IN ("room");'''
                 else:
-                    query = query[:-1] + ''' WHERE type = "room";'''
+                    query = query[:-1] + ''' WHERE type IN ("room", "floor", "building");'''
 
                 if search:
                     search ='%' + search + '%'
@@ -54,7 +56,6 @@ class LocationsRepository:
                                             WHEN type = 'room' THEN 3
                                         END;'''
 
-                print(execution_list)
                 cursor.execute(query, execution_list)
  
                 search_results = cursor.fetchall()
@@ -231,7 +232,8 @@ class LocationsRepository:
                     cursor.execute(query, [location.key])
                     sublocations = cursor.fetchall()
                     for sublocation in sublocations:
-                        self.delete_location(sublocation[0])
+                        sub = self.get_location(sublocation[0])
+                        self.delete_location(sub)
                 query = '''DELETE FROM preferred_locations WHERE locationkey = %s;'''
                 cursor.execute(query, [location.key])
                 self.connection.commit()
@@ -263,7 +265,7 @@ class LocationsRepository:
                 location_id = max_id[0] + 1            
                 query = '''INSERT INTO locations (locationid, site, room, publicaccess, description)
                         VALUES(%s, %s, %s, %s, %s);'''
-                cursor.execute(query, (location_id, location["building"].name, location.key, location.isPublic, location.name))
+                cursor.execute(query, (location_id, location.path["building"].name, location.key, location.isPublic, location.name))
                 self.connection.commit()
         except Exception as e:
             print(f"Error adding locationid to the database: {e}")
@@ -317,11 +319,10 @@ class LocationsRepository:
         try:
             path = {"building": "", "floor": "", "room": ""}
             location = self.get_location(locationkey)
-            path[location.type] = location.name
-
+            path[location.type] = location.name 
             while location.partof:
                 location = self.get_location(location.partof)
                 path[location.type] = location
             return path
         except Exception as e:
-            print(f"Error getting path: {e}")
+            print(f"Error getting path: {e} {locationkey}")
