@@ -117,31 +117,22 @@
             {% endif %}
         </div>
     </div>
-
 </form>
 
 <script>
-    // validation if accessioned accessionnum title classification are None or empty raise error
-
     function validateForm() {
-        console.log("Validating form...");
-
         var form = document.forms["object_edit"];
         var { accessioned, accessionnum, title, classification, beginYear, endYear } = form;
-
         if (![accessioned, accessionnum, title, classification].every(value => value.value && value.value !== "None")) {
             alert("Accessioned, Accession Number, Title, and Classification must be filled out");
             return false;
         }
-
         if (parseInt(beginYear.value, 10) > parseInt(endYear.value, 10)) {
             alert("Begin Year must be less than or equal to End Year");
             return false;
         }
-
         return true;
     }
-
 </script>
 
 {% endblock %}
