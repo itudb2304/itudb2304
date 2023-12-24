@@ -213,6 +213,7 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: -30px;
   margin-bottom: 50px;
 }
 
@@ -252,4 +253,9 @@ a {
 
 .box h4 {
   display: inline-block;
+}
+
+.checkbox-group {
+  display: inline-block;
+  margin-right: 10px;
 }
