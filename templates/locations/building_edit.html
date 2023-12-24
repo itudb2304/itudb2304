@@ -5,21 +5,29 @@
     <form action="" method="post" name="building_edit">
 
         <div class="field">
-            <label for="name" class="label">Name</label>
+            <label for="name" class="form-label required">Name</label>
             <div class = "control"> 
                 <input type="text" name="name" class="input" required="required" value="{{ values['name'] }}"/>
             </div>
         </div>
+        {% if 'name' in values.errors%}
+            <p class="help has-background-warning">
+                {{ values.errors['name'] }}
+            </p>
+        {% endif %}
 
         <div class="field">
-            <label for="is_public" class="label">IsPublic</label>
-            <div class = "control"> 
-                <input list = "publicity" type="text" name="isPublic" required="required" value="{{ values['isPublic'] }}"/>
-                <datalist id = "publicity" >
-                    <option value="Yes">
-                    <option value= "No">
-                </datalist>
-            </div> 
+            <label for="is_public" class="form-label required">IsPublic</label>
+            <div class="control">
+                <label class="radio">
+                    <input type="radio" name="isPublic" value="1" {% if values["isPublic"] == 1 %} checked {% endif %} required="required">
+                    Yes
+                </label>
+                <label class="radio">
+                    <input type="radio" name="isPublic" value="0" {% if values["isPublic"] == 0 %} checked {% endif %} required="required">
+                    No
+                </label>
+            </div>
         </div>
 
         {% if values['floors'] %}
@@ -27,10 +35,11 @@
                 <li>{{floor[0]}}</li>                               
             {% endfor %}   
         {% endif %}
+
         <div class="field">
             <label for="floors[]" class="label">Floors</label>
             <div class = "control" id = "floorInputContainer"> 
-                <input type="text" name="floors[]" required="option"/>
+                <input type="text" name="floors[]" required>
             </div> 
             <div class="field is-grouped">
                 <div class="control">
@@ -60,8 +69,11 @@
         });
         function cancelForm() {
             document.querySelector('input[name="name"]').removeAttribute('required');
-            document.querySelector('input[name="isPublic"]').removeAttribute('required');
             document.querySelector('input[name="floors[]"]').removeAttribute('required');
+            const radioButtons = document.querySelectorAll('input[name="isPublic"]');
+                radioButtons.forEach((radioButton) => {
+                    radioButton.removeAttribute('required');
+            });
         }
     </script>
 {% endblock %}

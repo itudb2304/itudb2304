@@ -5,10 +5,10 @@
     <div>
     {% if building %}   
                         
-        <div id = building[1] class = "building">                   
+        <div id = building.key class = "building">                   
               
             <form action="" method="post">  
-                <input type="hidden" name="building_key" value="{{ building[1] }}">
+                <input type="hidden" name="building_key" value="{{ building.key }}">
                 <button class="button is-danger is-small" name = "edit">Edit</button>
                 <button class="button is-danger is-small" name = "delete" onclick="return confirmDelete()">Delete</button>
             </form>    
@@ -18,6 +18,11 @@
                         <li><a href="{{url_for('locations.floor_page', floor_id=floor[1])}}">{{floor[0]}}</a></li>                               
                     {% endfor %}  
                 {% endif %}
+                <form action="" method="post">
+                    <button type="submit" class="btn btn-primary btn-lg custom-bg" name = "addFloor">
+                        <i class="fa-solid fa-plus"></i> Add Floor
+                    </button>
+                </form>
             </div> 
         </div>
              
