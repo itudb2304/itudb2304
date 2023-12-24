@@ -1,20 +1,13 @@
 {% extends "header.html" %}
 {% block title %} Rooms {% endblock %}
 {% block content %}
-
     <h1> {{floor.name}} </h1>
 
     <h2>   Rooms </h2>
-    <form action="" method="post">
-        <div class="field is-grouped">
-            <div class="control">
-            <button class="button is-danger is-small">
-              <a class="button is-primary is-outlined is-small"
-                 href="{{url_for('locations.floor_edit_page', floor_id=floor.key)}}">Edit</a>
-            </div>
-        </button>
-        </div>   
-
+    <form action="" method="post"> 
+        <button class="button is-danger" name="edit">Edit</button>
+        <button class="button is-danger is-small" name = "delete" onclick="return confirmDelete()">Delete</button>
+    </form>
         <table class="table">
             {% if rooms %}
             <table>
@@ -29,14 +22,7 @@
             </table>
             {% endif %}
         </table>
-        <div class="field is-grouped">
-            <div class="control">
-                <label class="button">
-                    <button class="button is-danger is-small" name = "delete" onclick="return confirmDelete()">Delete</button>
-                </label>  
-            </div>
-        </div>
-    </form>
+   
     <script>
         function confirmDelete() {
             return confirm('Are you sure you want to delete this item');
