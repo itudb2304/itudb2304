@@ -25,6 +25,7 @@
             <tr>
               <th>Description</th>
               <th>Public</th>
+              <th>Location Type</th>
               <th>Building</th>
             </tr>
           </thead>
@@ -40,6 +41,7 @@
                         <p>No</p>
                 {% endif %} 
                 </td>
+                <td>{{ location.type }}</td>
                 <td>{{ location.building }}</td>
                 {% endfor %}
             {% else %}

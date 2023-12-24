@@ -15,19 +15,10 @@ def locations_bp(connection):
 
     @locations.route('/', methods=['GET', 'POST'])
     def locations_page():      
-        if request.method == "POST":    
-            building_key = request.form["building_key"] 
-            if "delete" in request.form:
-                building = repository.get_location(building_key)
-                repository.delete_location(building)
-                return redirect(url_for("locations.locations_page"))
-            if "edit" in request.form:
-                return redirect(url_for('locations.building_edit_page', building_id=building_key))
-        else:
-            filter = request.args.get("locations-search")
-            locations = repository.get_locations(filter)
-            buildings = repository.get_buildings()
-            return render_template("locations.html", locations=locations, buildings=buildings)
+        filter = request.args.get("locations-search")
+        locations = repository.get_locations(filter)
+        buildings = repository.get_buildings()
+        return render_template("locations.html", locations=locations, buildings=buildings)
     
     @locations.route('building/<building_id>', methods=['GET', 'POST'])
     def building_page(building_id): 
@@ -160,4 +151,17 @@ def locations_bp(connection):
         else:
             return redirect(url_for("locations.room_page", room_id=room_id))
     
+    def validate_form(form):
+        form.data = {}
+        form.errors = {}
+
+        form_name = form.get("name", "").strip()
+        if len(form_name) == 0:
+            form.errors["name"] = "Name can not be blank"
+        elif not repository.is_name_unique(form_name):
+            form.errors["name"] = "Name already exists"
+        else:
+            form.data["name"] = form_name       
+        
+        return len(form.errors) == 0 
     return locations

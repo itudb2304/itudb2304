@@ -1,12 +1,14 @@
 class Location:
-    def __init__(self, name, type, isPublic = None, partof = None, key = None, building = None ) -> None:
+    def __init__(self, name, type, isPublic = None, partof = None, key = None, building = None, floor = None, room = None ) -> None:
         self.name = name
         self.key = key
         self.type = type
         self.isPublic = isPublic
-        self.building = building
-        self.floor = None
         self.partof = partof
+        self.building = building
+        self.floor = floor
+        self.room = room
+        
 
 class LocationsRepository:
     def __init__(self, connection) -> None:
@@ -18,14 +20,24 @@ class LocationsRepository:
                 locations = []
                 execution_list = []
                 query = '''
-                        SELECT DISTINCT l.description, p.locationtype, l.publicaccess, p.partof, p.locationkey, l.site
-                        FROM locations AS l
-                        LEFT JOIN preferred_locations AS p 
-                        ON l.room = p.locationkey;'''    
+                        SELECT *
+                        FROM (
+                            SELECT DISTINCT
+                                SUBSTRING_INDEX(SUBSTRING_INDEX(p.description, '/', -1),'-',-1) AS extracted_part,
+                                p.locationtype,
+                                p.ispublicvenue,
+                                p.partof,
+                                p.locationkey,
+                                l.site
+                            FROM
+                                locations AS l
+                            RIGHT JOIN
+                                preferred_locations AS p ON l.room = p.locationkey
+                        ) AS subquery;'''    
                 if filter:
                     filter ='%' + filter + '%'
                     execution_list.append(filter)
-                    query = query[:-1] + " WHERE l.description LIKE %s;"
+                    query = query[:-1] + " WHERE extracted_part LIKE %s;"
                     
                 cursor.execute(query, execution_list)
  
@@ -42,7 +54,7 @@ class LocationsRepository:
             buildings = []
             with self.connection.cursor() as cursor:
                 query = '''
-                    SELECT DISTINCT p.description, p.locationkey FROM preferred_locations AS p
+                    SELECT DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(p.description, '/', -1),'-',-1), p.locationkey FROM preferred_locations AS p
                     WHERE p.locationtype = "building";'''
                 cursor.execute(query)
                 for building, id in cursor:
@@ -58,7 +70,7 @@ class LocationsRepository:
             floors = []
             with self.connection.cursor() as cursor:
                 query = '''
-                    SELECT p.description, p.locationkey FROM preferred_locations as p
+                    SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(p.description, '/', -1),'-',-1), p.locationkey FROM preferred_locations as p
                     WHERE p.partof = %s;
                 '''
                 cursor.execute(query, [building_id])
@@ -73,7 +85,7 @@ class LocationsRepository:
             rooms = []
             with self.connection.cursor() as cursor:
                 query = '''
-                    SELECT p.description, p.locationkey FROM preferred_locations as p
+                    SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(p.description, '/', -1),'-',-1), p.locationkey FROM preferred_locations as p
                     WHERE p.partof = %s;
                 '''
                 cursor.execute(query, [floor_id])
@@ -214,7 +226,7 @@ class LocationsRepository:
         try:
             with self.connection.cursor() as cursor:
                 query = '''
-                    SELECT description, locationtype, ispublicvenue, partof FROM preferred_locations as p
+                    SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(description, '/', -1),'-',-1), locationtype, ispublicvenue, partof FROM preferred_locations as p
                     WHERE p.locationkey = %s;
                 '''
                 cursor.execute(query, [locationkey])
