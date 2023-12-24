@@ -1,0 +1,83 @@
+{% extends 'header.html' %}
+{% block content %}
+<div class="col-md-1 back-icon" style="margin-bottom: 30px;">
+  <form>
+      <a href="{{ url_for('constituents.constituents_page') }}" ><i class="fa-solid fa-arrow-left fa-2xl"></i></a>
+  </form>
+</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+<form class="row g-3 form-margin" action="{{ url_for('constituents.edit_constituent', constituentid=constituent.constituentid) }}" method="post">
+  <div class="col-md-4">
+    <label for="ulanid" class="form-label">ULAN ID</label>
+    <input type="text" class="form-control" maxlength="32" id="ulanid" name="ulanid" value="{{ constituent.ulanid }}">
+  </div>
+  <div class="col-md-4">
+    <label for="preferred-display-name" class="form-label">Preferred Display Name</label>
+    <input type="text" maxlength="256" class="form-control" id="preferred-display-name" name="preferred-display-name" value="{{ constituent.preferreddisplayname }}">
+  </div>
+  <div class="col-md-4">
+    <label for="forward-display-name" class="form-label">Forward Display Name</label>
+    <input type="text" maxlength="256" class="form-control" id="forward-display-name" name="forward-display-name" value="{{ constituent.forwarddisplayname }}">
+  </div>
+  <div class="col-md-4">
+    <label for="lastname" class="form-label">Last Name</label>
+    <input type="text" maxlength="256" class="form-control" id="lastname" name="lastname" value="{{ constituent.lastname }}">
+  </div>
+  <div class="col-md-4">
+    <label for="display-date" class="form-label">Display Date</label>
+    <input type="text" maxlength="256" class="form-control" id="display-date" name="display-date" value="{{ constituent.displaydate }}">
+  </div>
+  <div class="col-md-4">
+    <label for="artist-of-nga-object" class="form-label required">Artist of NGA Object</label>
+    <select id="artist-of-nga-object" name="artist-of-nga-object" class="form-select" required="required">
+      <option selected>0</option>
+      <option>1</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <label for="birthyear" class="form-label">Birth Year of Artist</label>
+    <input type="number" max="2024" class="form-control" id="birthyear" name="birthyear" value="{{ constituent.beginyear }}">
+  </div>
+  <div class="col-md-4">
+    <label for="deathyear" class="form-label">Death Year of Artist</label>
+    <input type="number" max="2024" class="form-control" id="deathyear" name="deathyear" value="{{ constituent.endyear }}">
+  </div>
+  <div class="col-md-4">
+    <label for="nationality" class="form-label">Nationality</label>
+    <input type="text" maxlength="128" class="form-control" id="nationality" name="nationality" value="{{ constituent.nationality }}">
+  </div>
+  <div class="col-md-4">
+    <label for="constituent-type" class="form-label required">Constituent Type</label>
+    <select id="constituent-type" name="constituent-type" class="form-select" required="required">
+      <option>anonymous</option>
+      <option>corporate</option>
+      <option>couple</option>
+      <option>individual</option>
+      <option>purchase_fund</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <label for="wikidataid" class="form-label">Wiki Data ID</label>
+    <input type="text" maxlength="64" class="form-control" id="wikidataid" name="wikidataid" value="{{ constituent.wikidataid }}">
+  </div>
+  <div class="col-12">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="gridCheck" required="required">
+      <label class="form-check-label required" for="gridCheck">
+        Confirm update
+      </label>
+    </div>
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary btn-lg custom-bg">Update constituent</button>
+  </div>
+</form>
+{% endblock %}

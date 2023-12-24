@@ -31,6 +31,17 @@
     font-size: 15px; /* Increased text to enable scrolling */
     padding: 0px 10px;
 }
+
+#objectsidenav{
+    width: 250px;
+    padding: 20px;
+    margin-right: auto;
+}
+
+#objectTablediv{
+    margin-right: 260px;
+}
+
  
 p.help.has-background-warning {
     display: inline-block;
@@ -40,6 +51,17 @@ p.help.has-background-warning {
     font-size: small;
 }
 
+
+#objectsidenav{
+    width: 250px;
+    padding: 20px;
+    margin-right: auto;
+}
+
+#objectTablediv{
+    margin-right: 260px;
+}
+  
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
 }

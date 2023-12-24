@@ -5,3 +5,37 @@ week 6
 - organised and merged the tables to adjust the project. 
 - created the constituents table.
 - read the CSV file into the database.
+- configured .gitignore file for the project
+
+week 7
+- uploaded the dataset to the project repository
+- created the objects historical data table
+- updated .gitignore file according to the project requirements
+- created html templates for general purposes: search bar, navigation bar and some styling with css
+
+week 8
+- created the basis for the views of constituents
+- fixed some view bugs
+
+week 9
+- did some research on how to integrate a flask project into MVC architecture
+- implemented repository pattern and controllers by blueprints
+
+week 10
+- fixed the model for constituents
+- implemented read operations and search feature based on the name of the constituents
+- added object constituents table to the project
+
+week 11
+- fixed bugs related to database operations and search feature
+
+week 12
+- fixed table definiton of objects_constituents
+- changed the folder structure of constituents related templates
+- added insert, delete and update queries to the repository
+- created html forms and styled them with css
+- implemented more route functions with post methods
+- developed the pagination feature
+- created back buttons to the main constituents page
+- added flash messages for forms
+- created the controller for home page and refactored the project structure
