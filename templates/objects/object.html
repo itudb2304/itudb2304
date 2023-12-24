@@ -10,7 +10,10 @@
 
 <body>
   <h6>Artwork Details</h6>
-  <h1>{{ object.title }}</h1> <h5>by {{ constituentslist[0][1] }}</h5>
+  <h1>{{ object.title }}</h1> 
+  {% if constituentslist|length > 0 %}
+  <h5>by {{ constituentslist[0][1] }}</h5>
+  {% endif %}
   <button id="updateButton" onclick="window.location.href='/objects/{{ object.objectid }}/edit'">Update</button>
   <button id="deleteButton">Delete</button>
 

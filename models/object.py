@@ -40,6 +40,6 @@ class ObjectDTO:
             self.customPrintURL = self._handle_none_values(data)
 
     def _handle_none_values(self, data):
-        return tuple(None if value is None else value for value in data)
+        return tuple(None if value is None or str(value).lower() == "none" else value for value in data)
 
     classification_elements = ["Painting", "Print", "Sculpture", "Drawing","Volume", "Portfolio","Photograph","New Media","Decorative Art","Technical Material"]
