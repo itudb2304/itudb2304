@@ -399,52 +399,8 @@ def init():
     cursor.execute(query)
     db.commit()
 
-    query = ''' 
-        CREATE TABLE IF NOT EXISTS media_items(    
-        mediaid INTEGER,
-        mediatype VARCHAR(10),
-        title VARCHAR(50),
-        description VARCHAR(500),
-        duration VARCHAR(100),
-        language VARCHAR(10),
-        thumbnailurl VARCHAR(256),
-        playurl VARCHAR(256),
-        downloadurl VARCHAR(256),
-        keywords VARCHAR(256),
-        tags VARCHAR(256),
-        imageurl VARCHAR(256),
-        presentationdate VARCHAR(30),
-        releasedate VARCHAR(30),
-        lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid)
-    );
-    '''
-    cursor.execute(query)
-    db.commit()
 
-    query = f'''
-        LOAD DATA LOCAL INFILE '{path}media_items.csv'
-        INTO TABLE media_items
-        FIELDS TERMINATED BY ';'
-        IGNORE 1 ROWS;
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query_template = '''
-        UPDATE media_items
-        SET {column_name} = REPLACE({column_name}, 'WILLCHANGE', ',');
-    '''
-    cursor.execute("SHOW COLUMNS FROM media_items")
-    columns = [column[0] for column in cursor.fetchall()]
-
-    for column in columns:
-        query = query_template.format(column_name=column)
-        cursor.execute(query)
-        db.commit()
-
-
-        query = '''
+    query = '''
         CREATE TABLE IF NOT EXISTS media_relationships (
         mediaid INTEGER UNIQUE,
         relatedid INTEGER,
@@ -509,63 +465,6 @@ def init():
         query = query_template.format(column_name=column)
         cursor.execute(query)
         db.commit()
-
-
-  
-
-
-
-    query = ''' 
-        CREATE TABLE IF NOT EXISTS constituents_media(    
-        mediaid INTEGER,
-        mediatype VARCHAR(10),
-        title VARCHAR(50),
-        description VARCHAR(500),
-        duration INTEGER,
-        language VARCHAR(10),
-        thumbnailurl VARCHAR(256),
-        playurl VARCHAR(256),
-        downloadurl VARCHAR(256),
-        keywords VARCHAR(256),
-        tags VARCHAR(256),
-        imageurl VARCHAR(256),
-        presentationdate VARCHAR(30),
-        releasedate VARCHAR(30),
-        lastmodified VARCHAR(30),
-        PRIMARY KEY (mediaid)
-    );
-    '''
-    cursor.execute(query)
-    db.commit()
-
-    query = f'''
-        LOAD DATA LOCAL INFILE '{path}constituents_media.csv'
-        INTO TABLE constituents_media
-        FIELDS TERMINATED BY ';'
-        IGNORE 1 ROWS;
-    '''
-    cursor.execute(query)
-    db.commit()
-    
-
-    query_template = '''
-        UPDATE constituents_media
-        SET {column_name} = REPLACE({column_name}, 'WILLCHANGE', ',');
-    '''
-    cursor.execute("SHOW COLUMNS FROM constituents_media")
-    columns = [column[0] for column in cursor.fetchall()]
-
-    for column in columns:
-        query = query_template.format(column_name=column)
-        cursor.execute(query)
-        db.commit()
-
-    
-
-   
-    
-
-
 
     query = '''
         CREATE TABLE IF NOT EXISTS objects_historical_data (
