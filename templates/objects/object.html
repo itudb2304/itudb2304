@@ -1,8 +1,5 @@
 {% extends "header.html" %}
 {% block title %}{{ object.title }}{% endblock %}
-{% set js_script = '''
-
-''' %}
 
 {% block content %}
 <title>{{ object.title }} Detailed</title>
@@ -10,49 +7,67 @@
 
 <body>
   <h6>Artwork Details</h6>
-  <h1>{{ object.title }}</h1> <h5>by {{ constituentslist[0][1] }}</h5>
+  <h1>{{ object.title }}</h1>
+  {% if constituentslist|length > 0 %}
+  <h5>by {{ constituentslist[0][1] }}</h5>
+  {% endif %}
   <button id="updateButton" onclick="window.location.href='/objects/{{ object.objectid }}/edit'">Update</button>
   <button id="deleteButton">Delete</button>
 
   <div class="endisdiv">
     <div class="photoOfArtwork">
-      <img src={{ media }}>
-    </div>
-    <div class="objectDescription">
-      {% if constituentslist|length > 0 %}
-      <p>
-        <strong>Artist Name:</strong>
-        <a href="{{ url_for('constituents.constituent_objects', id=constituentslist[0][0]) }}">
-          {{ constituentslist[0][1] }}
-        </a>
-      </p>
+      {% if media and media[0][0] %}
+      <img src="{{ media[0][0] }}" alt="Photo of Artwork">
+      {% else %}
+      <img src="https://via.placeholder.com/150" alt="Photo of Artwork">
       {% endif %}
-
-      <p><strong>Title: </strong>{{ object.title }}</p>
-      <p><strong>Is Virtual: </strong>{{ object.isVirtual }}</p>
-      <p><strong>Medium: </strong>{{ object.medium }}</p>
-      <p><strong>Dimensions: </strong>{{ object.dimensions }}</p>
-      <p><strong>Credit Line: </strong> <a href="{{ url_for('objects.objects_page', creditLine=object.creditLine) }}" >{{ object.creditLine }}</a></p>
-      <p><strong>Accession Number: </strong>{{ object.accessionnum }}</p>
-      <p><strong>Attribution: </strong>{{ object.attribution }}</p>
-      <p><strong>Image Use: </strong>{{ object.customPrintURL }}</p>
-      <p><strong>Classification: </strong>{{ object.classification }}</p>
-
-      {% if objectLocation %}
-      <h5>Location: </h5>
-      {% if objectLocation.site %}
-      <p><strong>Site: </strong> {{ objectLocation.site}}</a></p>
-      {% endif %}
-      {% if objectLocation.room %}
-      <p><strong>Room: </strong>{{objectLocation.room}} </p>
-      {% endif %}
-      {% if objectLocation.decription %}
-      <p><strong>desc: </strong>{{objectLocation.decription}} </p>
-      {% endif %}
-      {% endif %}
-
     </div>
   </div>
+  <div class="objectDescription">
+    {% if constituentslist|length > 0 %}
+    <p>
+      <strong>Artist Name:</strong>
+      <a href="{{ url_for('constituents.constituent_objects', id=constituentslist[0][0]) }}">
+        {{ constituentslist[0][1] }}
+      </a>
+    </p>
+    {% endif %}
+
+    <p><strong>Title: </strong>{{ object.title }}</p>
+    <p><strong>Is Virtual: </strong>{{ object.isVirtual }}</p>
+    <p><strong>Medium: </strong>{{ object.medium }}</p>
+    <p><strong>Dimensions: </strong>{{ object.dimensions }}</p>
+    <p><strong>Credit Line: </strong> <a href="{{ url_for('objects.objects_page', creditLine=object.creditLine) }}">{{
+        object.creditLine }}</a></p>
+    <p><strong>Accession Number: </strong>{{ object.accessionnum }}</p>
+    <p><strong>Attribution: </strong>{{ object.attribution }}</p>
+    <p><strong>Image Use: </strong>{{ object.customPrintURL }}</p>
+    <p><strong>Classification: </strong>{{ object.classification }}</p>
+
+    {% if objectLocation %}
+    <h5>Location: </h5>
+    {% if objectLocation.site %}
+    <p><strong>Site: </strong> {{ objectLocation.site}}</a></p>
+    {% endif %}
+    {% if objectLocation.room %}
+    <p><strong>Room: </strong>{{objectLocation.room}} </p>
+    {% endif %}
+    {% if objectLocation.decription %}
+    <p><strong>desc: </strong>{{objectLocation.decription}} </p>
+    {% endif %}
+    {% endif %}
+
+  </div>
+  </div>
+
+  {% if media and media[0][1] %}
+  <button onclick="toggleVisibility('desc-image')">Image Description</button>
+  <div id='desc-image'>
+    <p>{{ media[0][1] }}</p>
+  </div>
+  <hr>
+  {% endif %}
+
   <div class="div3">
     {% if object.inscription %}
     <button onclick="toggleVisibility('insc')">Inscription</button>

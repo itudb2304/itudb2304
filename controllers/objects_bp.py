@@ -83,10 +83,7 @@ def objects_bp(connection):
             object_text_entries = repository.get_object_text_entries(objectid) 
             constituentslist = repository.get_object_constituents(objectid)
             objectLocation = repository.get_location_by_locationid(object.locationid) if object.locationid else None
-            media = None # fill later
-            if media is None:
-                media = "https://via.placeholder.com/150"
-
+            media = repository.get_media_by_objectid(objectid)
             return render_template('object.html', object=object,constituentslist=constituentslist, objectLocation=objectLocation, media=media, text_entry=object_text_entries.text_entries)
         else:
             repository.delete_object(objectid)
