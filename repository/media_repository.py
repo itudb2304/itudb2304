@@ -14,7 +14,6 @@ class MediaRepository:
     def get_constituent_media(self):
         cursor = self.connection.cursor()
 
-        # Use LIMIT and OFFSET for pagination
         queryobject = """SELECT object_media.thumbnailurl, object_media.title, object_media.description, 
            object_media.playurl, media_relationships.relatedid
         FROM object_media
@@ -70,10 +69,8 @@ class MediaRepository:
         return id
 
     def update_media(self, media):
-        print(media.mediaid)
         cursor = self.connection.cursor()
         query = '''UPDATE object_media SET title = %s, description = %s, thumbnailurl = %s, playurl = %s WHERE mediaid = %s'''
-       
         cursor.execute(query, (media.title, media.description, media.thumbnailurl, media.playurl,media.mediaid))
         self.connection.commit()
     
@@ -81,6 +78,31 @@ class MediaRepository:
     def delete_media(self, media):
         cursor = self.connection.cursor()
         query = '''DELETE FROM object_media WHERE mediaid = %s'''
-            
         cursor.execute(query, [media.mediaid])
         self.connection.commit()
+
+    def validation_objectid(self, objectid):
+        cursor = self.connection.cursor()
+        query = '''SELECT COUNT(objectid) FROM objects WHERE objectid = %s'''
+        cursor.execute(query, (objectid,))
+        result = cursor.fetchall()
+        return result
+    
+    def validation_mediaid(self, mediaid):
+        cursor = self.connection.cursor()
+        query = '''SELECT COUNT(mediaid) FROM object_media WHERE mediaid = %s'''
+        cursor.execute(query, (mediaid,))
+        result = cursor.fetchall()
+        return result
+    
+    def get_object_ids(self):
+        object_ids = []
+        cursor = self.connection.cursor()
+        query = '''SELECT objectid FROM objects LIMIT 10;'''
+        cursor.execute(query)
+        object_ids = cursor.fetchall()
+        self.connection.commit()
+        return object_ids
+    
+    
+        

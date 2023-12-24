@@ -3,9 +3,12 @@
 {% block content %}
 <title>National Art Gallery</title>
     <h1 class=" title"> Media Add/Edit/Delete Page </h1>
+    {% if error_message %}
+        <div class="notification is-danger">
+                <p class="subtitle is-6">{{ error_message }}</p>
+        </div>
+    {% endif %}
     <form action="" method="post" name="movie_edit">
-
-
         <div class="field">
             <label for="id" class="label">ID</label>
             <div class = "control"> 
