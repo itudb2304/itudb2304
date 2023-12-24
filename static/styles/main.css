@@ -74,22 +74,44 @@ tr:nth-child(even) {
 
 .endisdiv {
   display: flex;
+  border-style: outset;
+  border-color: #eeeefe79;
+  border-width: 5px;
+  margin: 1em;
+  padding: 3px;
 }
 
 .objectDescription {
   margin: 2em;
+  min-width: 700px;
+  border-style: groove;
+  padding: 10px;
 }
 
 .photoOfArtwork {
   margin: 2em;
+  padding: 5px; 
+  display: inline-block;
+}
+
+#art{
+  min-width: 300px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border: 2px solid rgb(185, 179, 205);
+  padding: 10px;
+  box-sizing: border-box; 
+}
+
+.descriptions {
+  margin: 2em;
+  padding: 5px;
+  display: inline-block;
 }
 
 .main_page_section {
   margin: 2em;
-}
-
-#desc-image {
-  display: none;
 }
 
 .custom-bg {
