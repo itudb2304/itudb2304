@@ -1,0 +1,37 @@
+.sidenav {
+    width: 350px;
+    position:absolute;
+    z-index: 1;
+    top: 250px;
+    right: 10px;
+    background: #dadbdd;
+    overflow-x: hidden;
+    padding: 8px 0;
+  }
+  
+.building {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #111213;
+    display: block;
+  }
+  
+.sidenav .building .dropdown {
+    display: none;
+    padding-left: 20px;
+}
+
+.sidenav .building.active .dropdown {
+    display: block;
+}
+
+.tableDiv {
+    margin-right: 353px; /* Same width as the sidebar + left position in px */
+    font-size: 15px; /* Increased text to enable scrolling */
+    padding: 0px 10px;
+}
+  
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+}

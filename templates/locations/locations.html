@@ -1,40 +1,112 @@
 {% extends "header.html" %}
 {% block title %} Locations {% endblock %}
-, location{% block content %}
+{% block content %}
     <h1 class=" title"> Locations </h1>
-    {% if locations %}
-    <form action="" method="post">       
-            {% for location in locations%}                      
-                <div id = location[1]>
-                    <label class="checkbox">
-                        <input type="hidden" name="location_key" value="{{ location[1] }}">
-                        {{location[0]}}  
-                        <div class="field is-grouped">
-                            <div class="control">
-                                <button class="button is-danger is-small">
-                              <a class="button is-primary is-outlined is-small"
-                                 href="{{url_for('locations.building_edit_page', building_id=location[1])}}">Edit</a>
-                                </button>
-                                <button class="button is-danger is-small" name = "delete" onclick="return confirmDelete()">Delete</button>
+    
+    <div class="search-container">
+        <form action="" method = "get">
+            <div class="container mt-2">
+                <div class="row d-flex justify-content-center ">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="input-box">
+                                <input type="text" name="locations-search" id="locations-search" placeholder="Search" class="form-control">
+                                <i class="fa fa-search"></i>               
                             </div>
-                        </div>  
-
-                    </label>    
-                     
-                    {% for floor in location[2]%}  
-                        <li><a href="{{url_for('locations.floor_page', floor_id=floor[1], building_id = location[1])}}">{{floor[0]}}</a></li>                               
-                    {% endfor %}                     
+                        </div> 
+                    </div>
                 </div>
-            {% endfor %}
+        </form>
+      </div>
+    
+    <div class="tableDiv">
+        <table class="table" id="LocationsTable">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Public</th>
+              <th>Building</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if locations %}
+                {% for location in locations %}
+                <tr location-id="{{ location.key }}">
+                <td>{{ location.name }}</td>
+                <td>
+                 {% if location.isPublic == 1 %}
+                        <p>Yes</p>   
+                 {% else %}
+                        <p>No</p>
+                {% endif %} 
+                </td>
+                <td>{{ location.building }}</td>
+                {% endfor %}
+            {% else %}
+                <td><b>No locations found</b></td>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
         
-  
-    </form>
+    <div class = "sidenav">
+    
+    <aside>
+    {% if buildings %}   
+            {% for building in buildings%}                      
+                <div id = building[1] class = "building">                   
+                    <a href="{{url_for('locations.building_page', building_id=building[1])}}">{{building[0]}}</a>
+                    
+                    <div class = dropdown>
+                        {% for floor in building[2]%}  
+                            <li><a href="{{url_for('locations.floor_page', floor_id=floor[1])}}">{{floor[0]}}</a></li>                               
+                        {% endfor %}    
+                    </div> 
+                </div>
+            {% endfor %} 
     {% endif %}
-    <button><a href="{{ url_for('locations.building_add_page')}}">Add Building</a></button>
+    <form action="{{ url_for('locations.building_add_page') }}" method="get">
+        <button type="submit" class="btn btn-primary btn-lg custom-bg">
+            <i class="fa-solid fa-plus"></i> Add Building
+        </button>
+    </form>
+    </aside>
+    </div>
+
+    
     <script>
         function confirmDelete() {
             return confirm('Are you sure you want to delete this item');
         }
-    </script>
+        document.addEventListener("DOMContentLoaded", function () {
+          document.querySelectorAll("#LocationsTable tbody tr").forEach(function (row) {
+            row.addEventListener("dblclick", function (event) {
+              event.preventDefault();
+              window.location.href = "/locations/room/" + row.getAttribute("location-id");
+            });
+          });
+        });
+        
+        document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".building").forEach(function (building) {
+            building.addEventListener("click", function () {
+                building.classList.toggle("active");
+            });
+        });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".building").forEach(function (building) {
+            building.addEventListener("mouseenter", function () {
+                building.classList.add("active");
+            });
+
+            building.addEventListener("mouseleave", function () {
+                building.classList.remove("active");
+            });
+        });
+        });
+
+
+      </script>
 
 {% endblock %}
