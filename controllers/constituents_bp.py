@@ -111,6 +111,30 @@ def constituents_bp(connection):
             repository.add_constituent(attributes=attributes)
             flash("Constituent has been added successfully.", "success")
             return render_template("constituents_add.html")
+        
+    @constituents.route('/<int:constituentid>/edit', methods=['GET','POST'])
+    def edit_constituent(constituentid: int):
+        if request.method == 'GET':
+            constit = repository.get_constituent_by_id(constituentid)
+            return render_template("edit_constituent.html", constituent=constit)
+        else:
+            attributes = []
+            for att in constituent_attributes:
+                if att in request.form:
+                    attributes.append(request.form[att])
+                else:
+                    attributes.append(None)
+            repository.update_constituent(
+                attributes=attributes, constituentid=constituentid
+            )
+            flash("Constituent has been updated successfully.", "success")
+            constit = repository.get_constituent_by_id(constituentid)
+            return render_template("edit_constituent.html", constituent=constit)
+        
+    @constituents.route('/<int:constituentid>/delete', methods=['GET','POST'])
+    def delete_constituent(constituentid: int):
+        repository.delete_constituent(constituentid=constituentid)
+        return redirect(url_for('.constituents_page'))
 
     @constituents.route("/<int:id>", methods=["GET", "POST"])
     def constituent_objects(id: int):

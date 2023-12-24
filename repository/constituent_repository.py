@@ -130,20 +130,54 @@ class ConstituentRepository:
             print(f"Error inserting constituent to the database: {e}")
             self.connection.rollback()
 
-    # def distinct_constituent_objectID(self, constituentid: int, limit: int, offset: int):
-    #     try:
-    #         constituent_objects = []
-    #         with self.connection.cursor() as cursor:
-    #             query = '''SELECT DISTINCT objectID FROM objects_constituents WHERE constituentID=%s LIMIT %s,%s;;'''
-    #             cursor.execute(query, (constituentid, offset, limit))
-    #             constituent_objects = cursor.fetchall()
-    #             return constituent_objects
-    #     except Exception as e:
-    #         print(f"Error getting distinct constituent objects from the database: {e}")
-    #         self.connection.rollback()
+    def update_constituent(self, constituentid: int, attributes: list):
+        try:
+            constituent = Constituent(attributes=attributes)
+            with self.connection.cursor() as cursor:
+                query = '''UPDATE constituents SET
+                                    ulanid = %s,
+                                    preferreddisplayname = %s,
+                                    forwarddisplayname = %s,
+                                    lastname = %s,
+                                    displaydate = %s,
+                                    artistofngaobject = %s,
+                                    beginyear = %s,
+                                    endyear = %s,
+                                    visualbrowsertimespan = %s,
+                                    nationality = %s,
+                                    constituenttype = %s,
+                                    wikidataid = %s
+                                    WHERE constituentid = %s;'''
+                cursor.execute(query, (constituent.ulanid,
+                                            constituent.preferreddisplayname,
+                                            constituent.forwarddisplayname,
+                                            constituent.lastname,
+                                            constituent.displaydate,
+                                            constituent.artistofngaobject,
+                                            constituent.beginyear,
+                                            constituent.endyear,
+                                            constituent.visualbrowsertimespan,
+                                            constituent.nationality,
+                                            constituent.constituenttype,
+                                            constituent.wikidataid,
+                                            constituentid))
+                self.connection.commit()
+        except Exception as e:
+            print(f"Error updating constituent in the database: {e}")
+            self.connection.rollback()
 
-    # def distinct_constituent_objects(self, constituentID: int, objectID: int):
-    #     try:
+    def delete_constituent(self, constituentid: int):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                DELETE FROM constituents
+                WHERE constituentid=%s;
+                '''
+                cursor.execute(query, (constituentid,))
+                self.connection.commit()
+        except Exception as e:
+            print(f"Error deleting constituent from the database: {e}")
+            self.connection.rollback()
     
     def constituent_objects(self, constituentid: int, limit: int, offset: int):
         try:
