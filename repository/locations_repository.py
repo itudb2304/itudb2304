@@ -130,7 +130,7 @@ class LocationsRepository:
                     '''
                     cursor.execute(query, [location[0]])
                     for object_id in cursor:
-                        objects.append((object_id))
+                        objects.append(object_id)
             return objects
         except Exception as e:
             print(f"Error getting objects of the location from the database: {e}")
@@ -145,7 +145,6 @@ class LocationsRepository:
                 cursor.execute(query, [location_id])
                 for key in cursor:
                     locationkey = key
-            return locationkey
         except Exception as e:
             print(f"Error getting locationkey from the database: {e}")
 

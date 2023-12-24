@@ -13,7 +13,10 @@
         {% if objects %}
         <table>
             {% for object in objects%}
-                <li>{{object[0]}}</li>
+            <a href="{{url_for('objects.object_page', objectid=object.objectid)}}">
+                <h4>{{ object.title }}</h4>
+            </a>
+                
             {% endfor %}
         </table>
         {% endif %}

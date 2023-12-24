@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort
 from repository.locations_repository import LocationsRepository
+from repository.objects_repository import ObjectsRepository
 from repository.locations_repository import Location
+from models.object import ObjectDTO
 
 def locations_bp(connection):
     locations = Blueprint(
@@ -12,6 +14,7 @@ def locations_bp(connection):
     )
 
     repository = LocationsRepository(connection=connection)
+    objects_repository = ObjectsRepository(connection=connection)
 
     @locations.route('/', methods=['GET', 'POST'])
     def locations_page():      
@@ -165,8 +168,11 @@ def locations_bp(connection):
                 return redirect(url_for('locations.room_edit_page', room_id=room_id))
         else:
             objects = repository.get_objects(room_id)
-            return render_template("room.html", objects=objects, room=room)
-    
+            print(objects)
+            DTOobjects = [objects_repository.get_object_by_objectid(objectid[0]) for objectid in objects]
+            print(DTOobjects)
+            return render_template("room.html", objects=DTOobjects, room=room)
+
     @locations.route('/<floor_id>/new_room', methods=['GET', 'POST'])
     def room_add_page(floor_id): 
         if request.method == "GET":
@@ -182,10 +188,11 @@ def locations_bp(connection):
             room = Location(room_name, "room", room_isPublic, floor_id)
             room_key = repository.add_location(room)
             room.key = room_key
+            room.path = repository.get_path(room.key)
             repository.add_locationid(room)
             for object_id in room_objects:
                 repository.add_object(object_id, room_key)   
-            return redirect(url_for("locations.floor_page", floor_id=floor_id))
+            return redirect(url_for("locations.room_page", room_id=room.key))
         else:
             return redirect(url_for("locations.floor_page", floor_id=floor_id))
         
@@ -204,7 +211,7 @@ def locations_bp(connection):
             removed_objects = request.form.getlist('removed_objects[]')
             for object_id in removed_objects:
                 repository.remove_object(object_id, room_id)
-            updated_room = Location(room_name, "room", room_isPublic, room.partof, room_id)
+            updated_room = Location(room_name, "room", room_isPublic, room.partof, room_id, repository.get_path(room.key))
             repository.update_location(updated_room)
             repository.update_locationid(updated_room)
             for object_id in room_objects:
