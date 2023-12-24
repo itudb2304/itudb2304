@@ -15,8 +15,13 @@ def locations_bp(connection):
 
     @locations.route('/', methods=['GET', 'POST'])
     def locations_page():      
-        filter = request.args.get("locations-search")
-        locations = repository.get_locations(filter)
+        search = request.args.get("locations-search")
+        filter = {"public": "", "type": ""}
+        filter["public"] = request.form.getlist("public")
+        filter["type"] = request.form.getlist("locationtype")
+        print(search)
+        print(filter)
+        locations = repository.get_locations(search, filter)
         buildings = repository.get_buildings()
         return render_template("locations.html", locations=locations, buildings=buildings)
     
@@ -106,7 +111,8 @@ def locations_bp(connection):
             repository.update_location(updated_floor)
             for room_name in floor_rooms:
                 building = repository.get_location(floor.partof)
-                room = Location(room_name, "room", 0, floor_id, building=building.name)
+                room = Location(room_name, "room", 0, floor_id)
+                room.path["building"] = building
                 room_key = repository.add_location(room)
                 room.key = room_key
                 repository.add_locationid(room)
