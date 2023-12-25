@@ -1,37 +1,67 @@
 class Location:
-    def __init__(self, name, type, isPublic = None, partof = None, key = None, building = None ) -> None:
+    def __init__(self, name, type, isPublic = None, partof = None, key = None, path = {"building": "", "floor": "", "room": ""} ) -> None:
         self.name = name
         self.key = key
         self.type = type
         self.isPublic = isPublic
-        self.building = building
-        self.floor = None
         self.partof = partof
+        self.path = path 
+        
 
 class LocationsRepository:
     def __init__(self, connection) -> None:
         self.connection = connection
         
-    def get_locations(self, filter):
+    def get_locations(self, search, filter):
         try:
             with self.connection.cursor() as cursor:
                 locations = []
                 execution_list = []
                 query = '''
-                        SELECT DISTINCT l.description, p.locationtype, l.publicaccess, p.partof, p.locationkey, l.site
-                        FROM locations AS l
-                        LEFT JOIN preferred_locations AS p 
-                        ON l.room = p.locationkey;'''    
-                if filter:
-                    filter ='%' + filter + '%'
-                    execution_list.append(filter)
-                    query = query[:-1] + " WHERE l.description LIKE %s;"
-                    
+                        SELECT * FROM (
+                            SELECT DISTINCT
+                                SUBSTRING_INDEX(SUBSTRING_INDEX(p.description, '/', -1),'-',-1) AS extracted_part,
+                                p.locationtype AS type,
+                                p.ispublicvenue AS public,
+                                p.partof,
+                                p.locationkey,
+                                l.site
+                            FROM
+                                locations AS l
+                            RIGHT JOIN
+                                preferred_locations AS p ON l.room = p.locationkey
+                        ) AS subquery;'''    
+
+                if len(filter["type"]): 
+                    query = query[:-1] + " WHERE type IN (" + ",".join(["%s"] * len(filter["type"])) + ");"
+                    for type in filter["type"]:
+                        execution_list.append(type) 
+                elif not search and not len(filter["public"]):
+                    query = query[:-1] + ''' WHERE type IN ("room");'''
+                else:
+                    query = query[:-1] + ''' WHERE type IN ("room", "floor", "building");'''
+
+                if search:
+                    search ='%' + search + '%'
+                    execution_list.append(search)
+                    query = query[:-1] + " AND extracted_part LIKE %s;"
+
+                if len(filter["public"]):
+                    execution_list.append(filter["public"][0])
+                    query = query[:-1] + " AND public = %s;"
+
+                query = query[:-1] + ''' ORDER BY CASE 
+                                            WHEN type = 'building' THEN 1
+                                            WHEN type= 'floor' THEN 2
+                                            WHEN type = 'room' THEN 3
+                                        END;'''
+
                 cursor.execute(query, execution_list)
  
                 search_results = cursor.fetchall()
                 for name, type, isPublic, partof, key, building in search_results:
-                    locations.append(Location(name, type, isPublic, partof, key, building))
+                    location = Location(name, type, isPublic, partof, key, path=self.get_path(key))
+                    locations.append(location)
     
                 return locations
         except Exception as e:
@@ -42,7 +72,7 @@ class LocationsRepository:
             buildings = []
             with self.connection.cursor() as cursor:
                 query = '''
-                    SELECT DISTINCT p.description, p.locationkey FROM preferred_locations AS p
+                    SELECT DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(p.description, '/', -1),'-',-1), p.locationkey FROM preferred_locations AS p
                     WHERE p.locationtype = "building";'''
                 cursor.execute(query)
                 for building, id in cursor:
@@ -58,7 +88,7 @@ class LocationsRepository:
             floors = []
             with self.connection.cursor() as cursor:
                 query = '''
-                    SELECT p.description, p.locationkey FROM preferred_locations as p
+                    SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(p.description, '/', -1),'-',-1), p.locationkey FROM preferred_locations as p
                     WHERE p.partof = %s;
                 '''
                 cursor.execute(query, [building_id])
@@ -73,7 +103,7 @@ class LocationsRepository:
             rooms = []
             with self.connection.cursor() as cursor:
                 query = '''
-                    SELECT p.description, p.locationkey FROM preferred_locations as p
+                    SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(p.description, '/', -1),'-',-1), p.locationkey FROM preferred_locations as p
                     WHERE p.partof = %s;
                 '''
                 cursor.execute(query, [floor_id])
@@ -202,7 +232,8 @@ class LocationsRepository:
                     cursor.execute(query, [location.key])
                     sublocations = cursor.fetchall()
                     for sublocation in sublocations:
-                        self.delete_location(sublocation[0])
+                        sub = self.get_location(sublocation[0])
+                        self.delete_location(sub)
                 query = '''DELETE FROM preferred_locations WHERE locationkey = %s;'''
                 cursor.execute(query, [location.key])
                 self.connection.commit()
@@ -214,7 +245,7 @@ class LocationsRepository:
         try:
             with self.connection.cursor() as cursor:
                 query = '''
-                    SELECT description, locationtype, ispublicvenue, partof FROM preferred_locations as p
+                    SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(description, '/', -1),'-',-1), locationtype, ispublicvenue, partof FROM preferred_locations as p
                     WHERE p.locationkey = %s;
                 '''
                 cursor.execute(query, [locationkey])
@@ -234,7 +265,7 @@ class LocationsRepository:
                 location_id = max_id[0] + 1            
                 query = '''INSERT INTO locations (locationid, site, room, publicaccess, description)
                         VALUES(%s, %s, %s, %s, %s);'''
-                cursor.execute(query, (location_id, location.building, location.key, location.isPublic, location.name))
+                cursor.execute(query, (location_id, location.path["building"].name, location.key, location.isPublic, location.name))
                 self.connection.commit()
         except Exception as e:
             print(f"Error adding locationid to the database: {e}")
@@ -283,3 +314,15 @@ class LocationsRepository:
                 self.connection.commit()
         except Exception as e:
             print(f"Error removing object from a location: {e}")
+
+    def get_path(self, locationkey):
+        try:
+            path = {"building": "", "floor": "", "room": ""}
+            location = self.get_location(locationkey)
+            path[location.type] = location.name 
+            while location.partof:
+                location = self.get_location(location.partof)
+                path[location.type] = location
+            return path
+        except Exception as e:
+            print(f"Error getting path: {e} {locationkey}")

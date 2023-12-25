@@ -35,7 +35,6 @@ body {
   border-color: #eee;
 }
 
-
 .list {
   padding-top: 20px;
   padding-bottom: 10px;
@@ -244,6 +243,7 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: -30px;
   margin-bottom: 50px;
 }
 
@@ -287,4 +287,9 @@ a {
 
 .searching {
   padding: 4px;
+}
+
+.checkbox-group {
+  display: inline-block;
+  margin-right: 10px;
 }
