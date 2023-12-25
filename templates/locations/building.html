@@ -11,27 +11,81 @@
                 <input type="hidden" name="building_key" value="{{ building.key }}">
                 <button class="button is-danger is-small" name = "edit">Edit</button>
                 <button class="button is-danger is-small" name = "delete" onclick="return confirmDelete()">Delete</button>
-            </form>    
-            <div>
+            </form>   
+            {{ pagination.info }}
+            {{ pagination.links }}
+
+            <div class="container px-2 tableDiv">
+                <div class="row">
+                    <table class="table">
+                        {% if objects %}
+                        <table>
+                            {% for object in objects%}
+                            <div class="col-4 mb-4">
+                                <div class="list-div p-3">
+                                    <strong></strong><a href="{{url_for('objects.object_page', objectid=object.objectid)}}">
+                                    <h3>{{ object.title }}</h3>
+                                    </a></strong>
+                                    <h5><a href="{{url_for('constituents.constituent_by_name', name=object.attribution)}}">{{ object.attribution }}</a></h5>
+                                    <h6>{{ object.classification }}</h6>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </table>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+           
+            <div class="sidenav">
+                <aside>
                 {% if floors %}
                     {% for floor in floors%}  
-                        <li><a href="{{url_for('locations.floor_page', floor_id=floor[1])}}">{{floor[0]}}</a></li>                               
+                    <div id = floor[1] class = "floor"> 
+                        <a href="{{url_for('locations.floor_page', floor_id=floor[1])}}">{{floor[0]}}</a>  
+                         
+                    <div class = dropdown>
+                        {% for room in floor[2]%}  
+                            <li><a href="{{url_for('locations.room_page', room_id=room.key)}}">{{room.name}}</a></li>                               
+                        {% endfor %}    
+                    </div>   
+                </div>              
                     {% endfor %}  
                 {% endif %}
+
                 <form action="" method="post">
                     <button type="submit" class="btn btn-primary btn-lg custom-bg" name = "addFloor">
                         <i class="fa-solid fa-plus"></i> Add Floor
                     </button>
                 </form>
+            </aside>
             </div> 
         </div>
              
     {% endif %}
     </div>
+    {{ pagination.links }}
     <script>
         function confirmDelete() {
             return confirm('Are you sure you want to delete this item');
         }
+      
+        document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".floor").forEach(function (floor) {
+            floor.addEventListener("click", function () {
+                floor.classList.toggle("active");
+            });
+
+            floor.addEventListener("mouseenter", function () {
+                floor.classList.add("active");
+            });
+
+            floor.addEventListener("mouseleave", function () {
+                floor.classList.remove("active");
+            });
+        });
+         });
+        
       </script>
 
 {% endblock %}

@@ -30,3 +30,9 @@ week 10
 week 11
 - CRUD operations are implemented for floor, room
 - Object additon to room is implemented
+
+week 12
+- Search, filter sort operations are implemented
+- Form validation is added
+- Map image and coordinates of rooms with links are added
+- Objects are added 

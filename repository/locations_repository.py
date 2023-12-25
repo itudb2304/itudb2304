@@ -6,13 +6,15 @@ class Location:
         self.isPublic = isPublic
         self.partof = partof
         self.path = path 
+        self.shape = None
+        self.coords = None
         
 
 class LocationsRepository:
     def __init__(self, connection) -> None:
         self.connection = connection
         
-    def get_locations(self, search, filter):
+    def get_locations(self, search, filter, limit = None, offset = None):
         try:
             with self.connection.cursor() as cursor:
                 locations = []
@@ -55,7 +57,13 @@ class LocationsRepository:
                                             WHEN type= 'floor' THEN 2
                                             WHEN type = 'room' THEN 3
                                         END;'''
-
+                
+                if limit:
+                    query = query[:-1] + " LIMIT %s;"
+                    execution_list.append(limit)
+                if offset:
+                    query = query[:-1] + " OFFSET %s;"
+                    execution_list.append(offset)
                 cursor.execute(query, execution_list)
  
                 search_results = cursor.fetchall()
@@ -93,7 +101,9 @@ class LocationsRepository:
                 '''
                 cursor.execute(query, [building_id])
                 for description, floor_id in cursor:
-                    floors.append((description, floor_id))
+                    floors.append([description, floor_id])
+                for floor in floors:
+                    floor.append(self.get_rooms(floor[1]))
             return floors
         except Exception as e:
             print(f"Error getting floors from the database: {e}")
@@ -103,12 +113,18 @@ class LocationsRepository:
             rooms = []
             with self.connection.cursor() as cursor:
                 query = '''
-                    SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(p.description, '/', -1),'-',-1), p.locationkey FROM preferred_locations as p
+                    SELECT DISTINCT SUBSTRING_INDEX(SUBSTRING_INDEX(p.description, '/', -1),'-',-1), p.locationkey, p.locationtype,
+                    p.mapshapetype, p.mapshapecoords FROM preferred_locations as p
+                    LEFT JOIN locations as l ON p.locationkey = l.room
                     WHERE p.partof = %s;
                 '''
                 cursor.execute(query, [floor_id])
-                for description, room_id in cursor:
-                    rooms.append((description, room_id))
+                for description, room_id, type, shape, coords in cursor:
+                    room = Location(name = description, key= room_id, type= type )
+                    room.shape = shape
+                    room.coords = coords
+                    rooms.append(room)
+                    
             return rooms
         except Exception as e:
             print(f"Error getting rooms from the database: {e}")
@@ -118,23 +134,35 @@ class LocationsRepository:
             objects = []
             with self.connection.cursor() as cursor:
                 query = '''
-                    SELECT l.locationid FROM locations AS l
-                    WHERE l.room = %s;
+                    SELECT o.objectid FROM objects AS o
+                    WHERE o.locationid IN (
+                        SELECT l.locationid FROM locations AS l
+                        WHERE l.room = %s
+                    );
                 '''
                 cursor.execute(query, [room_id])
-                locations = cursor.fetchall()
-                for location in locations:
-                    query = '''
-                        SELECT o.objectid FROM objects AS o
-                        WHERE o.locationid = %s;
-                    '''
-                    cursor.execute(query, [location[0]])
-                    for object_id in cursor:
-                        objects.append((object_id))
+                for object_id in cursor:
+                    objects.append(object_id)
             return objects
         except Exception as e:
             print(f"Error getting objects of the location from the database: {e}")
     
+    def get_all_objects(self, locationkey):
+        try:
+            objects = []
+            with self.connection.cursor() as cursor:
+                sub = self.get_location(locationkey) 
+                
+                if sub.type == "room":
+                    return self.get_objects(locationkey)      
+                query = '''SELECT locationkey FROM preferred_locations WHERE partof= %s;'''
+                cursor.execute(query, [locationkey])
+                locations = cursor.fetchall()
+                for location in locations:
+                    objects.extend(self.get_all_objects(location[0]))
+                return objects
+        except Exception as e:
+            print(f"Error getting all objects of the location from the database: {e}")
     def get_locationkey(self, location_id):
         try:
             locationkey = ""
@@ -145,7 +173,6 @@ class LocationsRepository:
                 cursor.execute(query, [location_id])
                 for key in cursor:
                     locationkey = key
-            return locationkey
         except Exception as e:
             print(f"Error getting locationkey from the database: {e}")
 
@@ -175,11 +202,16 @@ class LocationsRepository:
         except Exception as e:
             print(f"Error controlling locationkey: {e}")
 
-    def is_name_unique(self, location_name):
+    def is_name_unique(self, location_name, locationkey):
         try:
             with self.connection.cursor() as cursor:
                 query = '''SELECT locationkey FROM preferred_locations WHERE description = %s;'''
-                cursor.execute(query, [location_name])
+                if locationkey:
+                    query = query[:-1] + '''  AND partof = %s;'''
+                    cursor.execute(query, (location_name, locationkey))
+                else:
+                    query = query[:-1] + '''  AND partof IS NULL;'''
+                    cursor.execute(query, [location_name])
                 row = None
                 for key in cursor:
                     row = key
@@ -326,3 +358,17 @@ class LocationsRepository:
             return path
         except Exception as e:
             print(f"Error getting path: {e} {locationkey}")
+
+    def get_map_image(self, location_key):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''SELECT l.mapimageurl FROM preferred_locations as p
+                            JOIN locations AS l
+                                ON l.room IN(
+                            SELECT locationkey FROM preferred_locations
+                            WHERE partof = %s) LIMIT 1;'''
+                cursor.execute(query, [location_key])
+                url = cursor.fetchall()
+                return url[0]
+        except Exception as e:
+            print(f"Error getting map_image: {e} {location_key}")

@@ -30,24 +30,6 @@
             </div>
         </div>
 
-        {% if values['floors'] %}
-            {% for floor in values['floors']%}  
-                <li>{{floor[0]}}</li>                               
-            {% endfor %}   
-        {% endif %}
-
-        <div class="field">
-            <label for="floors[]" class="label">Floors</label>
-            <div class = "control" id = "floorInputContainer"> 
-                <input type="text" name="floors[]" required>
-            </div> 
-            <div class="field is-grouped">
-                <div class="control">
-                    <button class="button is-primary is-small" id="addFloorBtn">Add Floor</button>
-                </div>
-            </div>
-        </div>
-
         <div class="field is-grouped">
             <div class="control">
                 <button class="button is-primary is-small" name = "save">Save</button>
@@ -69,7 +51,6 @@
         });
         function cancelForm() {
             document.querySelector('input[name="name"]').removeAttribute('required');
-            document.querySelector('input[name="floors[]"]').removeAttribute('required');
             const radioButtons = document.querySelectorAll('input[name="isPublic"]');
                 radioButtons.forEach((radioButton) => {
                     radioButton.removeAttribute('required');

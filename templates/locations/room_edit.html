@@ -1,11 +1,11 @@
 {% extends "header.html" %}
 {% block title %} Room {% endblock %}
 {% block content %}
-    <h1 class=" title"> Room Edit Page </h1>
+    <h1 class=" title"> Room Add/Edit Page </h1>
     <form action="" method="post" name="room_edit">
 
         <div class="field">
-            <label for="name" class="label">Name</label>
+            <label for="name" class="form-label required">Name</label>
             <div class = "control"> 
                 <input type="text" name="name" class="input" required="required" value="{{ values['name'] }}"/>
             </div>
@@ -31,21 +31,25 @@
             </div>
         </div>
 
-        <div class="field">
-        <table class="table">
-            {% if values['objects'] %}            
-            <table>
-                <h6>Select objects to remove</h6>
-                {% for object in values['objects'] %}
-                <label class="checkbox">
-                    <input type="checkbox" name="removed_objects[]" value="{{ object[0] }}">
-                </label> 
-                {{ object[0] }}
-                {% endfor %}
-            </table>
-            {% endif %}
+        {% if 'isPublic' in values.errors%}
+        <p class="help has-background-warning">
+            {{ values.errors['isPublic'] }}
+        </p>
+        {% endif %}
+
+        {% if values['objects'] %}            
+        <table>
+            <h6>Select objects to remove</h6>
+            {% for object in values['objects'] %}
+            <label class="checkbox">
+                <input type="checkbox" name="removed_objects[]" value="{{ object[0] }}">
+            </label> 
+            {{ object[0] }}
+            {% endfor %}
         </table>
-        </div>
+        {% endif %}
+    
+
 
         <div class="field">
             <label for="objects[]" class="label">Objects</label>
