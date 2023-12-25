@@ -47,11 +47,27 @@
         }
 
         .modal-content {
-            margin: 10% auto;
-            display: block;
-            max-width: 10%; 
-            max-height: 100%;
-        }
+        opacity: 0;
+        transform: scale(0.8);
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        text-align: center; /* Center the text */
+        padding: 50px; /* Add more padding for better appearance */
+        box-sizing: border-box; /* Include padding in the total width/height */
+        margin: 50px ; /* Leave space from left and right edges */
+        max-width: 60%; /* Set a maximum width */
+    }
+
+
+    .modal-content.show {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .info-container {
+        color: #fff;
+        margin-top: 50px; /* Move the text a little below */
+        font-size: 1.2em; /* Adjust the font size */
+    }
 
         .close {
             color: #fff;
@@ -62,11 +78,6 @@
             cursor: pointer;
         }
 
-        .info-container {
-            color: #fff;
-            text-align: center;
-            margin-top: 0;
-        }
         .hidden {
             display: none;
         }
@@ -93,6 +104,7 @@
         display: block; /* Remove extra space below inline images */
         margin: 0 auto; /* Center the image within the container */
     }
+
 
     .media-details {
         padding: 15px; /* Add padding inside the container */
@@ -159,7 +171,8 @@
                     <li>
                         <div class="media-item" onclick="showImage('{{ media_item[0] }}', '{{ media_item[2] }}')">
                             <p class="media-title">{{ media_item[1] }}</p>
-                            <img src="{{ media_item[0] }}" onerror="displayDefaultImage(this)" alt="Artwork" loading="lazy" onclick="showImage('{{ media_item[0] }}', '{{ media_item[2] }}')" >
+                            <p class="media-description hidden">{{ media_item[2] }}</p>
+                            <img src="{{ media_item[0] }}" onerror="this.src='https://secure.webtoolhub.com/static/resources/icons/set111/814a7dfe.png'" alt="Artwork" loading="lazy">
                             <div class="media-details">
                                 <iframe width="50%" height="200" loading="lazy" scrolling="yes" frameborder="yes" src="{{ media_item[3] }}" data-src="{{ media_item[3] }}"></iframe>
                                 <button class="btn btn-primary btn-lg custom-bg" onclick="window.location='{{ url_for('objects.object_page', objectid=media_item[4]) }}'">Object Page</button>
@@ -171,17 +184,42 @@
     </div>
     
      
-
     <div id="myModal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
-        <img id="modalImage" class="modal-content" alt="Full-size Artwork">
         <div id="infoContainer" class="info-container"></div>
     </div>
+    
     <div id="scroll-container"></div>
 
 
     
     <script>
+
+document.addEventListener('DOMContentLoaded', function () {
+        var mediaItems = document.querySelectorAll('.media-item');
+        mediaItems.forEach(function (item) {
+            item.addEventListener('click', function () {
+                var title = this.querySelector('.media-title').innerText;
+                var description = this.querySelector('.media-description').innerText;
+                openModal(title, description);
+            });
+        });
+    });
+
+    function openModal(title, description) {
+        var modal = document.getElementById('myModal');
+        var modalImage = document.getElementById('modalImage');
+        var infoContainer = document.getElementById('infoContainer');
+
+        infoContainer.innerHTML = '<b>Title:</b> ' + title + '<br><b>Description:</b> ' + description;
+
+        modal.style.display = 'block';
+    }
+
+    function closeModal() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = 'none';
+    }
         var loading = false; // Flag to prevent multiple requests
         var interval = 10000; // 10 seconds
 
@@ -193,36 +231,10 @@
             }
         }, interval);
 
-        
-    function displayDefaultImage(imgElement) {
-        imgElement.src = "https://secure.webtoolhub.com/static/resources/icons/set111/814a7dfe.png";
-        element.onerror = null; 
-    }
-    function showImage(imageSrc, createdText) {
-        event.preventDefault();
-        var modal = document.getElementById('myModal');
-        var modalImage = document.getElementById('modalImage');
-        var infoContainer = document.getElementById('infoContainer');
+ 
+ 
 
 
-        modalImage.src = imageSrc;
-        infoContainer.innerHTML = createdText;
-
-        modal.style.display = 'block';
-
-        modalImage.style.scale= "2"; 
-      
-    }
-
-    function closeModal() {
-        event.preventDefault();
-        var modal = document.getElementById('myModal');
-        var modalImage = document.getElementById('modalImage');
-
-      
-
-        modal.style.display = 'none';
-    }
 
     </script>
 </body>

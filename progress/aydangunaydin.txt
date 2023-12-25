@@ -12,3 +12,10 @@ week 8
 -worked on artwork.html file, user interactions and display
 week 9
 -dealing with the comma separated csv file issues
+week 10
+-showing media audio files 
+week 11
+-foreign key connections
+week 12
+-finalizing the webpage and adding crud operations for published_images
+-validation

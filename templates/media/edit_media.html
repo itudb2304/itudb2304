@@ -3,63 +3,60 @@
 {% block content %}
 <title>National Art Gallery</title>
     <h1 class=" title"> Media Add/Edit/Delete Page </h1>
-    <form action="" method="post" name="movie_edit">
-
-
-        <div class="field">
+    {% if error_message %}
+        <div class="notification is-danger">
+                <p class="subtitle is-6">{{ error_message }}</p>
+        </div>
+    {% endif %}
+    <form action="" method="post" name="edit">
+        <div class="col-md-4">
             <label for="id" class="label">ID</label>
             <div class = "control"> 
-                <input type="number" name="mediaid" min="0" class="input" required="required" value="{{ values['mediaid'] }}"/>
+                <input type="number" name="mediaid" min="0" class="form-control" required="required" value="{{ values['mediaid'] }}"/>
             </div>
         </div>
 
-        <div class="field">
+        <div class="col-md-4">
             <label for="id" class="label">Title</label>
             <div class = "control"> 
-              <input type="text" name="title" class="input" value="{{ values['title'] }}"/>
+              <input type="text" name="title" class="form-control" value="{{ values['title'] }}"/>
           </div>
         </div>
 
-        <div class="field">
+        <div class="col-md-4">
           <label for="id" class="label">Description</label>
           <div class = "control"> 
-            <input type="text" name="description" class="input" value="{{ values['description'] }}"/>
+            <input type="text" name="description" class="form-control" value="{{ values['description'] }}"/>
         </div>
       </div>
 
-      <div class="field">
+      <div class="col-md-4">
         <label for="id" class="label">ThumbnailUrl</label>
         <div class = "control"> 
-          <input type="text" name="thumbnailurl" pattern="^https:\/\/.*\.(jpg|png)$" class="input" value="{{ values['thumbnailurl'] }}"/>
+          <input type="text" name="thumbnailurl" pattern="^https:\/\/.*\.(jpg|png)$" class="form-control" value="{{ values['thumbnailurl'] }}"/>
       </div>
     </div>
 
-    <div class="field">
+    <div class="col-md-4">
       <label for="id" class="label">PlayUrl</label>
       <div class = "control"> 
-        <input type="text" name="playurl" class="input" value="{{ values['playurl'] }}"/>
+        <input type="text" name="playurl" class="form-control" value="{{ values['playurl'] }}"/>
     </div>
   </div>
 
 
 
-  <div class="field">
+  <div class="col-md-4">
     <label for="id" class="label">Object of Media</label>
     <div class = "control"> 
-      <input type="number" name="related" class="input" value="{{ values[related] }}"/>
+      <input type="number" name="related" class="form-control"" value="{{ values[related] }}"/>
   </div>
   </div>
 
     <div class="field is-grouped">
           <div class="control">
-              <button class="button is-primary is-small" >Save</button>
+              <button type = "submit" class="btn btn-primary btn-lg custom-bg" style="background-color: #212529; border: none;">Submit</button>
           </div>
-      </div>
-      <div class="field is-grouped">
-        <div class="control">
-            <button class="button is-primary is-small" >Delete</button>
-        </div>
-    </div>
-        
+      </div>   
     </form>
 {% endblock %}

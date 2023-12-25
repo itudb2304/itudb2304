@@ -3,53 +3,52 @@
 {% block content %}
 <title>National Art Gallery</title>
     <h1 class=" title"> Artwork Add/Edit/Delete Page </h1>
-    <form action="" method="post" name="movie_edit">
-
-        <div class="field">
-            <label for="id" class="label">ID</label>
+    {% if error_message %}
+        <div class="notification is-danger">
+                <p class="subtitle is-6">{{ error_message }}</p>
+        </div>
+    {% endif %}
+    <form action="" method="post" name="edit">
+        <div class="col-md-4">
+            <label for="uuid" class="label">ID</label>
             <div class = "control"> 
-                <input type="text" name="id" class="input" required="required" value="{{ values['id'] }}"/>
+                <input type="text" name="uuid" class="form-control" required="required" value="{{ values['uuid'] }}"/>
             </div>
         </div>
 
-        <div class="field">
-            <label for="id" class="label">URL</label>
+        <div class="col-md-4">
+            <label for="iiifthumburl" class="label">URL</label>
             <div class = "control"> 
-              <input type="text" name="url" class="input" required="required" value="{{ values['url'] }}"/>
+              <input type="text" name="iiifthumburl" class="form-control" value="{{ values['iiifthumburl'] }}"/>
           </div>
         </div>
 
-        <div class="field">
-          <label for="id" class="label">modified</label>
+        <div class="col-md-4">
+          <label for="assistivetext" class="label">Description</label>
           <div class = "control"> 
-            <input type="text" name="modified" class="input" required="required" value="{{ values['modified'] }}"/>
+            <input type="text" name="assistivetext" class="form-control" value="{{ values['assistivetext'] }}"/>
         </div>
       </div>
 
-      <div class="field">
-        <label for="id" class="label">Maxpixels</label>
+      <div class="col-md-4">
+        <label for="created" class="label">Creation Date</label>
         <div class = "control"> 
-          <input type="text" name="maxpixels" class="input" required="required" value="{{ values['maxpixels'] }}"/>
+          <input type="text" name="created" class="form-control" value="{{ values['created'] }}"/>
       </div>
     </div>
 
-    <div class="field">
-      <label for="id" class="label">Height</label>
-      <div class = "control"> 
-        <input type="text" name="height" class="input" required="required" value="{{ values['height'] }}"/>
-    </div>
+
+  <div class="col-md-4">
+    <label for="id" class="label">Object of Artwork</label>
+    <div class = "control"> 
+      <input type="number" name="related" class="form-control"" value="{{ values[related] }}"/>
+  </div>
   </div>
 
-        <div class="field is-grouped">
-            <div class="control">
-                <button class="button is-primary is-small" >Save</button>
-            </div>
-        </div>
-        <div class="field is-grouped">
+    <div class="field is-grouped">
           <div class="control">
-              <button class="button is-primary is-small" >Delete</button>
+              <button type = "submit" class="btn btn-primary btn-lg custom-bg" style="background-color: #212529; border: none;">Submit</button>
           </div>
-      </div>
-        
+      </div>   
     </form>
 {% endblock %}

@@ -48,22 +48,25 @@
 
   <div class="sidenav" id="objectsidenav">
     <aside>
-      <button onclick="window.location.href='/objects/object_addition'">Add Object</button>
+      <button class="searching" onclick="window.location.href='/objects/object_addition'">Add New Object</button>
+      
       <form action="/objects" method="GET">
-        <div class="searchBarfortitle">
+        <div class="searching">
           <input type="text" name="title" placeholder="Search by Title" {% if title_filter %} value="{{ title_filter }}"
             {% endif %}>
         </div>
 
-        <div class="searchBarforCreditLine">
+        <div class="searching">
           <input type="text" name="creditLine" placeholder="Search by Credit Line" {% if credit_line_filter %}
             value="{{ credit_line_filter }}" {% endif %}>
         </div>
 
-        <div class="classificationFiltering">
+        <div class="searching">
           <h5>Filter by Classification</h5>
-          <input type="checkbox" name="classification" value="Painting">Painting<br>
-          <input type="checkbox" name="classification" value="Print">Print<br>
+          <input type="checkbox" name="classification" value="Painting" Painting {% if "Painting" in selected_classifications
+            %} checked {% endif %}>Painting<br>
+          <input type="checkbox" name="classification" value="Print" Print {% if "Print" in selected_classifications
+            %} checked {% endif %}>Print<br>
           <input type="checkbox" name="classification" value="Sculpture" {% if "Sculpture" in selected_classifications
             %} checked {% endif %}>Sculpture<br>
           <input type="checkbox" name="classification" value="Drawing" {% if "Drawing" in selected_classifications %}
@@ -82,7 +85,7 @@
             selected_classifications %} checked {% endif %}>Technical Material<br>
         </div>
 
-        <div class="sortByTitle">
+        <div class="searching">
           <h6>Sorting Strategy on Title:</h6>
           <select name="sort">
             <option value="none" {% if sort=="none" %} selected {% endif %}>None</option>
@@ -91,7 +94,7 @@
           </select>
         </div>
 
-        <div class="submitbutton">
+        <div class="searching">
           <input type="submit" value="Filter">
         </div>
       </form>

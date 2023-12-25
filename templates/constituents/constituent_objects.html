@@ -1,6 +1,6 @@
 {% extends 'header.html' %}
 {% block content %}
-
+<title>Constituent Objects</title>
 {% if  constituent_objects[0] %}
 <h1 style="margin-left: 30px;">Contributions by {{constituent_objects[0].constituent_forward_display_name}}</h1>
 {% endif %}
@@ -33,10 +33,28 @@
     </div>
 </form>
 
-<!-- <div class="roletypefilter">
-    <h5>Filter by Role Type</h5>
-    <input type="checkbox" name="classification" value="Painting">Painting<br>
-</div> -->
+<form action="{{ url_for('constituents.constituent_objects', id=constituentID) }}" method="post">
+    <div class="container">
+        <div class="roletypefilter">
+            <h5>Filter by Role Type</h5>
+            <div class="form-check checkbox-group">
+                <input class="form-check-input" type="radio" name="roletypefilter" value="artist" id="artistCheckbox">
+                <label class="form-check-label" for="artistCheckbox">Artist</label>
+            </div>
+            <div class="form-check checkbox-group">
+                <input class="form-check-input" type="radio" name="roletypefilter" value="donor" id="donorCheckbox">
+                <label class="form-check-label" for="donorCheckbox">Donor</label>
+            </div>
+            <div class="form-check checkbox-group">
+                <input class="form-check-input" type="radio" name="roletypefilter" value="owner" id="ownerCheckbox">
+                <label class="form-check-label" for="ownerCheckbox">Owner</label>
+            </div>
+            <div class="form-check checkbox-group">
+                <button class="btn btn-primary btn-lg custom-bg" name="filter" id="filter">Filter</button>
+            </div>
+        </div>
+    </div>
+</form>
 
 <div>
     {{ pagination.info }}

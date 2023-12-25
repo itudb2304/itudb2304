@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, redirect, render_template, request, url_for
 from repository.objects_repository import ObjectDTO, ObjectsRepository
 from flask import redirect, url_for, render_template, request, jsonify
-from repository.media_repository import MediaRepository
 from flask_paginate import Pagination, get_page_args
 
 def objects_bp(connection):
@@ -54,8 +53,13 @@ def objects_bp(connection):
         newObject.objectid = repository.get_max_objectid() + 1
 
         if request.method == "GET":
-            return render_template("object_edit.html", objectDTO=newObject)
+            return render_template("object_edit.html", objectDTO=newObject, addition=True)
         else:
+            photoUrl = request.form["textUrl"]
+            assistiveText = request.form["assistiveText"]
+            if(photoUrl != ""):
+                repository.add_media_to_object(newObject.objectid, photoUrl, assistiveText)
+
             newObject.accessioned = request.form["accessioned"]
             newObject.accessionnum = request.form["accessionnum"]
             newObject.title = request.form["title"]
@@ -93,8 +97,12 @@ def objects_bp(connection):
     def object_edit_page(objectid):
         if request.method == "GET":
             object = repository.get_object_by_objectid(objectid)
-            return render_template('object_edit.html',objectDTO=object)
+            media = repository.get_media_by_objectid(objectid)
+            return render_template('object_edit.html',objectDTO=object, media=media)
         else:
+            alteredAssistiveText = request.form["alteredAssistiveText"]
+            repository.edit_media_of_object(objectid, alteredAssistiveText)
+
             objectDTO = repository.get_object_by_objectid(objectid)
             objectDTO.accessioned = request.form["accessioned"]
             objectDTO.accessionnum = request.form["accessionnum"]

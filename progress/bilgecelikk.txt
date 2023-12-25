@@ -36,3 +36,6 @@ week 11
 week 12
 - search by title and credit line, sort by title
 - pagination on objects
+- connected objects to objects_text_entries and published_images
+- additions and parial editions on published_images through object page
+- added css on object related pages

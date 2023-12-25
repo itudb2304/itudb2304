@@ -329,3 +329,36 @@ class ConstituentRepository:
         except Exception as e:
             print(f"Error deleting constituent object from the database: {e}")
             self.connection.rollback()
+
+    def filter_constituent_objects(self, filter: str, constituentid: int, limit: int, offset: int):
+        try:
+            objects_info = []
+            with self.connection.cursor() as cursor:
+                query = '''SELECT DISTINCT oc.id, oc.objectID, oc.constituentID, oc.roleType,
+                oc.role, oc.displayDate, oc.displayOrder, oc.country, o.title, c.forwarddisplayname 
+                FROM constituents c
+                LEFT JOIN objects_constituents oc on c.constituentid = oc.constituentID
+                LEFT JOIN objects o on o.objectid = oc.objectID
+                WHERE c.constituentid = %s AND oc.roleType = %s
+                LIMIT %s,%s;'''
+                cursor.execute(query, (constituentid, filter, offset, limit))
+                objects_info = cursor.fetchall()
+                objects_info = [ConstituentObjects(i) for i in objects_info]
+                self.connection.commit()
+                return objects_info
+        except Exception as e:
+            print(f"Error getting filtered constituent objects from the database: {e}")
+            self.connection.rollback()
+
+    def get_number_of_obj_after_filter(self, filter: str, constituentid: int):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''SELECT COUNT(oc.id)
+                FROM objects_constituents oc
+                WHERE oc.constituentid = %s AND oc.roleType = %s;'''
+                cursor.execute(query, (constituentid, filter))
+                temp = cursor.fetchone()[0]
+                return temp
+        except Exception as e:
+            print(f"Error getting filtered constituent objects from the database: {e}")
+            self.connection.rollback()
