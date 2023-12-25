@@ -224,3 +224,30 @@ class ObjectsRepository:
         except Exception as e:
             print(f"Error getting media from the database: {e}")
             self.connection.rollback()
+    
+    def add_media_to_object(self, objectid, url, assistiveText):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                INSERT INTO published_images (uuid, iiifurl, iiifthumburl, depictstmsobjectid, assistiveText)
+                VALUES (%s, %s, %s, %s, %s);
+                '''
+                cursor.execute(query, [url, url, url, objectid, assistiveText])
+                self.connection.commit()
+        except Exception as e:
+            print(f"Error adding media to the database: {e}")
+            self.connection.rollback()
+    
+    def edit_media_of_object(self, objectid, assistiveText):
+        try:
+            with self.connection.cursor() as cursor:
+                query = '''
+                UPDATE published_images
+                SET assistiveText = %s
+                WHERE depictstmsobjectid = %s;
+                '''
+                cursor.execute(query, [assistiveText, objectid])
+                self.connection.commit()
+        except Exception as e:
+            print(f"Error editing media in the database: {e}")
+            self.connection.rollback()

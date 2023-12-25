@@ -23,12 +23,17 @@ body {
   background-color: #eeeeee69;
 }
 
+.form-control2 {
+  height: 50px;
+  width: fit-content;
+  background-color: #e3e3e3;
+}
+
 .form-control:focus {
   background-color: #eeeeee69;
   box-shadow: none;
   border-color: #eee;
 }
-
 
 .list {
   padding-top: 20px;
@@ -74,8 +79,6 @@ tr:nth-child(even) {
 
 .endisdiv {
   display: flex;
-  border-style: outset;
-  border-color: #eeeefe79;
   border-width: 5px;
   margin: 1em;
   padding: 3px;
@@ -83,16 +86,43 @@ tr:nth-child(even) {
 
 .objectDescription {
   margin: 2em;
-  min-width: 700px;
+  min-width: 500px;
   border-style: groove;
-  padding: 10px;
+  padding: 3%;
+}
+
+#nodesc {
+  margin: 1em;
+  width: 50%;
+  border-style: groove;
+  padding: 2%;
 }
 
 .photoOfArtwork {
   margin: 2em;
   padding: 5px; 
-  display: inline-block;
 }
+
+#nophoto {
+  align-self: center;
+  align-items: center;
+  margin: 1em;
+  width: 50%;
+  border-style: groove;
+  padding: 2%;
+}
+
+.imgdesc {
+  padding: 2%;
+  padding-top: 4%;
+}
+
+.buttons {
+  padding-right: 6%;
+  text-align: right;
+}
+
+
 
 #art{
   min-width: 300px;
@@ -253,6 +283,10 @@ a {
 
 .box h4 {
   display: inline-block;
+}
+
+.searching {
+  padding: 4px;
 }
 
 .checkbox-group {
