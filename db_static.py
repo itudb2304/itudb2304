@@ -436,8 +436,8 @@ def init():
         CREATE TABLE IF NOT EXISTS object_media(    
         mediaid INTEGER,
         mediatype VARCHAR(10),
-        title VARCHAR(50),
-        description VARCHAR(500),
+        title TEXT,
+        description TEXT,
         duration VARCHAR(100),
         language VARCHAR(10),
         thumbnailurl VARCHAR(256),
