@@ -19,24 +19,31 @@
         </form>
     </div>
 
-    <form action="" method = "post">
-        <div>
-            <h5>Public</h5>
-            <input type="radio" name="public" value='1'> Yes<br>
-            <input type="radio" name="public" value='0'> No<br>
+    <form action="" method="post" class="filter-form">
+        <div class="filter-group">
+            <h5> Public </h5>
+            <div class="filter-options">
+                <label><input type="radio" name="public" value="1">Yes</label>
+                <label><input type="radio" name="public" value="0">No</label>
+            </div>
         </div>
-        <div>
+    
+        <div class="filter-group">
             <h5>Location type</h5>
-            <input type="checkbox" name="locationtype" value="building"> Building<br>
-            <input type="checkbox" name="locationtype" value="floor"> Floor<br>
-            <input type="checkbox" name="locationtype" value="room"> Room<br>
+            <div class="filter-options">
+                <label><input type="checkbox" name="locationtype" value="building"> Building</label>
+                <label><input type="checkbox" name="locationtype" value="floor"> Floor</label>
+                <label><input type="checkbox" name="locationtype" value="room"> Room</label>
+            </div>
         </div>
-        <div class="submitbutton">
+    
+        <div class="filter-group submitbutton ">
             <input type="submit" value="Filter">
         </div>
     </form>
 
-    
+    {{ pagination.info }}
+    {{ pagination.links }}
     <div class="tableDiv">
         <table class="table" id="locationsTable">
           <thead>
@@ -96,7 +103,7 @@
     </form>
     </aside>
     </div>
-
+    {{ pagination.links }}
     
     <script>
         function confirmDelete() {
@@ -140,5 +147,5 @@
 
 
       </script>
-
+    
 {% endblock %}

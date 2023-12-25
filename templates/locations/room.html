@@ -2,25 +2,33 @@
 {% block title %} Objects {% endblock %}
 {% block content %}
     <h1>{{ room.name}} </h1>
-    <h2> Objects </h2>
     <form action="" method="post">
         <label class="button">
             <button class="button is-danger" name="edit">Edit</button>
             <button class="button is-danger" name="delete" onclick="return confirmDelete()">Delete</button>
         </label>  
     </form>
-    <table class="table">
-        {% if objects %}
-        <table>
-            {% for object in objects%}
-            <a href="{{url_for('objects.object_page', objectid=object.objectid)}}">
-                <h4>{{ object.title }}</h4>
-            </a>
-                
-            {% endfor %}
-        </table>
-        {% endif %}
-    </table>
+    <div class="container px-2">
+        <div class="row">
+            <table class="table">
+                {% if objects %}
+                <table>
+                    {% for object in objects%}
+                    <div class="col-4 mb-4">
+                        <div class="list-div p-3">
+                            <strong></strong><a href="{{url_for('objects.object_page', objectid=object.objectid)}}">
+                            <h3>{{ object.title }}</h3>
+                            </a></strong>
+                            <h5><a href="{{url_for('constituents.constituent_by_name', name=object.attribution)}}">{{ object.attribution }}</a></h5>
+                            <h6>{{ object.classification }}</h6>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </table>
+                {% endif %}
+            </table>
+        </div>
+    </div>
     <script>
         function confirmDelete() {
             return confirm('Are you sure you want to delete this item');
