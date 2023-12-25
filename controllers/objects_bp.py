@@ -53,7 +53,7 @@ def objects_bp(connection):
         newObject.objectid = repository.get_max_objectid() + 1
 
         if request.method == "GET":
-            return render_template("object_edit.html", objectDTO=newObject)
+            return render_template("object_edit.html", objectDTO=newObject, addition=True)
         else:
             photoUrl = request.form["textUrl"]
             assistiveText = request.form["assistiveText"]

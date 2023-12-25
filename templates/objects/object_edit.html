@@ -123,22 +123,25 @@
 
         <div class="objectDescription" id="nodesc">
             <aside>
-                {% if objectDTO.title==None and media==None %}
+                {% if addition %}
                 <div>
                     <div> <b>Enter Url:</b>
                         <input type="text" name="textUrl" value="" />
                     </div>
-                    <div> <b>Assistive Text</b>
-                        <textarea type="text" rows="10" cols="50" value=""></textarea>
+                    <div>
+                        <p><b>Assistive Text</b></p>
+                        <textarea type="text" rows="20" cols="50" name="assistiveText"></textarea>
                     </div>
                 </div>
-                {% endif %}
+                {%else%}
                 {%if media %}
                 <div>
-                    <b>Alter the assistive text</b>
-                    <textarea type="text" rows="20" cols="50" name="alteredAssistiveText" {%if media[0][1] %}
-                        value="{{ media[0][1] }}" {%else%} value="" {%endif%}></textarea>
+                    <p><b>Alter the assistive text</b></p>
+                    <textarea type="text" rows="20" cols="50" name="alteredAssistiveText">
+                        {% if media[0][1] %}{{ media[0][1] }}{% else %} {%endif%}>
+                    </textarea>
                 </div>
+                {% endif %}
                 {% endif %}
 
                 <div class="col-md-4">
