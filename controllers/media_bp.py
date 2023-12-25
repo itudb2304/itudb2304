@@ -28,7 +28,7 @@ def media_bp(connection):
         
     @media.route('/delete', methods=['GET', 'POST'])
     def delete_media():
-        values = {"mediaid": "", "table": ""}
+        values = {"mediaid": ""}
         if request.method == 'GET':
             return render_template("edit_media.html", values = values)
         else:
@@ -70,16 +70,16 @@ def media_bp(connection):
 
     @media.route('/edit', methods=['GET', 'POST'])
     def media_edit_page():
-        mediaid = request.form["mediaid"]
-        title = request.form["title"]
-        description = request.form["description"]
-        url = request.form["thumbnailurl"]
-        play = request.form["playurl"]
-        media = Media(mediaid, title, description, url, play)
         if request.method == "GET":
             values = {"mediaid": "", "title": "", "description": "", "thumbnailurl": "", "playurl": ""}
             return render_template("edit_media.html", values = values)
         else:
+            mediaid = request.form["mediaid"]
+            title = request.form["title"]
+            description = request.form["description"]
+            url = request.form["thumbnailurl"]
+            play = request.form["playurl"]
+            media = Media(mediaid, title, description, url, play)
             if repository.validation_objectid(request.form["related"])[0][0] > 0:
                 if repository.validation_mediaid(request.form["mediaid"])[0][0]>0:
                     repository.update_media(media)

@@ -14,6 +14,17 @@ cursor = db.cursor()
 def init():
 
     query = '''
+        DROP DATABASE IF EXISTS national_art;
+    '''
+    cursor.execute(query)
+    db.commit()
+    
+    query = '''
+        CREATE DATABASE national_art;
+    '''
+    cursor.execute(query)
+    db.commit()
+    query = '''
         USE national_art;
     '''
     cursor.execute(query)
@@ -350,7 +361,7 @@ def init():
     query = ''' 
         CREATE TABLE IF NOT EXISTS published_images(    
         uuid VARCHAR(255),
-        iiifurl VARCHAR(255) NOT NULL,
+        iiifurl VARCHAR(255),
         iiifthumburl VARCHAR(1024) NOT NULL,
         viewtype VARCHAR(20),
         sequence INTEGER,
@@ -361,7 +372,8 @@ def init():
         modified VARCHAR(10),
         depictstmsobjectid INTEGER,
         assistivetext VARCHAR(500),
-        PRIMARY KEY (uuid)
+        PRIMARY KEY (uuid),
+        FOREIGN KEY (depictstmsobjectid) REFERENCES objects(objectid) ON DELETE CASCADE ON UPDATE CASCADE
     );
     '''
     cursor.execute(query)
