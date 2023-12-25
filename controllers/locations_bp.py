@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort
 from repository.locations_repository import LocationsRepository
 from repository.objects_repository import ObjectsRepository
+from repository.constituent_repository import ConstituentRepository
 from repository.locations_repository import Location
+from flask_paginate import Pagination, get_page_args
 from models.object import ObjectDTO
 
 def locations_bp(connection):
@@ -15,6 +17,7 @@ def locations_bp(connection):
 
     repository = LocationsRepository(connection=connection)
     objects_repository = ObjectsRepository(connection=connection)
+    constituents_repository = ConstituentRepository(connection=connection)
 
     @locations.route('/', methods=['GET', 'POST'])
     def locations_page():      
@@ -22,9 +25,19 @@ def locations_bp(connection):
         filter = {"public": "", "type": ""}
         filter["public"] = request.form.getlist("public")
         filter["type"] = request.form.getlist("locationtype")
-        locations = repository.get_locations(search, filter)
+        page, per_page, offset = get_page_args(
+                page_parameter="page", per_page_parameter="per_page"
+            )
+        per_page = 25
+        all_locations = repository.get_locations(search, filter)
+        locations = repository.get_locations(search, filter, offset=offset, limit=per_page)
+        total = len(all_locations)
         buildings = repository.get_buildings()
-        return render_template("locations.html", locations=locations, buildings=buildings)
+
+        pagination = Pagination(
+            page=page, per_page=per_page, total=total, css_framework='bootstrap4'
+        )
+        return render_template("locations.html", locations=locations, buildings=buildings, pagination=pagination)
     
     @locations.route('building/<building_id>', methods=['GET', 'POST'])
     def building_page(building_id): 
@@ -40,7 +53,19 @@ def locations_bp(connection):
         else:
             building = repository.get_location(building_id)
             floors = repository.get_floors(building_id)
-            return render_template("building.html", building = building, floors = floors)
+            page, per_page, offset = get_page_args(
+                page_parameter="page", per_page_parameter="per_page"
+            )
+            per_page = 25
+            all_objects = repository.get_all_objects(building_id)
+            total = len(all_objects)
+            objects = all_objects[offset:(offset+per_page)]
+            pagination = Pagination(
+            page=page, per_page=per_page, total=total, css_framework='bootstrap4'
+            )
+            DTOobjects = [objects_repository.get_object_by_objectid(objectid[0]) for objectid in objects]
+            
+            return render_template("building.html", building = building, floors = floors, objects = DTOobjects, pagination=pagination)
     
     @locations.route('/new_building', methods=['GET', 'POST'])
     def building_add_page():
@@ -54,8 +79,8 @@ def locations_bp(connection):
             building_name = request.form["name"]
             building_isPublic = request.form["isPublic"]
             building = Location(building_name, "building", building_isPublic)
-            repository.add_location(building)          
-            return redirect(url_for("locations.locations_page"))
+            building_id = repository.add_location(building)          
+            return redirect(url_for("locations.building_page", building_id = building_id))
         else:
             return redirect(url_for("locations.locations_page"))
     
@@ -88,10 +113,25 @@ def locations_bp(connection):
             if "addRoom" in request.form:
                 return redirect(url_for('locations.room_add_page', floor_id = floor_id))
         else:
+            
             rooms = repository.get_rooms(floor_id)
             floor = repository.get_location(floor_id)
-            return render_template("floor.html", rooms=rooms, floor=floor)
-    
+            page, per_page, offset = get_page_args(
+                page_parameter="page", per_page_parameter="per_page"
+            )
+            per_page = 25
+            all_objects = repository.get_all_objects(floor_id)
+            total = len(all_objects)
+            objects = all_objects[offset:(offset+per_page)]
+            pagination = Pagination(
+            page=page, per_page=per_page, total=total, css_framework='bootstrap4'
+            )
+            DTOobjects = [objects_repository.get_object_by_objectid(objectid[0]) for objectid in objects]
+            map_image = repository.get_map_image(floor_id)
+            if map_image:
+                return render_template("floor.html", rooms=rooms, map_image=map_image[0], floor=floor, objects=DTOobjects, pagination=pagination)
+            else:
+                return render_template("floor.html", rooms=rooms, map_image=None, floor=floor, objects=DTOobjects, pagination=pagination)
     @locations.route('/<building_id>/new_floor', methods=['GET', 'POST'])
     def floor_add_page(building_id): 
         if request.method == "GET":
