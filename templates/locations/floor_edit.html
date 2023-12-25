@@ -31,25 +31,12 @@
             </div>
         </div>
 
-        {% if values['rooms'] %}
-            {% for room in values['rooms']%}  
-                <li>{{room[0]}}</li>                               
-            {% endfor %}   
+        {% if 'isPublic' in values.errors%}
+        <p class="help has-background-warning">
+            {{ values.errors['isPublic'] }}
+        </p>
         {% endif %}
-        <div class="field">
-
-            <label for="rooms[]" class="label">Rooms</label>
-            <div class = "control" id = "roomInputContainer"> 
-                <input type="text" name="rooms[]" required/>
-            </div> 
-            <div class="field is-grouped">
-                <div class="control">                
-                    <button class="button is-primary is-small" id="addRoomBtn">Add Room</button>
-                </div>
-            </div>
-   
-        </div>
-
+        
         <div class="field is-grouped">
             <div class="control">
                 <button class="button is-primary is-small" name = "save">Save</button>
@@ -71,7 +58,7 @@
         });
         function cancelForm() {
             document.querySelector('input[name="name"]').removeAttribute('required');
-            document.querySelector('input[name="rooms[]"]').removeAttribute('required');
+
             const radioButtons = document.querySelectorAll('input[name="isPublic"]');
                 radioButtons.forEach((radioButton) => {
                     radioButton.removeAttribute('required');

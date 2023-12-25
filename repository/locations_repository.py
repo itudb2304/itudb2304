@@ -174,11 +174,16 @@ class LocationsRepository:
         except Exception as e:
             print(f"Error controlling locationkey: {e}")
 
-    def is_name_unique(self, location_name):
+    def is_name_unique(self, location_name, locationkey):
         try:
             with self.connection.cursor() as cursor:
                 query = '''SELECT locationkey FROM preferred_locations WHERE description = %s;'''
-                cursor.execute(query, [location_name])
+                if locationkey:
+                    query = query[:-1] + '''  AND partof = %s;'''
+                    cursor.execute(query, (location_name, locationkey))
+                else:
+                    query = query[:-1] + '''  AND partof IS NULL;'''
+                    cursor.execute(query, [location_name])
                 row = None
                 for key in cursor:
                     row = key

@@ -31,21 +31,26 @@
             </div>
         </div>
 
-        <div class="field">
-        <table class="table">
-            {% if values['objects'] %}            
-            <table>
-                <h6>Select objects to remove</h6>
-                {% for object in values['objects'] %}
-                <label class="checkbox">
-                    <input type="checkbox" name="removed_objects[]" value="{{ object[0] }}">
-                </label> 
-                {{ object[0] }}
-                {% endfor %}
-            </table>
-            {% endif %}
+        {% if 'isPublic' in values.errors%}
+        <p class="help has-background-warning">
+            {{ values.errors['isPublic'] }}
+        </p>
+        {% endif %}
+
+    
+        {% if values['objects'] %}            
+        <table>
+            <h6>Select objects to remove</h6>
+            {% for object in values['objects'] %}
+            <label class="checkbox">
+                <input type="checkbox" name="removed_objects[]" value="{{ object[0] }}">
+            </label> 
+            {{ object[0] }}
+            {% endfor %}
         </table>
-        </div>
+        {% endif %}
+    
+
 
         <div class="field">
             <label for="objects[]" class="label">Objects</label>

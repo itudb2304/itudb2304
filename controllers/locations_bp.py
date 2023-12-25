@@ -45,21 +45,16 @@ def locations_bp(connection):
     @locations.route('/new_building', methods=['GET', 'POST'])
     def building_add_page():
         if request.method == "GET":
-            values = {"name": "", "isPublic": "", "floors": ""}
+            values = {"name": "", "isPublic": ""}
             return render_template("building_edit.html", values = values)
         if 'save' in request.form:
-            valid = validate_form(request.form)
+            valid = validate_form(request.form, None)
             if not valid:
                 return render_template("building_edit.html", values = request.form)
             building_name = request.form["name"]
             building_isPublic = request.form["isPublic"]
-            building_floors = request.form.getlist('floors[]')
             building = Location(building_name, "building", building_isPublic)
-            building_key = repository.add_location(building)
-            if building_floors:
-                for floor_name in building_floors:
-                    new_floor = Location(floor_name, "floor", 0, building_key)
-                    repository.add_location(new_floor)          
+            repository.add_location(building)          
             return redirect(url_for("locations.locations_page"))
         else:
             return redirect(url_for("locations.locations_page"))
@@ -70,19 +65,13 @@ def locations_bp(connection):
             building = repository.get_location(building_id)
             building_isPublic = building.isPublic
             building_floors = repository.get_floors(building_id)
-            values = {"name": building.name, "isPublic": building_isPublic, "floors": building_floors}
+            values = {"name": building.name, "isPublic": building_isPublic}
             return render_template("building_edit.html", values = values)
         if 'save' in request.form:
             building_name = request.form["name"]
             building_isPublic = request.form["isPublic"]
-            building_floors = request.form.getlist('floors[]')
             building = Location(building_name, "building", building_isPublic, key = building_id)
             repository.update_location(building)
-            if building_floors:
-                for floor_name in building_floors:
-                    new_floor = Location(floor_name, "floor", 0, building_id)
-                    repository.add_location(new_floor)
-    
             return redirect(url_for("locations.building_page", building_id=building_id))
         else:
             return redirect(url_for("locations.building_page", building_id=building_id  ))
@@ -106,25 +95,16 @@ def locations_bp(connection):
     @locations.route('/<building_id>/new_floor', methods=['GET', 'POST'])
     def floor_add_page(building_id): 
         if request.method == "GET":
-            values = {"name": "", "isPublic": "", "rooms": ""}
+            values = {"name": "", "isPublic": ""}
             return render_template("floor_edit.html", values = values)
         if 'save' in request.form:
-            valid = validate_form(request.form)
+            valid = validate_form(request.form, building_id)
             if not valid:
                 return render_template("floor_edit.html", values = request.form)
             floor_name = request.form["name"]
             floor_isPublic = request.form["isPublic"]
-            floor_rooms = request.form.getlist('rooms[]')
             floor = Location(floor_name, "floor", floor_isPublic, building_id)
-            floor_id = repository.add_location(floor)       
-            if floor_rooms:
-                for room_name in floor_rooms:
-                    building = repository.get_location(floor.partof)
-                    room = Location(room_name, "room", 0, floor_id)
-                    room.path["building"] = building
-                    room_key = repository.add_location(room)
-                    room.key = room_key
-                    repository.add_locationid(room)
+            repository.add_location(floor)       
             return redirect(url_for("locations.building_page", building_id=building_id))
         else:
             return redirect(url_for("locations.building_page", building_id=building_id))
@@ -138,21 +118,13 @@ def locations_bp(connection):
                 abort(404)
             floor_isPublic = floor.isPublic
             floor_rooms = repository.get_rooms(floor_id)
-            values = {"name": floor.name, "isPublic": floor_isPublic, "rooms": floor_rooms}
+            values = {"name": floor.name, "isPublic": floor_isPublic}
             return render_template("floor_edit.html", values = values)
         if 'save' in request.form:
             floor_name = request.form["name"]
             floor_isPublic = request.form["isPublic"]
-            floor_rooms = request.form.getlist('rooms[]')
             updated_floor = Location(floor_name, "floor", floor_isPublic, floor.partof, floor_id)
             repository.update_location(updated_floor)
-            for room_name in floor_rooms:
-                building = repository.get_location(floor.partof)
-                room = Location(room_name, "room", 0, floor_id)
-                room.path["building"] = building
-                room_key = repository.add_location(room)
-                room.key = room_key
-                repository.add_locationid(room)
             return redirect(url_for("locations.floor_page", floor_id=floor_id))
         else:
             return redirect(url_for("locations.floor_page", floor_id=floor_id))
@@ -168,9 +140,7 @@ def locations_bp(connection):
                 return redirect(url_for('locations.room_edit_page', room_id=room_id))
         else:
             objects = repository.get_objects(room_id)
-            print(objects)
             DTOobjects = [objects_repository.get_object_by_objectid(objectid[0]) for objectid in objects]
-            print(DTOobjects)
             return render_template("room.html", objects=DTOobjects, room=room)
 
     @locations.route('/<floor_id>/new_room', methods=['GET', 'POST'])
@@ -179,7 +149,7 @@ def locations_bp(connection):
             values = {"name": "", "isPublic": "", "objects": ""}
             return render_template("room_edit.html", values = values)
         if 'save' in request.form:
-            valid = validate_form(request.form)
+            valid = validate_form(request.form, floor_id)
             if not valid:
                 return render_template("room_edit.html", values = request.form)
             room_name = request.form["name"]
@@ -210,7 +180,7 @@ def locations_bp(connection):
             room_objects = request.form.getlist('objects[]')
             removed_objects = request.form.getlist('removed_objects[]')
             for object_id in removed_objects:
-                repository.remove_object(object_id, room_id)
+                repository.remove_object(object_id)
             updated_room = Location(room_name, "room", room_isPublic, room.partof, room_id, repository.get_path(room.key))
             repository.update_location(updated_room)
             repository.update_locationid(updated_room)
@@ -220,17 +190,24 @@ def locations_bp(connection):
         else:
             return redirect(url_for("locations.room_page", room_id=room_id))
     
-    def validate_form(form):
+    def validate_form(form, locationkey):
         form.data = {}
         form.errors = {}
 
         form_name = form.get("name", "").strip()
         if len(form_name) == 0:
             form.errors["name"] = "Name can not be blank"
-        elif not repository.is_name_unique(form_name):
+        elif not repository.is_name_unique(form_name, locationkey):
             form.errors["name"] = "Name already exists"
         else:
             form.data["name"] = form_name       
         
+        form_public = form.get("isPublic")
+        location = repository.get_location(locationkey)
+        if location and location.isPublic == 0 and form_public == "1":
+            form.errors["isPublic"] = location.name + " is not public!"
+        else:
+            form.data["isPublic"] = form_public
+
         return len(form.errors) == 0 
     return locations
