@@ -38,4 +38,4 @@ week 12
 - pagination on objects
 - connected objects to objects_text_entries and published_images
 - additions and parial editions on published_images through object page
-- added css
+- added css on object related pages
