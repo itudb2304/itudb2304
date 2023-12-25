@@ -11,8 +11,10 @@
   {% if constituentslist|length > 0 %}
   <h5>by {{ constituentslist[0][1] }}</h5>
   {% endif %}
-  <button id="updateButton" onclick="window.location.href='/objects/{{ object.objectid }}/edit'">Update</button>
-  <button id="deleteButton">Delete</button>
+  <div id="buttons"> 
+    <button id="updateButton" onclick="window.location.href='/objects/{{ object.objectid }}/edit'">Update</button>
+    <button id="deleteButton">Delete</button>
+  </div>
 
   <div class="endisdiv">
     <div class="photoOfArtwork">
@@ -22,18 +24,20 @@
       <img src="https://via.placeholder.com/150" alt="Photo of Artwork">
       {% endif %}
 
-      {% if media and media[0][1] %}
-      <p><em>Image Description</em></p>
-      <div id='desc-image'>
-        <p>{{ media[0][1] }}</p>
+      <div class="imgdesc">
+        {% if media and media[0][1] %}
+        <p><em>Image Description</em></p>
+        <div id='desc-image'>
+          <p>{{ media[0][1] }}</p>
+        </div>
+        <hr>
+        {% endif %}
       </div>
-      <hr>
-      {% endif %}
     </div>
     <div class="objectDescription">
       <p><strong>Title: </strong>{{ object.title }}</p>
       <p><strong>Credit Line: </strong> <a href="{{ url_for('objects.objects_page', creditLine=object.creditLine) }}">{{
-        object.creditLine }}</a></p>
+          object.creditLine }}</a></p>
       {% if constituentslist|length > 0 %}
       <p>
         <strong>Artist Name:</strong>
@@ -68,10 +72,12 @@
       {% if objectLocation %}
       <h5>Location: </h5>
       {% if objectLocation.site %}
-      <p><strong>Site: </strong> {{ objectLocation.site}}</a></p>
+      <p><strong>Site: </strong>
+        {{ objectLocation.site }}</p>
+      </p>
       {% endif %}
       {% if objectLocation.room %}
-      <p><strong>Room: </strong>{{objectLocation.room}} </p>
+      <p><strong>Room: </strong> <a href="/locations/room/{{ objectLocation.room }}">{{ objectLocation.room }}</a></p>
       {% endif %}
       {% if objectLocation.decription %}
       <p><strong>desc: </strong>{{objectLocation.decription}} </p>

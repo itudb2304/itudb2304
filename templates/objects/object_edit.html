@@ -1,122 +1,163 @@
 {% extends "header.html" %}
-{% block title %} Objects {% endblock %}
+{% block title %} Object Add/Edit {% endblock %}
 {% block content %}
 
 <h1 class="title"> Object Add/Edit Page </h1>
 <form action="" method="post" name="object_edit" onsubmit="return validateForm();">
 
-    <div class="field">
-        <label for="accessioned" class="label">Accessioned</label>
-        <div class="form-control">
-            <select id="accessioned" name="accessioned" required="required">
-                <option value="1" {% if objectDTO.accessioned==1 %}selected{% endif %}>True</option>
-                <option value="0" {% if objectDTO.accessioned==0 %}selected{% endif %}>False</option>
-            </select>
+    <div class="endisdiv">
+        <div class=photoOfArtwork id="nophoto">
+            <div class="col-md-4">
+                <label for="accessioned" class="label">Accessioned</label>
+                <div>
+                    <select id="accessioned" name="accessioned" required="required">
+                        <option value="1" {% if objectDTO.accessioned==1 %}selected{% endif %}>True</option>
+                        <option value="0" {% if objectDTO.accessioned==0 %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="accessionnum" class="label">Accession Number</label>
+                <div>
+                    <input type="text" class="form-control2" name="accessionnum" class="input" required="required"
+                        value="{{ objectDTO.accessionnum }}" />
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="title" class="label">Title</label>
+                <div>
+                    <input type="text" class="form-control2" name="title" class="input" required="required"
+                        value="{{ objectDTO.title }}" />
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="beginYear" class="label">Begin Year</label>
+                <div>
+                    <input type="number" class="form-control2" min="0" max="2024" name="beginYear" class="input"
+                        required="required" value={% if objectDTO.beginYear !=None %} "{{ objectDTO.beginYear }}" {%
+                        else %} 0 {% endif %} />
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="endYear" class="label">End Year</label>
+                <div>
+                    <input type="number" class="form-control2" min="0" max="2024" name="endYear" class="input"
+                        required="required" value={% if objectDTO.endYear !=None %} "{{ objectDTO.endYear }}" {% else %}
+                        0 {% endif %} />
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="medium" class="label">Medium</label>
+                <div>
+                    <input type="text" class="form-control2" name="medium" class="input" required="required"
+                        value="{{ objectDTO.medium }}" />
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="attribution" class="label">Attribution</label>
+                <div>
+                    <input type="text" class="form-control2" name="attribution" class="input" required="required"
+                        value="{{ objectDTO.attribution }}" />
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="creditLine" class="label">Credit Line</label>
+                <div>
+                    <input type="text" class="form-control2" name="creditLine" class="input" required="required"
+                        value="{{ objectDTO.creditLine }}" />
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="accessioned" class="label">Classification</label>
+                <div>
+                    <select id="classification" class="form-select" class="form-select" name="classification"
+                        required="required">
+                        <option value="Painting" {% if objectDTO.classification=="Painting" %}selected{% endif %}>
+                            Painting
+                        </option>
+                        <option value="Print" {% if objectDTO.classification=="Print" %}selected{% endif %}>Print
+                        </option>
+                        <option value="Sculpture" {% if objectDTO.classification=="Sculpture" %}selected{% endif %}>
+                            Sculpture
+                        </option>
+                        <option value="Drawing" {% if objectDTO.classification=="Drawing" %}selected{% endif %}>Drawing
+                        </option>
+                        <option value="Volume" {% if objectDTO.classification=="Volume" %}selected{% endif %}>Volume
+                        </option>
+                        <option value="Portfolio" {% if objectDTO.classification=="Portfolio" %}selected{% endif %}>
+                            Portfolio
+                        </option>
+                        <option value="Photograph" {% if objectDTO.classification=="Photograph" %}selected{% endif %}>
+                            Photograph
+                        </option>
+                        <option value="New Media" {% if objectDTO.classification=="New Media" %}selected{% endif %}>New
+                            Media
+                        </option>
+                        <option value="Decorative Art" {% if objectDTO.classification=="Decorative Art" %}selected{%
+                            endif %}>
+                            Decorative Art</option>
+                        <option value="Technical Material" {% if objectDTO.classification=="Technical Material"
+                            %}selected{% endif %}>Technical Material</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="isVirtual" class="label">Is Virtual</label>
+                <div>
+                    <select id="isVirtual" class="form-select" name="isVirtual" required="required">
+                        <option value="1" {% if objectDTO.isVirtual==1 %}selected{% endif %}>True</option>
+                        <option value="0" {% if objectDTO.isVirtual==0 %}selected{% endif %}>False</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="objectDescription" id="nodesc">
+            <aside>
+                {% if objectDTO.title==None and media==None %}
+                <div>
+                    <div> <b>Enter Url:</b>
+                        <input type="text" name="textUrl" value="" />
+                    </div>
+                    <div> <b>Assistive Text</b>
+                        <textarea type="text" rows="10" cols="50" value=""></textarea>
+                    </div>
+                </div>
+                {% endif %}
+                {%if media %}
+                <div>
+                    <b>Alter the assistive text</b>
+                    <textarea type="text" rows="20" cols="50" name="alteredAssistiveText" {%if media[0][1] %}
+                        value="{{ media[0][1] }}" {%else%} value="" {%endif%}></textarea>
+                </div>
+                {% endif %}
+
+                <div class="col-md-4">
+                    <div class="form-control2">
+                        <button class="button is-primary">Save</button>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    {% if objectDTO.title != "None" %}
+                    <a href="{{ url_for('objects.object_page', objectid=objectDTO.objectid) }}">Cancel</a>
+                    {% else %}
+                    <a href="{{ url_for('object.objects_page') }}"> Cancel</a>
+                    {% endif %}
+                </div>
+            </aside>
         </div>
     </div>
 
-    <div class="field">
-        <label for="accessionnum" class="label">Accession Number</label>
-        <div class="form-control">
-            <input type="text" name="accessionnum" class="input" required="required"
-                value="{{ objectDTO.accessionnum }}" />
-        </div>
-    </div>
-
-    <div class="field">
-        <label for="title" class="label">Title</label>
-        <div class="form-control">
-            <input type="text" name="title" class="input" required="required" value="{{ objectDTO.title }}" />
-        </div>
-    </div>
-
-    <div class="field">
-        <label for="beginYear" class="label">Begin Year</label>
-        <div class="form-control">
-            <input type="number" min="0" max="2024" name="beginYear" class="input" required="required" value={% if
-                objectDTO.beginYear !=None %} "{{ objectDTO.beginYear }}" {% else %} 0 {% endif %} />
-        </div>
-    </div>
-
-    <div class="field">
-        <label for="endYear" class="label">End Year</label>
-        <div class="form-control">
-            <input type="number" min="0" max="2024" name="endYear" class="input" required="required" value={% if
-                objectDTO.endYear !=None %} "{{ objectDTO.endYear }}" {% else %} 0 {% endif %} />
-        </div>
-    </div>
-
-    <div class="field">
-        <label for="medium" class="label">Medium</label>
-        <div class="form-control">
-            <input type="text" name="medium" class="input" required="required" value="{{ objectDTO.medium }}" />
-        </div>
-    </div>
-
-    <div class="field">
-        <label for="attribution" class="label">Attribution</label>
-        <div class="form-control">
-            <input type="text" name="attribution" class="input" required="required"
-                value="{{ objectDTO.attribution }}" />
-        </div>
-    </div>
-
-    <div class="field">
-        <label for="creditLine" class="label">Credit Line</label>
-        <div class="form-control">
-            <input type="text" name="creditLine" class="input" required="required" value="{{ objectDTO.creditLine }}" />
-        </div>
-    </div>
-
-    <div class="field">
-        <label for="accessioned" class="label">Classification</label>
-        <div class="form-control">
-            <select id="classification" name="classification" required="required">
-                <option value="Painting" {% if objectDTO.classification=="Painting" %}selected{% endif %}>Painting
-                </option>
-                <option value="Print" {% if objectDTO.classification=="Print" %}selected{% endif %}>Print</option>
-                <option value="Sculpture" {% if objectDTO.classification=="Sculpture" %}selected{% endif %}>Sculpture
-                </option>
-                <option value="Drawing" {% if objectDTO.classification=="Drawing" %}selected{% endif %}>Drawing</option>
-                <option value="Volume" {% if objectDTO.classification=="Volume" %}selected{% endif %}>Volume</option>
-                <option value="Portfolio" {% if objectDTO.classification=="Portfolio" %}selected{% endif %}>Portfolio
-                </option>
-                <option value="Photograph" {% if objectDTO.classification=="Photograph" %}selected{% endif %}>Photograph
-                </option>
-                <option value="New Media" {% if objectDTO.classification=="New Media" %}selected{% endif %}>New Media
-                </option>
-                <option value="Decorative Art" {% if objectDTO.classification=="Decorative Art" %}selected{% endif %}>
-                    Decorative Art</option>
-                <option value="Technical Material" {% if objectDTO.classification=="Technical Material" %}selected{%
-                    endif %}>Technical Material</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="field">
-        <label for="isVirtual" class="label">Is Virtual</label>
-        <div class="form-control">
-            <select id="isVirtual" name="isVirtual" required="required">
-                <option value="1" {% if objectDTO.isVirtual==1 %}selected{% endif %}>True</option>
-                <option value="0" {% if objectDTO.isVirtual==0 %}selected{% endif %}>False</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="field is-grouped">
-        <div class="form-control">
-            <button class="button is-primary is-small">Save</button>
-        </div>
-    </div>
-    <div class="field is-grouped">
-        <div class="form-control">
-            {% if objectDTO.title != None %}
-            <a href="/object/{{ objectDTO.id }}" class="button is-primary is-small">Cancel</a>
-            {% else %}
-            <a href="/objects" class="button is-primary is-small">Cancel</a>
-            {% endif %}
-        </div>
-    </div>
 </form>
 
 <script>
@@ -129,6 +170,14 @@
         }
         if (parseInt(beginYear.value, 10) > parseInt(endYear.value, 10)) {
             alert("Begin Year must be less than or equal to End Year");
+            return false;
+        }
+        var photoUrl = form.querySelector('#photoUrl').value;
+        if (photoUrl === "") return true;
+
+        var isValidPhoto = photoUrl.match(/\.(jpeg|jpg|gif|png)$/) != null;
+        if (!isValidPhoto) {
+            alert("Photo URL must be a valid image file");
             return false;
         }
         return true;
